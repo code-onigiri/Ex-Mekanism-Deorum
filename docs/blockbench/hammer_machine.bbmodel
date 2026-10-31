@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "java_block",
+    "box_uv": false
+  },
+  "name": "hammer_machine",
+  "model_identifier": "",
+  "variable_placeholders": "",
+  "variable_placeholder_buttons": [],
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "cube",
+      "uuid": "b0c1d5ec-fcbc-5da3-9f06-0d66683a0919",
+      "box_uv": false,
+      "rescale": false,
+      "locked": false,
+      "light_emission": 0,
+      "render_order": "default",
+      "allow_mirror_modeling": true,
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "autouv": 0,
+      "color": 7,
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 2
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 3
+        }
+      }
+    }
+  ],
+  "outliner": [
+    "b0c1d5ec-fcbc-5da3-9f06-0d66683a0919"
+  ],
+  "textures": [
+    {
+      "path": "",
+      "name": "hammer_machine_front",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "0",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "f43e32aa-3c67-5d24-ac38-f807d6ab56ef",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA/klEQVR42p2TOwqDQBCG5ywxKj7wDILvByr2NrFQELSwzhlygOQAaXPCCf+CskkkxRa/M7rzfzuOKxVFwWVZchzHIqZpytM08TAMQl3Xcd/3Isca6hDhq6qKqa5rnueZ13XlZVk4z3NumkYUJEmyxzAM2fd9AR/HUdS2bcsE2ul0VhLglGXZx8PX8/5Xci02J7Qhmx+361/JECXAcmn2enRPQRAoA6Io+h0iICg6MspmCJ/9o4Nv0NGusnAmyDRNZYCmaUyu6yoDbNtm0nVdGQAvgaIKcByHyfO8Q/M29U3fpxCyLIsJFNV/QcwAF5AgwzD2iPdDLq8j39Yg3L8BBdDa5S+Yvf8AAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "hammer_machine_side",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "1",
+      "particle": true,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "5fb42663-fec7-55c1-8b27-bb916b6c6103",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB80lEQVR42l2TyWpiURCG72NIB4kR44woKoKoiLPGOYq6cBacFYeFW5+8wlfNsUMviqpbw3/+Gq719fUl9XpdSqWS6kqlIvv9Xtbrtcp4PJblcqk2MfLQ1DWbTbFarZacTie53W5yPp+lVqtJu93WhHK5/NKFQkGy2ayCbzYbze12u2KBttvt5HK5KNDj8VCw+/2uSc/nU20EPwDb7VYFcKtarSpAMpmUTCYj6XRaBft/MbFEIiGr1UpbsaABAAG73S7Ojw9xu90SCARUgsGg+Hw+8Xg84nA4xGazSS6Xk8Vi8Q8AWqlUShzv7+J0OjUZ8fv9LyCv16sAb29/lM1sNhPYW/l8XhnwUjwel2g0KpFIRMLhsGp8sVhM/SYOIAyKxeLfIX5/f8t8PtfBMDiGafT1elX7eDyqkEMuzFm7Muj3+zKdTnU9pshoimBofNzDZDKRXq+nN2HRG0MDhIM5HA5aQKHZuQHhmxyKqXG5XGLRD70w6eFwqJdH0e9XsfERGwwGmssg0dbn56f2wrUxSECgyJCIIdgUEyOHqySfmMWqGAiDxMk3Nj4KRqOR2tAmxg10Oh1dIeytUCj0SjZMmAvo9Ilg4+Nf4F8xG9AWQMHRaDQUhD+MzfASAl1jU8ywyUVgpC2AhPCa0byK/TuObWII3z9/k91KcqNmAwAAAABJRU5ErkJggg=="
+    },
+    {
+      "path": "",
+      "name": "hammer_machine_top",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "2",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "33056c3d-5135-58c8-9ef0-57dcf3a77455",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABt0lEQVR42k2TVwsCQQyE9+/og4rgu2A/sWAFC3r2XkDw50e+gSw+5HK7m0wms9nQ6/UsSRJZu9021tfr1Y7Ho2y5XNp2u9V/t9tVDB4jNvA5nU52u93sfD4LqN/vK7DRaERfrVblD4eDAIklLoC03+/tcrkI6PV6Cex+vyvo+/3qH2MfgN1uJxsOhxZAAWC9XkcWrKGMB9SrksQ5sZhaGI1GNh6PIzoJtVrN6vW6aNNSpVKRrVYrgRBHa51OxwKVZrOZPZ9PJZM0n8+jcZamqW02GwE7Uxc7QG0ymSgZdCoTnMlkLJfLWaFQ0P/j8dAZbZEzGAzUZuCaWBAASKvVEsVisWilUkmWz+dtsVhYs9mMbcJAAHxg8H6/IwOqUJlkPExoBXAXGA0oLgAY0BfICEO1bDarZJjQAjq4BogJA1oJCMGCewadKohHAlX/BeVGfIiYAbXgI0x1AOjR99wDyrwgLtWJYQA51yiTSAvQ80nDE8yeg7PPdftNaJSh4mOL/3w+EtSnEnN9SGLUp9OpdIKFRhlkqhFQLpfjw/l/UMRBGUbOML5Gf57+VBEHMK7Jn7WL7dpgrH+PywnsQQGZ1AAAAABJRU5ErkJggg=="
+    },
+    {
+      "path": "",
+      "name": "hammer_machine_bottom",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "3",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "3ba159d9-2ecf-51b0-a816-55285143d1c2",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgUlEQVR42k3TZ6oCUQwF4FmMir0gVsSu2Pa/nTy+QB7zI3MzKScnubnNcDiM0WgUvV4vut1u9Pv9YBuPxzEYDNJO2EnpYiaTSTTT6TTu93s8Ho//8/P5xPP5zP86r9drnM/nuN1ucblc0jabzaKBxgnoeDzG6/VKkEr8/X6pE/bD4ZCxQLBo0ATAsVwuY71ex2azid1ul7Lf7/Nk55/P5xmLjeINGgCgr1arTBBwOp2yikB+7AAD0Qb/PwAD6ioVOhup2RSIImx07JtOp5NOQdvtNqvWHJzv9zt1YIArBgO3ljPgNCT0OYBJdBtACJuqYkp31Y17hSxYC0W7DUCvNiqGni0YBEqSigE2ldieg0JuQwzRfmML695NGZikWqoaJrsCAIpNMjCI2iwTRtF/DcqpX8NbLBYpdY05RNsETaANA6IKIIwkqlw7QACKxz7fAvq1nt/vN4dXfbffSTETa1+yBSgYFF16PRw21dq+2kxt5FvwgVRPt0790dt+evmI/z+S1K5OpyT2RgAAAABJRU5ErkJggg=="
+    }
+  ]
+}

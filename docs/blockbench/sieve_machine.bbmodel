@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "java_block",
+    "box_uv": false
+  },
+  "name": "sieve_machine",
+  "model_identifier": "",
+  "variable_placeholders": "",
+  "variable_placeholder_buttons": [],
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "cube",
+      "uuid": "2eb5b40d-6eb0-5932-b659-d4a6b400bd6c",
+      "box_uv": false,
+      "rescale": false,
+      "locked": false,
+      "light_emission": 0,
+      "render_order": "default",
+      "allow_mirror_modeling": true,
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "autouv": 0,
+      "color": 7,
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 2
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 3
+        }
+      }
+    }
+  ],
+  "outliner": [
+    "2eb5b40d-6eb0-5932-b659-d4a6b400bd6c"
+  ],
+  "textures": [
+    {
+      "path": "",
+      "name": "sieve_machine_front",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "0",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "44cdf722-aea1-581d-8733-b6dc66ccd717",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA40lEQVR42q2TOw7CMAyGcxbU9/MW3aq2qlq1OzuH4ATsSMyMnPBHX6RWhYFHYHBix/Yf/3ZikiRRmqYKgkC+7yuKIrVtq7quNU2Tuq5T0zSqqsr6iGMnL89zmaIoNAyD5nnWOI4Kw9AGk0QyIIABWpal+r63OrHYBrTdznMSqjBxHK8Hl+vtI1niudxQxhbg+Zbns78CUL3xPM8ZgKm97cHxdH6wx/1hjc+yTIa5/kRhO8ZvAaBveIWuFGwFNOKnJvKaXAGo3v6FVxQo+SWFbQ+c/gILSAgjXXb4oW/96IsPwb4DuaLQp/0y3VUAAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "sieve_machine_side",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "1",
+      "particle": true,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "80117451-5f6b-5b94-b679-8a8bc1c60b00",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABz0lEQVR42k2TVwpCQQxFZzEqdsHyK2LvvYNdsRd0AS49cgKR9xEzmcm9ucmLrtFoSLPZlHK5LKVSSarVqnDXarWkVqvpPcZ9MBiUQCCgPhwOSywWE9fpdOTxeMjxeJTr9Sr7/V7O57M8n0/5fD76RrzZbCQSiUilUtGC4/FYEomEOJhPp5MaBIDMvt+vvF4vyWazMpvNtHo+n1eFvV5PVThk7nY7NapCZGru97tcLhfZbrcK8Pv9UigUVAUt0orr9/uaAAAwRADf77eCuVsulzIcDhWAgna7rW38CdbrtUoGDIi+MUgXi4VMp1OVy5CpTlyv1yUUColDEgqQzbBut5uSEENIcjQaVTCyaaXb7aoCWtIZTCYTORwOSjSfz1XRarVS2VShqn3uwWAgo9FIPyvEjm/MBcmwQ2ZJTL1YLGrPtMqnw1uutmBL4V0SO1MZIxkwQNpACebz+cSxHMgjkQkjjTPKSKZfqqLKYsj+ChgEbGykrTDyScQAksysKGBz+A8R+blcTpLJpCak02ldFmLzzMEbm0e9i8fjkkqlVLp5SKhoPpPJqLd3Yry2AAsSkYRkzpgNC6D3zXaBNvS/wA9MGJM3T3+cve+c7Q0j/gFxEdvMyCpIewAAAABJRU5ErkJggg=="
+    },
+    {
+      "path": "",
+      "name": "sieve_machine_top",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "2",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "6f31a769-c5aa-5d4b-b125-71b92f7acb91",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABxUlEQVR42k2Sx6qCQQyF51FcXDso6EK3Yu8NFUVBRMSCir0gqE+eyxfIj4uQzMnJmSQzrlqtSq1Wk0KhIPl8XkqlkoDV63Upl8uKY+CYxXAajYa4ZrMpu91OTqeT7Pd79a/XS87ns+J48NVqJfP5XDabjSyXS8U6nY441NbrtRwOBy243+8qYoXf71djDBwBxDC6cLSJAOrWBeftdqseUbuVIvJwMS53tAHR1CngjHG2HPhsNlMRcGJPAOB2uykJghUTg3ErBmadTqdTXbLLZrNeq9bi9Xr1RGyk37EYhw54Nd0BRIp+O6DQzlZorwA+mUz0qR3vSuL5fCrZFvkrYIv8XTC4jsAiAHi+4/GoJPZhT2lvTkye82KxUGN8xy98v9/i8/nk7+9P/efzkcfjoXa5XNQY8ZeDoHbg9/sllUqpJZNJzycSCY3T6bSXJ7YcRq2LRCL6JYfDoS6l2+1Ku91WT3dgvV5POeDj8VjjVqsl0WhUXCwWk9FoJP1+X308HpdwOCzBYFAJoVBIMfNsP5fLafvwHCSUuQ1VCjOZjBL46+SKxaJUKhUVoCPrkO51BJSwQCCgHjJi+MFgoDEXwIXD7Bjnf5gWBnT/NxtSAAAAAElFTkSuQmCC"
+    },
+    {
+      "path": "",
+      "name": "sieve_machine_bottom",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "3",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "173c53fe-5ea5-516f-90b1-041ee82665bb",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgUlEQVR42k3TZ6oCUQwF4FmMir0gVsSu2Pa/nTy+QB7zI3MzKScnubnNcDiM0WgUvV4vut1u9Pv9YBuPxzEYDNJO2EnpYiaTSTTT6TTu93s8Ho//8/P5xPP5zP86r9drnM/nuN1ucblc0jabzaKBxgnoeDzG6/VKkEr8/X6pE/bD4ZCxQLBo0ATAsVwuY71ex2azid1ul7Lf7/Nk55/P5xmLjeINGgCgr1arTBBwOp2yikB+7AAD0Qb/PwAD6ioVOhup2RSIImx07JtOp5NOQdvtNqvWHJzv9zt1YIArBgO3ljPgNCT0OYBJdBtACJuqYkp31Y17hSxYC0W7DUCvNiqGni0YBEqSigE2ldieg0JuQwzRfmML695NGZikWqoaJrsCAIpNMjCI2iwTRtF/DcqpX8NbLBYpdY05RNsETaANA6IKIIwkqlw7QACKxz7fAvq1nt/vN4dXfbffSTETa1+yBSgYFF16PRw21dq+2kxt5FvwgVRPt0790dt+evmI/z+S1K5OpyT2RgAAAABJRU5ErkJggg=="
+    }
+  ]
+}

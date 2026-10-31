@@ -5,6 +5,9 @@
 
 ## テクスチャ
 
+Blockbench でモデルごと編集したい場合は [docs/blockbench/README.md](blockbench/README.md) を参照してください
+(`python3 tools/export_blockbench.py` で開ける形に書き出せます)。
+
 ### 生成されるファイル
 
 ブロック 1 種につき 5 枚の PNG と、モデル/blockstate を生成します。

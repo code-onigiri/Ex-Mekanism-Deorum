@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "java_block",
+    "box_uv": false
+  },
+  "name": "crucible_machine",
+  "model_identifier": "",
+  "variable_placeholders": "",
+  "variable_placeholder_buttons": [],
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "cube",
+      "uuid": "311c1ef2-85db-5578-82d7-f01cb56f0cea",
+      "box_uv": false,
+      "rescale": false,
+      "locked": false,
+      "light_emission": 0,
+      "render_order": "default",
+      "allow_mirror_modeling": true,
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "autouv": 0,
+      "color": 7,
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 2
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 3
+        }
+      }
+    }
+  ],
+  "outliner": [
+    "311c1ef2-85db-5578-82d7-f01cb56f0cea"
+  ],
+  "textures": [
+    {
+      "path": "",
+      "name": "crucible_machine_front",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "0",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "d717a342-c51f-572c-9cba-ac6406dbd7b6",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABGUlEQVR42p1TS2qFQBDsU+j+GfHvJYyi+AMXOYEERdCA7uIutwiEnCEn7FAD8xiN5iVvUc5Qdpc1XSPlec5FUXCSJBzHMadpyuDKsuQsywQPgAfkHjVVVTHVdc3jOPI8zzxNk1jXdeVlWQSPFXzf99y2LQ/DwF3XCa5pGiaoXS4PdwEuCDYl8fX5/ifIenycYEMV+Hh7/RUvT9VtARQdYS8A9xRF0UYABc/F4yHke1mP1DZD/K8A4t84uDVItRnAnSDLsn7Es5/F/uwShmEw+b5/mLEal7pX4bouk2map81q7kci6CWonDXL7M9EPM9jCsPw1LZ6B45qHMdhgsq9/4KYAR5QktB1/boioSAIWNO0K2fbtjg7gN5v+t7fR9CfW48AAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "crucible_machine_side",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "1",
+      "particle": true,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "abdca84f-bce6-587e-bd4a-9763a5d89661",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACD0lEQVR42k2SV29iQQyF578gQlXgKawShd47oYa21NASoiw88t+9/ixdlAdfl/EcH5+5rlarSb1el2KxKIVCQcrlslBrNBpSqVSsjlHHvJieZrMprtVqyfl8lsvlIt/f3+Zvt5tcr1er46kfDgfZbDZyOp1kv99b7e3tTRxox+NRspmMFJVBS1H7vZ4Z8eT9XXrdrjCoqUzp+5NIGCAsHDQB6Crav58fOX99yX63k6NO2W23clD/oX69WslmvbY8oyCwYbiDBgBVBWrq3kytVat3q2gTkyulkl0sqQbpdFpWCngHYK/BYCCf6j8UeavGVG/iUeniyaeTia2zWCxMZJfL5YxBKpmUjCLXda9Op2Me8xjBkJyexNOTMeDVTET2gT4T/s7nZuvlUlY6ZToeW87kQb9vPpvNynA4tOc3Bl1VGUQmT6dTGY1GZjRRY72evgo1VibnjH/CBQIBicViEgqFJBgMSiQSkcfHR4nH4xKNRq2OUce8mB6fzyeOJpBSqZQ8Pz+bwqhNnlRdXl5erP76+moeo05POBwW5/f7paoisQ/0WIc1oAl9cjyKszvC0V/SZ+WuA4WL7/rH8f97F/CAUuurePR4GhG3221bxbHLWJVmIn6p6s9VdQCpYcSAcGk2m0k+nzdG6OFAsXfXaTQQY0ymRuPvM+oeQ9OAj6f0w8PD3bMf8e9zYu8MI/8PNyjkULC+PuAAAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "crucible_machine_top",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "2",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "050e7f9b-34c5-57bb-8dfc-0ef3ef86db6b",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABf0lEQVR42l2T0arCQAxE908EffZDVGptVbCCPlgtVlArBX8/cuYypdyHbTbJZDKb3aY8z2Oz2cRqtYrlchnz+TyIYdfrteLssyyTxWcPpizLSNvtNu73ezyfTyVns5kA0+lUPiTEKLC9XC7Rtm3sdrtIgK/XazweDyUnk8lgyRVFoT3dsJDWda0FLtEBgvP5LBUE8U2Muv1+r67k6AyWBSYhAyDFt9tNBfgsfOeIn04ndSbOfiAg0HWdQABczJ4YXVnErPR4PGo+abFYDFIpAPh+vwcSfCtqmkaW46CAW9MMAFI0VkChfRfS3cc8HA5/18hUSfR9LzDyLNkE2LEaCInrCAwCSR6Uh2YSyK2IQnzkszh+4hVS8Hq9BOQo7CH7P1SK/YgGBQyCoLv7RgzybVRVpUdFZ1+jhuiHgwoPaXzXxExOHHLfBOr1LyCZjtjv96uBjufg+VD0+XyCGhTpCLDATDcAfuceFsBxjrgV6l/gA5N/XVvOx36cZ+8cC/8H+GURzLLn3gMAAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "crucible_machine_bottom",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "3",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "5e5debdd-a233-55bd-b5f8-335d4d2ee0b7",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgklEQVR42k3TV44CQQwE0DkFXICcESIKkUGk+1+nV8+S2fnw2ONQLru7q8FgUNrtdkin0yn++/1+SNoZY6fOeOVzvV7L5XIpp9Mp9Pl8LsfjsRwOh9Dpr8fYw+GwVJD2+32ZTCYRJLfbrdzv99Bpv9/v8vl8Ii738XiErqBw6rZYLELW63XZ7XZls9mEvd1uy2q1Ksvl8tcIgxjBfCgZYz6fhygEmHSTGSAgWPlXGyNA49RFZ0GAJEdh82OEPn/soNVqRRcCwMJybkWv16s8n88okqOBGLBer/fPQDKKySYLLY+dgHL4NHKk1Wg0inkVQU9bcR2ALxlgA0zz3xJRsjzIOXuyYNOZAwxT48cIukqyYXaOkbQJYPfFCMD4ptNpqSwijzHvQIIoyqNUjL4mgMV/AIk+m80CxGnopIAmgPnF5QKIHbhNeT0FoFsS+X6/MUqeO+rYyQUQx4hG/WZxuiCAaaJAnlj9ncRbGI/HkSxIms1mUGs0GqXb7f7+U+fTziZ/O4qqwTOPoyIAAAAASUVORK5CYII="
+    }
+  ]
+}

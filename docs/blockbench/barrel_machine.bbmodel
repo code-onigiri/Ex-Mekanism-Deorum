@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "format_version": "4.10",
+    "model_format": "java_block",
+    "box_uv": false
+  },
+  "name": "barrel_machine",
+  "model_identifier": "",
+  "variable_placeholders": "",
+  "variable_placeholder_buttons": [],
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "cube",
+      "uuid": "9d562067-cb97-523d-8eab-0b0a63ccbfeb",
+      "box_uv": false,
+      "rescale": false,
+      "locked": false,
+      "light_emission": 0,
+      "render_order": "default",
+      "allow_mirror_modeling": true,
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "autouv": 0,
+      "color": 7,
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 0
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 1
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 2
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": 3
+        }
+      }
+    }
+  ],
+  "outliner": [
+    "9d562067-cb97-523d-8eab-0b0a63ccbfeb"
+  ],
+  "textures": [
+    {
+      "path": "",
+      "name": "barrel_machine_front",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "0",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "3dc5f450-67df-5950-b67c-93c6d876dc38",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBElEQVR42p1TSYqEQBDMl7jhhn/w4L6houf2JIweRAW/M7e5zSdjyAKbdgYapw5hllWRQURaUlEUqKoKcRyLmmUZlmXBNE0CwzBgHEexTtNU8LiWZYm6rkFN02BdVxzHgX3fkec52rYFCydJ8qxhGML3fSE+zzO2bUPXdSBWMwxTCuyC2PLr5vfX51u8crmX+r6/NH88+rd4FRECnOPcePT5LZx8nhcFQXDb/u8YURRdh3gnAuPk82e/OPhvBL4TZBiGdARFUUCu60pHsCwLpGmadATuJVaRjWDbNsjzvD838Y59hmmaIMdxpP8FMQN+sBJD1/Vn5Xy85vOTw5bPM1VVxfsPE1rnp4hV9xUAAAAASUVORK5CYII="
+    },
+    {
+      "path": "",
+      "name": "barrel_machine_side",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "1",
+      "particle": true,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "a34cb09b-40e8-571e-8070-668b7680ee6b",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACF0lEQVR42j2T2U5qUQyG15MgyiTCNRABmedBBgEFJaCGMBglkcCN8gbEEAKJ+LA9+Xqyueju3P5t1zaFQkFKpZKk02nluVxOqtWqFItFqVQqgj+bzUq5XFZOHNzyG4Lf39/l8/NT5vO5zGYzWS6XysfjsfqQX15elL+9van94+ND6vW6mOvra0kkEkqxWEx5PB6XcDh8kqFgMCiLxUKLTKdTmUwmisJkMhnpdDqacHd3d5IbjYa0222Vm82mtFotCQQCivL19VWJcQ1VgLxer3VOunx/f+s+sH99fal9tVopIjqD4vn5+X+Bbrcrv7+/cjgc5OHhQeX9fn+Sd7udEHM8HiWZTGpnmgwGA8nn82L+/v4U9s/Pj2y3W5U3m81JhkOMwwjW/CBIpVJibm5uTgvEgMyp0CG6sgeSe72eJo5GIy3ImIYEFoajVqtp0P39vRIIsBHMItE5HTpEI3NxcSE+n09cLpc4HA5xu91ydXUlfr9fPB6POJ1O9WG3dLjX6xWbzSbm8vJSK0UiEb11NBoVxoJjC4VCaue9wCHsxFDY2O12ub291TsDj3EeHx9VBz46nJPxoDg7NuYn11CFRGbm3laCFYSNB0YMdooj05SxDPNyZzrCh8Oh9Pt9LciisPMmKMJ/8/T0pJcBEfswLITKQKMqMkRn6++EWz5kC6HugA+VoPPz8xNnPusCVgyQLd/Z2Znq/wAXoujsyHwROwAAAABJRU5ErkJggg=="
+    },
+    {
+      "path": "",
+      "name": "barrel_machine_top",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "2",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "2f5e46aa-1fcc-5a13-95f3-ec88138fb3ca",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAByElEQVR42nWTR4tCQRCE55+8g549eFEUPJizGMCAOWHALPrze/lqGXku7GGYeT3dVTXV/Vyz2bRWq2WVSsWq1ao1Gg3t5XJZZ+7Z/Zm7er2uc7vdNtfpdGy329npdLLlcmmr1crW67VNp1ObTCY2GAy0+zvinPf7vXW7XXO1Wk0Fh8PBLpeLvV4vez6fAiRG4vl8FgmFt9tNQCxUOKSFGTebjS7Zx+Ox4hSTQxxA8lg8xfV6PV3CSBHJuVzOCoWC5fN5K5VKls1mFaMoDC4A3kEAab54NpuJmZ213W61uCMO2XA4lLEOBgCQBjrMJGcyGSlgJRIJ+cIZtXiBGjrnkAHA9XqVAgCPx6OAIpGIRaNRS6VSNp/PFfNk/X7/t430FVmPx0MKYMF9DxAEgaXTaT2lWCxKAQrJlQe0EUm+VQDCFo/HJT2ZTFosFvvyAPmYyLA5phBTAAAdFpIo8Cb6xfMgQ+FHAUb4yQKAN4IcXhTi+Gg0EjM5HxP9IKEC5vAgkfR3kGi374QmkX+BEfYj+36//x3lxWJh9/vdqOEf0RzgAchIAxUPMBJ0Ev1OAW0LT6MUhH9X3oQxKGIWkAo73zD735k8vOH7B2DBCtmiteTtAAAAAElFTkSuQmCC"
+    },
+    {
+      "path": "",
+      "name": "barrel_machine_bottom",
+      "folder": "block",
+      "namespace": "exmekdeorum",
+      "id": "3",
+      "particle": false,
+      "render_mode": "default",
+      "visible": true,
+      "mode": "bitmap",
+      "saved": false,
+      "uuid": "bca0ef88-923d-521f-8f4b-7635a17b9e1d",
+      "relative_path": "",
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgUlEQVR42k3TZ6oCUQwF4FmMir0gVsSu2Pa/nTy+QB7zI3MzKScnubnNcDiM0WgUvV4vut1u9Pv9YBuPxzEYDNJO2EnpYiaTSTTT6TTu93s8Ho//8/P5xPP5zP86r9drnM/nuN1ucblc0jabzaKBxgnoeDzG6/VKkEr8/X6pE/bD4ZCxQLBo0ATAsVwuY71ex2azid1ul7Lf7/Nk55/P5xmLjeINGgCgr1arTBBwOp2yikB+7AAD0Qb/PwAD6ioVOhup2RSIImx07JtOp5NOQdvtNqvWHJzv9zt1YIArBgO3ljPgNCT0OYBJdBtACJuqYkp31Y17hSxYC0W7DUCvNiqGni0YBEqSigE2ldieg0JuQwzRfmML695NGZikWqoaJrsCAIpNMjCI2iwTRtF/DcqpX8NbLBYpdY05RNsETaANA6IKIIwkqlw7QACKxz7fAvq1nt/vN4dXfbffSTETa1+yBSgYFF16PRw21dq+2kxt5FvwgVRPt0790dt+evmI/z+S1K5OpyT2RgAAAABJRU5ErkJggg=="
+    }
+  ]
+}
