@@ -181,7 +181,7 @@ $ gradle build
 
 - この Mod: GNU General Public License v3.0 ([LICENSE](LICENSE))
 - ブロックのベーステクスチャと GUI 背景: Mekanism (MIT License,
-  Copyright Aidancbrady and contributors)。`tools/mekanism_base/LICENSE-Mekanism.txt` を参照
+  Copyright Aidancbrady and contributors)
 - Ex Deorum のレシピ・タグ・機械パーツを利用しています。Ex Deorum は
   [thedarkcolour](https://github.com/thedarkcolour/ExDeorum) による Mod です
 - Minecraft EULA (<https://aka.ms/MinecraftEULA>) への同意は利用者の責任です

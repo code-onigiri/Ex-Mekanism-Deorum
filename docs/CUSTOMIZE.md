@@ -3,109 +3,50 @@
 この Mod の見た目と数値は、すべてリポジトリ内のテクスチャ・GUI コード・定数で完結しています。
 ここでは「どこを触れば何が変わるか」をまとめます。
 
-## テクスチャ
+## テクスチャ / モデル
 
-Blockbench でモデルごと編集したい場合は [docs/blockbench/README.md](blockbench/README.md) を参照してください
-(`python3 tools/export_blockbench.py` で開ける形に書き出せます)。
-
-### 生成されるファイル
-
-ブロック 1 種につき 5 枚の PNG と、モデル/blockstate を生成します。
+ブロック 1 種につき 5 枚の PNG、モデル 2 種、blockstate、アイテムモデルを持ちます。
+すべて `src/main/resources/` 配下の通常のリソースなので、PNG / JSON を直接編集して
+`gradle build` すれば反映されます (アセットの自動生成はしません)。
 
 | パス | 内容 |
 | --- | --- |
-| `src/main/resources/assets/exmekdeorum/textures/block/<block>_front.png` | 正面 (ファミリーアイコン) |
+| `src/main/resources/assets/exmekdeorum/textures/block/<block>_front.png` | 正面 |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_front_active.png` | 稼働中の正面 |
-| `src/main/resources/assets/exmekdeorum/textures/block/<block>_side.png` | 左右 / 背面 (共通、ファミリーごとの刻み) |
+| `src/main/resources/assets/exmekdeorum/textures/block/<block>_side.png` | 左右 / 背面 (共通) |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_top.png` | 上面 |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_bottom.png` | 底面 |
-| `src/main/resources/assets/exmekdeorum/models/block/<block>.json` | `minecraft:block/orientable_with_bottom` (正面 = north) |
+| `src/main/resources/assets/exmekdeorum/models/block/<block>.json` | モデル (`minecraft:block/orientable_with_bottom`) |
 | `src/main/resources/assets/exmekdeorum/models/block/<block>_active.json` | 稼働中モデル |
 | `src/main/resources/assets/exmekdeorum/blockstates/<block>.json` | `facing` × `active` の 8 バリアント |
 | `src/main/resources/assets/exmekdeorum/models/item/<block>.json` | アイテムモデル |
 | `src/main/resources/assets/exmekdeorum/textures/gui/deorum_machine.png` | 共通 GUI (256×256 nine-slice) |
 
-GUI 背景だけは生成対象外です。Mekanism の `assets/mekanism/gui/base.png` を複製した固定
-アセットで、直接編集してください (`tools/generate_assets.py` は上書きしません)。
+### 面の使い分け
 
-### ベーステクスチャ
+- `_front` / `_front_active`: 正面 (`facing` で回転し、稼働中は `_front_active` に切り替わる)
+- `_side`: 左右と背面で共通
+- `_top` / `_bottom`: 上面と底面
+- ファクトリーは正面の LED (上端 1 px・中央 6 px) の色だけティアで変えます。色は Mekanism の
+  `BaseTier` に合わせています (Basic: mint / Advanced: coral / Elite: cyan / Ultimate: magenta)
 
-- **正面**: 手描きのパネル (`tools/mekanism_base/machines/custom/front.png`) がベース
-- **左右 / 背面**: 上半分は `crusher` のパネル、下半分 (row 8〜15) は Energized Smelter のベント帯
-  (`side_panel()`)。左右背面は同じテクスチャで、上部の四角 (12×4) にファミリーごとの刻みを
-  入れる (`side_detail()`):
-  - ハンマー: 横リブ
-  - ふるい: パンチング (市松の穴)
-  - バレル: 縦の鎧板 (staves)
-  - 溶岩るつぼ: 楕円のハッチリング
-  - 水るつぼ: 斜めの冷却スリット
-- **上面 / 底面**: Mekanism の `crusher` (ファクトリーは `factory/crushing`) がベース
-- 生成時に変えるのは次の 2 点だけ
-  1. 正面の内側 (上 2px / 左右下 1px の縁を残した **14×13**) にファミリーごとの機械的な柄を描く
-     (`front_pattern_pixels`)
-  2. ファクトリーは Mekanism の `front_led` と同じ位置 (上端 1px・中央 6px) にティア LED を置く
-     (`TIER_LED`、色は Mekanism の `factory/led.png` から採取)
+### モデルと blockstate
 
-| ファミリー | 柄 | 実装 |
-| --- | --- | --- |
-| ハンマー | 45 度の滑り止めリブ | 斜めハッチ |
-| ふるい | パンチングメタル (4px ピッチの穴) | 穴あき板 |
-| バレル | 横ルーバー (鉄帯のスリット) | 横ストライプ |
-| 溶岩るつぼ | 丸い圧力ハッチ | 同心円リング |
-| 水るつぼ | 縦フィン (冷却ラジエーター) | 縦ストライプ |
+- モデルはバニラの親モデル (`minecraft:block/orientable_with_bottom`) とテクスチャ参照だけの薄い JSON です。
+  面を増やしたい場合は `elements` を持つモデルに差し替えてください
+  (Blockbench で書き出した JSON をそのまま置けます)。
+- blockstate は `facing` × `active` の 8 バリアントで、`active=true` のときだけ `_active` モデルを向きます。
 
-柄は「絵」ではなくパターンなので、色を変えればそのまま別の機械感を出せます。共通の
-フレーム (外周 1px + 四隅のボルト) は `_frame()` / `_bolt()` で描いています。
+### GUI 背景
 
-正面ベースの明るい部分 (下左右の張り出しや縁のリブなど) は、輝度 55 以上のピクセルを
-「手描きのディテール」として残し、暗い窓の中だけ柄で埋めます。張り出しを追加したいときは
-`machines/custom/front.png` に明るい色で描いておけば自動的に残ります。
+`textures/gui/deorum_machine.png` は Mekanism の `gui/base.png` を複製した固定アセット (256×256) です。
+4 px の nine-slice で描画しているため、枠はシートの外周 4 px 以内に置き、中央は単色にしてください。
 
-`tools/mekanism_base/` には他マシンのベースも残してあるので、`BASE_MAP` を書き換えれば
-ファミリーごとに別ベースへ戻せます。正面だけ別の画像にしたい場合は
-`machines/custom/front.png` を差し替えてください。
-
-### 手描きテクスチャの保護
-
-`tools/generate_assets.py` の `PRESERVE_TEXTURES` にファイル名を入れると、その PNG は生成時に
-上書きされません。現在は空ですが、Blockbench で直接描いた面を残したいときに使えます。
-
-```python
-PRESERVE_TEXTURES = {
-    "hammer_machine_front.png",
-}
-```
-
-保護したテクスチャを消して生成し直したいときは、該当 PNG を削除するか、セットから外してから
-`python3 tools/generate_assets.py` を実行してください。
-
-### 差し替え方
-
-- 正面のパネル自体 → `tools/mekanism_base/machines/custom/front.png` (16×16)
-- 柄 → `tools/generate_assets.py` の `front_pattern_pixels` (ファミリーごとの分岐) と
-  パレット (`PATTERN_PLATE` / `PATTERN_RIB` / `PATTERN_RIB_LO` / `PATTERN_DEEP` / `PATTERN_BOLT`)
-- ベースを別の Mek 機械に変える → `BASE_MAP` (上面 / 底面)
-- 左右 / 背面のディテール → `side_detail()` (ファミリーごとの分岐)
-- 側面 / 背面のベント帯 → `side_panel()` (行数・範囲)
-- ティア LED 色 → `TIER_LED`
-- ベース画像そのもの → `tools/mekanism_base/` の PNG を置換
-
-変更後は生成スクリプトを再実行します。
-
-```console
-$ python3 tools/generate_assets.py
-$ gradle build
-```
-
-手で描いた PNG は再実行で上書きされるので注意してください。
-
-
-## MOD アイコン
+### MOD アイコン
 
 - ゲーム内の Mod 一覧用: `src/main/resources/icon.png` (128×128、`neoforge.mods.toml` の `logoFile = "icon.png"`)
-- CurseForge / GitHub 用: `docs/icon.png` (512×512)
-- 元絵は 32×32 のドット絵で `/tmp/icon.py` 相当のスクリプトから書き出しています。差し替える場合は
-  同じサイズで上書きして `gradle build` してください (アイコンはテクスチャ生成の対象外です)。
+- GitHub / CurseForge 用: `docs/icon.png` (512×512)
+- どちらも PNG を同じサイズで上書きして `gradle build` すれば反映されます。
 
 ## GUI
 
@@ -192,6 +133,6 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
 
 - 新しいティア: `MachineTier` に列挙子を追加すると `ModMachines` のループがブロックと
   BE タイプを自動生成します。テクスチャ・blockstate・モデル・レシピ・言語は
-  `python3 tools/generate_assets.py` で生成してください。
+  `src/main/resources/` の既存ファイルを雛形に手動で追加してください。
 - 新しいファミリー: `DeorumMachineFamily` に列挙子を追加し、`ModMachines` のタイル生成
   switch と `initInventory` を実装したタイルクラスを追加します。

@@ -25,13 +25,11 @@
 /.work/
 /.nix-cache/
 
-# Python bytecode
+# Local-only development helpers (asset generators, smoke tests)
+/tools/
+/scripts/
 __pycache__/
 *.pyc
-
-# Generated Blockbench exports (run tools/export_blockbench.py locally)
-/docs/blockbench/*.bbmodel
-/docs/blockbench/flat/
 
 # Logs and crash dumps
 *.log

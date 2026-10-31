@@ -35,7 +35,7 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 
 - flake を更新したら、新しいターミナルで `nix develop` をやり直す
 - 古い Gradle デーモンが残っている場合は `gradle --stop` してから `gradle runClient`
-- それでもだめなら `./scripts/run-client.sh` (`--no-daemon` で起動)
+- それでもだめなら `nix develop --command gradle --no-daemon runClient` (`--no-daemon` で起動)
 - IDE から起動する場合も、IDE 自体を `nix develop` の中で立ち上げる
 
 `oshi` の `Did not find udev library` 警告は無害です。
@@ -69,8 +69,6 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 | `src/main/java/dev/codeonigiri/exmekdeorum/compat/jei/` | JEI プラグイン (触媒登録・進行バークリック) |
 | `src/main/resources/assets/exmekdeorum/` | テクスチャ・モデル・blockstate・言語 |
 | `src/main/resources/data/exmekdeorum/` | クラフトレシピ・ルートテーブル |
-| `tools/generate_assets.py` | 仮アセット (PNG/JSON) の生成スクリプト |
-| `tools/smoke_test.py` | 専用サーバーでの機械の自動スモークテスト |
 | `docs/` | スクリーンショットとドキュメント |
 
 ## 依存の仕組み
@@ -98,10 +96,9 @@ $ gradle build -PexdeorumJar=/path/to/exdeorum-3.12.jar -PmekanismJar=/path/to/M
   IDE の実行構成にも現れる (ModDevGradle が生成)。
 - サーバー: `gradle runServer` は `run/eula.txt` を自動で書く。EULA への同意は利用者の責任。
   起動後はコンソールに `stop` と入力すると安全に停止する。
-- アセットを再生成: `python3 tools/generate_assets.py`
-  (テクスチャ / モデル / blockstate / レシピ / 言語を 25 ブロック分まとめて生成)
-- スモークテスト: `python3 tools/smoke_test.py`
-  (ワールド削除 → サーバー起動 → 4 機械 + ふるいファクトリーの自動テスト、約 1 分)
+- アセット: `src/main/resources/` の PNG / JSON を直接編集する (自動生成はしません)
+- 起動確認: `nix develop -c gradle runServer` で 1.21.1 の専用サーバーを起動し、
+  機械を設置してレシピが動くことを確認する
 
 ## 動作確認
 
@@ -145,8 +142,8 @@ $ nix hash convert --hash-algo sha512 --to sri <sha512-hex>
 
 ## ライセンスと再配布
 
-- この Mod は MIT License (`LICENSE`)
+- この Mod は GNU General Public License v3.0 (`LICENSE`)
 - Ex Deorum / Mekanism の jar は再配布せず、Modrinth CDN から取得する
-- GUI 背景とブロックのベーステクスチャは Mekanism のもの (MIT)。
-  `tools/mekanism_base/LICENSE-Mekanism.txt` を参照
+- GUI 背景とブロックのベーステクスチャは Mekanism のもの (MIT,
+  Copyright Aidancbrady and contributors)
 - Minecraft EULA (<https://aka.ms/MinecraftEULA>) への同意は利用者の責任
