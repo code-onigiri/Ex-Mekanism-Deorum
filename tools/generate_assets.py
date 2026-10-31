@@ -348,11 +348,17 @@ def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple
             px[1][x] = (*c, 255)
 
     # 正面の内側 (上 2px / 他 1px の縁を残した 14x13) を機械的な柄で塗る。
+    # 手描きベースの明るい部分 (下左右の張り出しなど) は残し、暗い窓の中だけ描く。
     if face in ("front", "front_active"):
         icon = front_pattern_pixels(family, face == "front_active")
         for gy, row in enumerate(icon):
             for gx, color in enumerate(row):
-                px[2 + gy][1 + gx] = (*color, 255)
+                y, x = 2 + gy, 1 + gx
+                r, g, b, _a = px[y][x]
+                luma = (r * 299 + g * 587 + b * 114) // 1000
+                if luma >= 55:
+                    continue
+                px[y][x] = (*color, 255)
     # ブロック面は不透明に (Mekanism の overlay 用 alpha 0 をそのまま出すと穴になる)。
     px = [[(r, g, b, 255) for (r, g, b, _a) in row] for row in px]
     return px
