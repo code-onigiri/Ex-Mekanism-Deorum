@@ -1,107 +1,102 @@
 # Ex Mekanism Deorum
 
-Ex Deorum の機械 (ハンマー / ふるい / バレル / るつぼ) を **Mekanism の機械**として追加するアドオンです。
-FE 給電・アップグレード・側面設定つきで、Ex Deorum のレシピをそのまま自動化できます。
+An addon that reimagines **Ex Deorum** machines (Hammer, Sieve, Barrel, and Crucible) as **Mekanism** machines.
+Automate all your Ex Deorum processing with FE power, upgrades, and full side configuration support.
 
-![ゲーム内](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/texture-ingame.png)
+![In-game Preview](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/texture-ingame.png)
 
-## 概要
+## Overview
 
-Ex Deorum の「手作業の機械」を Mekanism のマシンとして再実装しました。
-レシピは Ex Deorum 側を直接参照するため、**データパックで追加したレシピもそのまま動きます**。
+Ex Deorum's manual and mechanical machines are re-implemented using Mekanism's machine architecture.
+Because recipes are directly referenced from Ex Deorum at runtime, **custom recipes added via datapacks work out of the box**.
 
-- 無印の機械 5 種 + Basic / Advanced / Elite / Ultimate のファクトリー 20 種 (計 25 ブロック)
-- Mekanism のアップグレード (スピード / エネルギー / マフリング)、側面設定、セキュリティ、
-  レッドストーン制御に対応
-- ファクトリーは Basic 3 / Advanced 5 / Elite 7 / Ultimate 9 レーンの並列処理
-  (るつぼのみ溶解速度 5/10/20/30 倍)
-- 圧縮ハンマーをセットすると `compressed_hammer` レシピも処理
-- JEI 対応 (Ex Deorum のカテゴリに触媒として追加。進行バークリックでレシピを開く)
+- **25 Blocks**: 5 Base Machines + 20 Tiered Factories (Basic / Advanced / Elite / Ultimate)
+- Full Mekanism integration: Upgrades (Speed, Energy, Muffling), Side Configuration, Security, and Redstone control
+- Factory parallelism: 3 / 5 / 7 / 9 parallel lanes for Basic, Advanced, Elite, and Ultimate (Crucibles scale melting speed by 5x / 10x / 20x / 30x instead)
+- Compressed Hammer support: inserting a compressed hammer enables `compressed_hammer` recipes automatically
+- JEI integration: registered as catalysts for Ex Deorum categories; click the GUI progress bar to jump directly to recipes
 
-## 必要環境
+## Requirements
 
-| 項目 | バージョン |
+| Requirement | Version |
 | --- | --- |
 | Minecraft | 1.21.1 |
-| NeoForge | 21.1.265 以降 |
-| Ex Deorum | 3.12 以降 (必須) |
-| Mekanism | 10.7.19 以降 (必須) |
-| JEI | 任意 |
+| NeoForge | 21.1.265 or higher |
+| Ex Deorum | 3.12 or higher (Required) |
+| Mekanism | 10.7.19 or higher (Required) |
+| JEI | Optional |
 
-クライアント・サーバーの両方に入れてください。コンフィグはありません。
+Install on both client and server. No configuration file needed.
 
-## 導入
+## Installation
 
-1. Minecraft 1.21.1 + NeoForge 21.1.265 の環境を用意する
-2. Ex Deorum と Mekanism を `mods/` に入れる
-3. この Mod の jar を `mods/` に入れる
+1. Set up a Minecraft 1.21.1 environment with NeoForge (>= 21.1.265).
+2. Place **Ex Deorum** and **Mekanism** into your `mods/` directory.
+3. Place this mod's jar file into your `mods/` directory.
 
-## 追加される機械
+## Machines & Factories
 
-| ファミリー | 無印 | ファクトリー | 消費 |
+| Family | Base Machine | Tiered Factories | Base Consumption |
 | --- | --- | --- | --- |
-| ハンマー | ハンマー機 | Basic〜Ultimate ハンマーファクトリー | 20 FE/t |
-| ふるい | ふるい機 | Basic〜Ultimate ふるいファクトリー | 40 FE/t |
-| バレル | バレル機 | Basic〜Ultimate バレルファクトリー | 10 FE/t |
-| 溶岩るつぼ | 溶岩るつぼ機 | Basic〜Ultimate るつぼファクトリー | 20 FE/t × 溶解倍率 |
-| 水るつぼ | 水るつぼ機 | Basic〜Ultimate 水るつぼファクトリー | 20 FE/t × 溶解倍率 |
+| Hammer | Hammer Machine | Basic – Ultimate Hammer Factory | 20 FE/t |
+| Sieve | Sieve Machine | Basic – Ultimate Sieve Factory | 40 FE/t |
+| Barrel | Barrel Machine | Basic – Ultimate Barrel Factory | 10 FE/t |
+| Lava Crucible | Crucible Machine | Basic – Ultimate Crucible Factory | 20 FE/t × melt multiplier |
+| Water Crucible | Water Crucible Machine | Basic – Ultimate Water Crucible Factory | 20 FE/t × melt multiplier |
 
-るつぼファクトリーはレーンを増やさず、溶解速度が Basic 5 倍 / Advanced 10 倍 /
-Elite 20 倍 / Ultimate 30 倍になります (電力も同じ倍率)。
+Crucible factories do not use parallel lanes; instead, their melting speed scales by **5x (Basic) / 10x (Advanced) / 20x (Elite) / 30x (Ultimate)** with matching energy consumption (energy per mB produced remains constant).
 
-## 使い方
+## Machine Details
 
-### ハンマー / ふるい
+### Hammer & Sieve
 
-- ハンマースロット (スロット 22) にハンマー、ふるいにはメッシュが必須
-- 処理中のアイテムは入力スロットに残り、完了時にだけ 1 個消費
-- ハンマーは効率 / 幸運、ふるいはメッシュの効率 / 幸運が効く
-- 圧縮ハンマーを入れると圧縮ブロックを `compressed_hammer` レシピで処理
-  (入力とハンマーの挿入順は問いません)
+- **Hammer Machine**: Requires a hammer in the auxiliary slot (slot 22). Durability is consumed per operation. Supports Efficiency and Fortune enchantments. Output distributes into 20 output slots.
+  - Inserting a compressed hammer (`#exdeorum:compressed_hammers`) enables processing compressed blocks via `compressed_hammer` recipes.
+- **Sieve Machine**: Requires a mesh in the auxiliary slot (slot 22). Mesh Efficiency and Fortune enchantments apply. Hand-only recipes are ignored mechanically.
+- **Item Consumption**: Input items remain in their slot while processing and are only consumed by 1 upon operation completion.
 
-### バレル
+### Barrel
 
-- アイテム入力 2 スロット、アイテム出力 1 スロット、液体入力 / 出力タンク (各 1000 mB × 並列数)
-- 堆肥化・アイテム+液体の混合・真上の液体との混合・下 3×3 の触媒による液体変換・雨天給水に対応
-- 堆肥は入れた瞬間に貯まり、進行バーが「貯まった割合」→「土を作る工程」に切り替わります
+- Features 2 item input slots, 1 item output slot, and dedicated fluid input & output tanks (1,000 mB × parallel lane count each).
+- Supports composting, item + fluid mixing, in-world fluid mixing (fluid block above), catalyst transformation (3×3 blocks below), and rainwater filling.
+- **Composting**: Added biomass fills the compost buffer instantly; the progress bar tracks compost fill percentage, then switches to the dirt creation phase.
+- Fluid inputs only accept external filling when the barrel is idle (compost buffer is 0 and item inputs are empty).
 
-### るつぼ
+### Crucible
 
-- **溶岩るつぼ**: 1 個ずつ溶解。真下のブロックの熱値で速度が決まり、熱源がないと進みません
-- **水るつぼ**: `water_crucible` レシピ専用。熱源不要
-- 出力は液体タンクのみ (パイプで取り出し)
+- **Lava Crucible**: Melts solid items one by one into fluid. Melting speed depends on the heat value of the block directly underneath (`crucible_heat_source`). Without a heat source, no energy or items are consumed.
+- **Water Crucible**: Dedicated to `water_crucible` recipes. Requires no heat source (fixed base rate).
+- Fluid outputs can only be extracted via fluid pipes (no manual bucket insertion into the output tank).
 
-![ブロックの正面](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/block-fronts.png)
+![Block Fronts](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/block-fronts.png)
 
-## クラフトレシピ
+## Crafting Recipes
 
-無印の機械は `ACA / IPI / ACA` (A = 赤石, C = 基本制御回路, I = 鉄インゴット) で、
-中央に Ex Deorum の機械パーツを置きます。
+Base machines use the standard Mekanism machine ring: `ACA / IPI / ACA` (A = Redstone, C = Basic Control Circuit, I = Iron Ingot), surrounding the corresponding Ex Deorum mechanical part `P`:
 
-| 機械 | 中央 |
+| Machine | Center Part `P` |
 | --- | --- |
-| ハンマー機 | 機械式ハンマー |
-| ふるい機 | 機械式ふるい |
-| バレル機 | オークのバレル |
-| 溶岩るつぼ / 水るつぼ | 磁器るつぼ + 最下段に溶岩入り / 水入りバケツ |
+| Hammer Machine | `exdeorum:mechanical_hammer` |
+| Sieve Machine | `exdeorum:mechanical_sieve` |
+| Barrel Machine | `exdeorum:oak_barrel` |
+| Lava Crucible | `exdeorum:porcelain_crucible` (+ Lava Bucket at bottom center) |
+| Water Crucible | `exdeorum:porcelain_crucible` (+ Water Bucket at bottom center) |
 
-ファクトリーは Mekanism の工場と同じ段階アップグレードです
-(Basic → Advanced → Elite → Ultimate)。
+Tiered factories follow Mekanism's tier upgrade progression (Basic -> Advanced -> Elite -> Ultimate), crafting directly from the previous tier block.
 
-## 既知の制限
+## Known Limitations
 
-- テクスチャと GUI は仮アセットです (今後調整予定)
-- `compressed_sieve` レシピは未対応 (圧縮ハンマーは対応)
-- バレルの熱い液体による焼失は未実装
+- Textures and GUIs are currently placeholder assets (open for customization and tuning).
+- `compressed_sieve` recipes are not automated (compressed hammer recipes are supported).
+- Barrels taking fire damage from hot fluids is not implemented.
 
-## クレジット
+## Credits & License
 
-- 作者: codeonigiri
-- ブロックのベーステクスチャと GUI 背景: Mekanism (MIT License,
-  Copyright Aidancbrady and contributors)
-- Ex Deorum のレシピ・タグ・機械パーツを利用: thedarkcolour / Ex Deorum
+- Author: codeonigiri
+- Mod License: MIT License ([LICENSE](https://github.com/code-onigiri/Ex-Mekanism-Deorum/blob/main/LICENSE))
+- Base textures and GUI base: Mekanism (MIT License, Copyright Aidancbrady and contributors)
+- Recipe caches, tags, and item parts: [Ex Deorum](https://github.com/thedarkcolour/ExDeorum) by thedarkcolour
 
-## リンク
+## Links
 
 - GitHub: <https://github.com/code-onigiri/Ex-Mekanism-Deorum>
-- ライセンス: MIT
