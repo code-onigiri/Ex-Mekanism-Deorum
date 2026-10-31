@@ -62,11 +62,11 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 | `mods.nix` | 必須 Mod のバージョン・URL・SRI/SHA-1/SHA-512・サイズ |
 | `build.gradle` | ModDevGradle の設定・依存 jar の配線・run 構成 |
 | `gradle.properties` | Mod メタデータと依存バージョン範囲 |
-| `src/main/java/dev/exmekdeorum/machine/` | ティア・ファミリー定義とブロック属性 |
-| `src/main/java/dev/exmekdeorum/tile/` | 5 種類の機械のブロックエンティティ |
-| `src/main/java/dev/exmekdeorum/registry/` | ブロック・BE タイプ・コンテナ・クリエイティブタブ |
-| `src/main/java/dev/exmekdeorum/client/` | GUI とスクリーン登録 |
-| `src/main/java/dev/exmekdeorum/compat/jei/` | JEI プラグイン (触媒登録・進行バークリック) |
+| `src/main/java/dev/codeonigiri/exmekdeorum/machine/` | ティア・ファミリー定義とブロック属性 |
+| `src/main/java/dev/codeonigiri/exmekdeorum/tile/` | 5 種類の機械のブロックエンティティ |
+| `src/main/java/dev/codeonigiri/exmekdeorum/registry/` | ブロック・BE タイプ・コンテナ・クリエイティブタブ |
+| `src/main/java/dev/codeonigiri/exmekdeorum/client/` | GUI とスクリーン登録 |
+| `src/main/java/dev/codeonigiri/exmekdeorum/compat/jei/` | JEI プラグイン (触媒登録・進行バークリック) |
 | `src/main/resources/assets/exmekdeorum/` | テクスチャ・モデル・blockstate・言語 |
 | `src/main/resources/data/exmekdeorum/` | クラフトレシピ・ルートテーブル |
 | `tools/generate_assets.py` | 仮アセット (PNG/JSON) の生成スクリプト |

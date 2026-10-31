@@ -3,7 +3,7 @@
 An addon that reimagines **Ex Deorum** machines (Hammer, Sieve, Barrel, and Crucible) as **Mekanism** machines.
 Automate all your Ex Deorum processing with FE power, upgrades, and full side configuration support.
 
-![In-game Preview](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/texture-ingame.png)
+![GUI Preview](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/gui-preview.png)
 
 ## Overview
 
@@ -93,7 +93,7 @@ Tiered factories follow Mekanism's tier upgrade progression (Basic -> Advanced -
 ## Credits & License
 
 - Author: codeonigiri
-- Mod License: MIT License ([LICENSE](https://github.com/code-onigiri/Ex-Mekanism-Deorum/blob/main/LICENSE))
+- Mod License: GNU General Public License v3.0 ([LICENSE](https://github.com/code-onigiri/Ex-Mekanism-Deorum/blob/main/LICENSE))
 - Base textures and GUI base: Mekanism (MIT License, Copyright Aidancbrady and contributors)
 - Recipe caches, tags, and item parts: [Ex Deorum](https://github.com/thedarkcolour/ExDeorum) by thedarkcolour
 

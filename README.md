@@ -13,7 +13,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 - 必須依存: **Ex Deorum 3.12+** / **Mekanism 10.7.19+**
 - バージョン: `0.1.0` (テクスチャ・GUI は仮アセットです)
 
-![ゲーム内での見え方 (左からバレル / 上位バレルファクトリー / ふるいファクトリー / 水るつぼの側面)](docs/texture-ingame.png)
+![GUI プレビュー](docs/gui-preview.png)
 
 ## 特徴
 
@@ -179,7 +179,7 @@ $ gradle build
 
 ## ライセンス / クレジット
 
-- この Mod: MIT License ([LICENSE](LICENSE))
+- この Mod: GNU General Public License v3.0 ([LICENSE](LICENSE))
 - ブロックのベーステクスチャと GUI 背景: Mekanism (MIT License,
   Copyright Aidancbrady and contributors)。`tools/mekanism_base/LICENSE-Mekanism.txt` を参照
 - Ex Deorum のレシピ・タグ・機械パーツを利用しています。Ex Deorum は
