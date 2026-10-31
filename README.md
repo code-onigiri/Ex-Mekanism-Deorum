@@ -1,0 +1,184 @@
+# Ex Mekanism Deorum
+
+**Ex Deorum** の機械 (ハンマー / ふるい / バレル / るつぼ / 水るつぼ) を
+**Mekanism の機械**として追加する NeoForge Mod です。
+
+Mekanism と同じ操作感 (FE 給電・アップグレード・側面設定・セキュリティ) で、
+Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deorum 側のレシピキャッシュを
+直接参照するため、データパックで追加したレシピもそのまま動きます。
+
+- Minecraft **1.21.1** / NeoForge **21.1.265**
+- 必須依存: **Ex Deorum 3.12+** / **Mekanism 10.7.19+**
+- バージョン: `0.1.0` (テクスチャ・GUI は仮アセットです)
+
+![ゲーム内での見え方](docs/texture-ingame.png)
+
+## 特徴
+
+- **25 ブロック**: 無印の機械 5 種 + Basic / Advanced / Elite / Ultimate のファクトリー 20 種
+- **レシピ自動参照**: Ex Deorum のハンマー・ふるい・バレル・るつぼレシピをそのまま使用
+  (データパック追加分も自動)
+- **Mekanism 統合**: FE で動作。スピード / エネルギー / マフリングのアップグレード、
+  側面設定、セキュリティ、レッドストーン制御、JEI 触媒に対応
+- **ファクトリー**: Basic 3 / Advanced 5 / Elite 7 / Ultimate 9 レーンの並列処理
+  (るつぼのみ速度 5/10/20/30 倍)
+- **圧縮ハンマー対応**: 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理
+
+![ブロックの正面 (上から無印 / Basic / Advanced / Elite / Ultimate、左からハンマー・ふるい・バレル・溶岩るつぼ・水るつぼ)](docs/block-fronts.png)
+
+## 導入方法
+
+1. Minecraft 1.21.1 + NeoForge 21.1.265 の環境を用意する
+2. [Ex Deorum](https://modrinth.com/mod/ex-deorum) 3.12 以降を入れる
+3. [Mekanism](https://modrinth.com/mod/mekanism) 10.7.19 以降を入れる
+4. この Mod の jar を `mods/` に入れる
+
+クライアント・サーバーの両方に入れてください。コンフィグはありません。
+
+## 追加される機械
+
+| ファミリー | 無印の機械 | ファクトリー | 1 レーンあたりの消費 |
+| --- | --- | --- | --- |
+| ハンマー | `hammer_machine` | `basic_/advanced_/elite_/ultimate_hammer_factory` | 20 FE/t |
+| ふるい | `sieve_machine` | `basic_/advanced_/elite_/ultimate_sieve_factory` | 40 FE/t |
+| バレル | `barrel_machine` | `basic_/advanced_/elite_/ultimate_barrel_factory` | 10 FE/t |
+| 溶岩るつぼ | `crucible_machine` | `basic_/advanced_/elite_/ultimate_crucible_factory` | 20 FE/t × 溶解倍率 |
+| 水るつぼ | `water_crucible_machine` | `basic_/advanced_/elite_/ultimate_water_crucible_factory` | 20 FE/t × 溶解倍率 |
+
+- ハンマー / ふるい / バレルのファクトリーは Mekanism 準拠で Basic 3 / Advanced 5 /
+  Elite 7 / Ultimate 9 本の並列処理です。ティアによる速度ボーナスはなく、1 レーンあたりの
+  FE は無印と同じです。
+- **るつぼファクトリーだけは例外**で、レーンを増やさず溶解速度を Basic 5 倍 / Advanced 10 倍 /
+  Elite 20 倍 / Ultimate 30 倍にします。電力も同じ倍率で増えるため、液体 1 単位あたりの FE は
+  無印と同じです。
+- 設置直後の側面設定は Mekanism の機械と同じです (アイテム: 全側面入力 + 右出力 + 背面
+  エネルギー、エネルギー: 全側面入力、バレル/るつぼの液体: 全側面入出力)。ケーブルやパイプは
+  設置してそのまま接続できます。
+- クリエイティブタブ `Ex Mekanism Deorum` に 25 個すべて入っています。
+
+## 使い方
+
+### レシピの参照元
+
+機械はレシピを自前で持たず、稼働時に Ex Deorum のレシピキャッシュ
+(`thedarkcolour.exdeorum.recipe.RecipeCaches`) を直接引きます。
+
+| 機械 | 参照する Ex Deorum レシピ |
+| --- | --- |
+| ハンマー | `exdeorum:hammer` (圧縮ハンマー使用時は `exdeorum:compressed_hammer`) |
+| ふるい | `exdeorum:sieve` |
+| バレル | `exdeorum:barrel_compost` / `barrel_mixing` / `barrel_fluid_mixing` / `barrel_fluid_transformation` |
+| 溶岩るつぼ | `exdeorum:lava_crucible` / `exdeorum:crucible_heat_source` |
+| 水るつぼ | `exdeorum:water_crucible` |
+
+### ハンマー / ふるい
+
+- **ハンマー**: 1 個あたり基本 200 tick。ハンマースロット (スロット 22) のハンマーを 1 回ごとに
+  1 耐久消費し、効率 (Efficiency) と幸運 (Fortune) が効きます。出力は 20 スロット。
+  スロット 22 に圧縮ハンマー (`#exdeorum:compressed_hammers`) を入れると、圧縮ブロックは
+  `compressed_hammer` レシピで処理します。入力とハンマーの挿入順は問いません。
+- **ふるい**: 1 個あたり基本 100 tick。メッシュスロット (スロット 22) が必須で、
+  メッシュの効率 / 幸運エンチャントが効きます。`by_hand_only: true` のレシピは機械では
+  抽選対象外です。
+- **入力の扱い**: 処理中のアイテムは入力スロットに残り、1 回の処理が完了したときにだけ
+  1 個消費します (入れた瞬間に減ることはありません)。
+
+### バレル
+
+- アイテム入力 2 スロット (どちらでも同じ処理に使えます)、アイテム出力 1 スロット、
+  液体入力タンクと液体出力タンクを各 1000 mB × 並列数
+- 堆肥化・アイテム+液体の混合・真上の液体との混合 (in-world mixing)・下 3×3 の触媒による
+  液体変換・雨天時の給水に対応
+- **堆肥化**: 入れたアイテムがすぐに `compost` 値として貯まり、進行バーは「貯まった割合」を
+  表示します。満杯になるとバーは土を作る工程に切り替わり、完了すると土が出力されます。
+- **アイテム+液体の混合** (例: 水 + 雪玉 → 氷) は完成品がアイテム出力スロットに入ります。
+- 外部からの液体注入は入力タンクへ、変換結果は出力タンクへ入り、パイプで出し入れできます。
+  変換は入力タンクが満杯のときだけ進み、完了時に入力タンクが空になって出力タンクに結果液体が
+  入ります。
+
+### るつぼ
+
+- **溶岩るつぼ**: **1 個ずつ**溶解します。入力スロットのアイテムは処理中も残り、進行バーが
+  0→1 まで進んで満タンになると、レシピの液体 (例: 丸石 250 mB) がタンクに入ってアイテムが
+  1 個消費されます。速度は**真下ブロックの熱値** (`crucible_heat_source`) で決まり、熱源が
+  ないとバーは進まずアイテムも消費しません (エネルギーも消費しません)。タンク 4000 mB ×
+  溶解倍率で、外部からの注入はできません (出力専用。パイプで取り出します)。
+- **水るつぼ**: `exdeorum:water_crucible` レシピ専用。熱源不要で、基準速度は固定 4
+  (10 tick あたり 4 mB)。るつぼファクトリーでは速度が 5〜30 倍になり、電力も同じ倍率で
+  消費するので「液体 1 mB あたりの電力」は変わりません。
+
+## クラフトレシピ
+
+無印の機械は、Mekanism の基本回路 + 赤石 + 鉄のリングで Ex Deorum の機械パーツを囲みます
+(パターンはすべて `ACA / IPI / ACA`、`P` が中央)。
+
+| 機械 | 中央のパーツ |
+| --- | --- |
+| ハンマー機 | `exdeorum:mechanical_hammer` |
+| ふるい機 | `exdeorum:mechanical_sieve` |
+| バレル機 | `exdeorum:oak_barrel` |
+| 溶岩るつぼ | `exdeorum:porcelain_crucible` + 最下段に `minecraft:lava_bucket` |
+| 水るつぼ | `exdeorum:porcelain_crucible` + 最下段に `minecraft:water_bucket` |
+
+周囲は `mekanism:basic_control_circuit` (C)・`minecraft:redstone` (A)・
+`minecraft:iron_ingot` (I) です。
+
+ファクトリーは Mekanism の工場と同じアップグレード段階で、1 つ下のティアを中央に置きます。
+
+| ティア | 合金 (A) | 回路 (C) | インゴット (I) |
+| --- | --- | --- | --- |
+| Basic | `minecraft:redstone` | `mekanism:basic_control_circuit` | `minecraft:iron_ingot` |
+| Advanced | `mekanism:alloy_infused` | `mekanism:advanced_control_circuit` | `mekanism:ingot_osmium` |
+| Elite | `mekanism:alloy_reinforced` | `mekanism:elite_control_circuit` | `minecraft:gold_ingot` |
+| Ultimate | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | `minecraft:diamond` |
+
+## JEI 連携
+
+JEI は任意依存です (なくても動作します。配布 jar には含まれません)。
+
+- 独自カテゴリは追加せず、Ex Deorum のカテゴリ (`exdeorum:hammer`, `sieve`,
+  `barrel_compost` など) にこの Mod の機械を触媒として追加します
+- GUI の進行バーを左クリックすると、対応する JEI レシピを直接開きます
+- EMI 併用時は Ex Deorum のカテゴリ名前空間 (`exdeorum_emi`) に追従します
+
+![GUI](docs/gui-preview.png)
+
+![側面設定ウィンドウ](docs/side-config-preview.png)
+
+![バレル GUI (2 入力 + 入力/出力タンク)](docs/barrel-preview.png)
+
+![水るつぼ GUI (入力 + 液体出力)](docs/water-crucible-preview.png)
+
+![溶岩るつぼ GUI](docs/crucible-preview.png)
+
+![ハンマーファクトリー GUI (20 出力)](docs/hammer-factory-preview.png)
+
+## 既知の制限
+
+- ブロックテクスチャと GUI は仮アセットです (差し替え前提)。ベースは Mekanism の
+  テクスチャを複製し、正面アイコンとティア LED だけ差し替えています。
+  詳細は [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md) を参照してください。
+- `compressed_sieve` (圧縮ブロック用のふるいレシピ) は通常のふるい機械の対象外です
+  (圧縮ハンマーはハンマー機械で処理できます)。
+- バレルの「熱い液体による焼失」は実装していません (破壊される挙動は機械向きでないため)。
+- バレルの外部からの液体注入は「堆肥 0 かつアイテム入力 2 スロットが空」のときだけ許可して
+  います。
+
+## カスタマイズ / 開発
+
+- テクスチャ・GUI・バランスの調整: [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md)
+- ビルド環境・依存の仕組み・バージョン更新: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+
+```console
+$ nix develop
+$ gradle build
+```
+
+## ライセンス / クレジット
+
+- この Mod: MIT License ([LICENSE](LICENSE))
+- ブロックのベーステクスチャと GUI 背景: Mekanism (MIT License,
+  Copyright Aidancbrady and contributors)。`tools/mekanism_base/LICENSE-Mekanism.txt` を参照
+- Ex Deorum のレシピ・タグ・機械パーツを利用しています。Ex Deorum は
+  [thedarkcolour](https://github.com/thedarkcolour/ExDeorum) による Mod です
+- Minecraft EULA (<https://aka.ms/MinecraftEULA>) への同意は利用者の責任です

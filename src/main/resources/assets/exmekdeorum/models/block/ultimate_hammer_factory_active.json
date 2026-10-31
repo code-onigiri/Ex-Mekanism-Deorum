@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/ultimate_hammer_factory_front_active",
+    "side": "exmekdeorum:block/ultimate_hammer_factory_side",
+    "top": "exmekdeorum:block/ultimate_hammer_factory_top",
+    "bottom": "exmekdeorum:block/ultimate_hammer_factory_bottom"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/hammer_machine_front_active",
+    "side": "exmekdeorum:block/hammer_machine_side",
+    "top": "exmekdeorum:block/hammer_machine_top",
+    "bottom": "exmekdeorum:block/hammer_machine_bottom"
+  }
+}

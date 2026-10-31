@@ -1,0 +1,48 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+description = '''${mod_description}'''
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "exdeorum"
+type = "required"
+versionRange = "${exdeorum_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "mekanism"
+type = "required"
+versionRange = "${mekanism_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+# Optional client-side integration: JEI displays Ex Deorum's recipes and lists
+# this mod's machines as crafting catalysts for them. The plugin class is only
+# loaded when JEI is present.
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "[19.21,)"
+ordering = "AFTER"
+side = "CLIENT"

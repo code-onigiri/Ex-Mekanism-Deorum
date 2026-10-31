@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/water_crucible_machine_front_active",
+    "side": "exmekdeorum:block/water_crucible_machine_side",
+    "top": "exmekdeorum:block/water_crucible_machine_top",
+    "bottom": "exmekdeorum:block/water_crucible_machine_bottom"
+  }
+}

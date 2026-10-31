@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "mekanism:basic_control_circuit"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "exdeorum:porcelain_crucible"
+    },
+    "B": {
+      "item": "minecraft:lava_bucket"
+    }
+  },
+  "result": {
+    "id": "exmekdeorum:crucible_machine",
+    "count": 1
+  }
+}

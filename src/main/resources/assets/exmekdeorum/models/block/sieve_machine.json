@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/sieve_machine_front",
+    "side": "exmekdeorum:block/sieve_machine_side",
+    "top": "exmekdeorum:block/sieve_machine_top",
+    "bottom": "exmekdeorum:block/sieve_machine_bottom"
+  }
+}

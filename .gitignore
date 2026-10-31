@@ -1,0 +1,26 @@
+# Nix build results
+/result
+/result-*
+
+# Scratch space
+/.scratch/
+
+# Gradle
+/.gradle/
+/.gradle-user-home/
+/build/
+/libs/
+
+# Game data created by the run tasks
+/run/
+
+# Datagen output
+/src/generated/resources/
+
+# IDE
+/.idea/
+*.iml
+
+# Local scratch (decompiled sources, nix fetcher cache)
+/.work/
+/.nix-cache/

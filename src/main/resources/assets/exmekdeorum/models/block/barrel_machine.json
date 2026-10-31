@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/barrel_machine_front",
+    "side": "exmekdeorum:block/barrel_machine_side",
+    "top": "exmekdeorum:block/barrel_machine_top",
+    "bottom": "exmekdeorum:block/barrel_machine_bottom"
+  }
+}

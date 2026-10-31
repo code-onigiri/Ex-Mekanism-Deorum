@@ -1,0 +1,132 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+group = mod_group_id
+version = mod_version
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// The required mods and the dev-only JEI jar are fetched and pinned by the Nix
+// dev shell (flake.nix) and exported as EXDEORUM_JAR / MEKANISM_JAR / JEI_JAR.
+// Outside `nix develop` you can pass -PexdeorumJar=... / -PmekanismJar=... /
+// -PjeiJar=..., or drop the jars into libs/.
+def modJar = { String envName, String propertyName, String fileName ->
+    def path = System.getenv(envName) ?: project.findProperty(propertyName)
+    if (path == null) {
+        def lib = file('libs/' + fileName)
+        if (lib.isFile()) {
+            path = lib.absolutePath
+        }
+    }
+    if (path == null) {
+        throw new GradleException(
+                'Missing ' + fileName + '. Run inside `nix develop`, pass -P' + propertyName +
+                '=/path/to/' + fileName + ', or put it in libs/' + fileName + '.')
+    }
+    return file(path)
+}
+
+neoForge {
+    version = neo_version
+
+    runs {
+        client {
+            client()
+            gameDirectory = file('run')
+            // `-PquickPlayWorld=<save name>` jumps straight into a singleplayer save (used by
+            // tools/ for automated GUI screenshots).
+            if (project.hasProperty('quickPlayWorld')) {
+                programArgument('--quickPlaySingleplayer')
+                programArgument(project.property('quickPlayWorld').toString())
+            } else if (project.hasProperty('quickPlayMultiplayer')) {
+                programArgument('--quickPlayMultiplayer')
+                programArgument(project.property('quickPlayMultiplayer').toString())
+            }
+        }
+        server {
+            server()
+            gameDirectory = file('run')
+            programArgument('--nogui')
+        }
+        data {
+            data()
+            gameDirectory = file('run')
+            programArgument('--mod')
+            programArgument(mod_id)
+            programArgument('--all')
+            programArgument('--output')
+            programArgument(file('src/generated/resources').absolutePath)
+            programArgument('--existing')
+            programArgument(file('src/main/resources').absolutePath)
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    implementation files(
+            modJar('EXDEORUM_JAR', 'exdeorumJar', 'exdeorum-3.12.jar'),
+            modJar('MEKANISM_JAR', 'mekanismJar', 'Mekanism-1.21.1-10.7.19.85.jar'),
+            // Dev-only: not bundled into the jar; used to compile the JEI plugin
+            // and to show recipes in the dev client.
+            modJar('JEI_JAR', 'jeiJar', 'jei-1.21.1-neoforge-19.54.0.429.jar'))
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    def expandProps = [
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+            loader_version_range   : loader_version_range,
+            neo_version_range      : neo_version_range,
+            minecraft_version_range: minecraft_version_range,
+            exdeorum_version_range : exdeorum_version_range,
+            mekanism_version_range : mekanism_version_range,
+    ]
+    inputs.properties(expandProps)
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(expandProps)
+    }
+}
+
+tasks.named('runData').configure {
+    doFirst {
+        file('src/generated/resources').mkdirs()
+    }
+}
+
+tasks.named('runServer').configure {
+    doFirst {
+        def eula = file('run/eula.txt')
+        eula.parentFile.mkdirs()
+        eula.text = 'eula=true\n'
+    }
+}
+
+// Forward the console to the game process, so 'stop' works for runServer /
+// runClient (also from scripts: (sleep 30; echo stop) | gradle runServer).
+tasks.withType(JavaExec).configureEach {
+    standardInput = System.in
+}
