@@ -325,11 +325,25 @@ def _pixel4(byte: int, half: int, plte, trns):
     return (r, g, b, a)
 
 
+def side_panel(family: str, tier: str | None) -> list[list[tuple[int, int, int, int]]]:
+    """左右/背面: 上半分は crusher のパネル、下半分 (row 8..15) は Energized のベント帯。"""
+    machine_name, factory_name = BASE_MAP[family]
+    sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)
+    px = decode_png(os.path.join(BASE, sub, "side.png"))
+    px = [row[:16] for row in px[:16]]
+    band = decode_png(os.path.join(BASE, "machines", "energized_smelter", "side.png"))[8:16]
+    for y in range(8, 16):
+        px[y] = [(*band[y - 8][x][:3], 255) for x in range(16)]
+    return px
+
+
 def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple[int, int, int, int]]]:
-    """正面は手描きベース + 機械的な柄、それ以外は Mekanism の crusher ベースを使う。"""
+    """正面は手描きベース + 機械的な柄、左右/背面は Energized の下半分、上下は crusher。"""
     base_face = face
     if face in ("front", "front_active"):
         px = decode_png(os.path.join(BASE, "machines", "custom", base_face + ".png"))
+    elif face == "side":
+        px = side_panel(family, tier)
     else:
         machine_name, factory_name = BASE_MAP[family]
         sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)

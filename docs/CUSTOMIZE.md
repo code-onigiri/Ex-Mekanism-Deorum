@@ -31,7 +31,9 @@ GUI 背景だけは生成対象外です。Mekanism の `assets/mekanism/gui/bas
 ### ベーステクスチャ
 
 - **正面**: 手描きのパネル (`tools/mekanism_base/machines/custom/front.png`) がベース
-- **側面 / 上面 / 底面**: Mekanism の `crusher` (ファクトリーは `factory/crushing`) がベース
+- **側面 / 背面**: 上半分は `crusher` のパネル、下半分 (row 8〜15) は Energized Smelter のベント帯
+  (`side_panel()`)
+- **上面 / 底面**: Mekanism の `crusher` (ファクトリーは `factory/crushing`) がベース
 - 生成時に変えるのは次の 2 点だけ
   1. 正面の内側 (上 2px / 左右下 1px の縁を残した **14×13**) にファミリーごとの機械的な柄を描く
      (`front_pattern_pixels`)
@@ -76,7 +78,8 @@ PRESERVE_TEXTURES = {
 - 正面のパネル自体 → `tools/mekanism_base/machines/custom/front.png` (16×16)
 - 柄 → `tools/generate_assets.py` の `front_pattern_pixels` (ファミリーごとの分岐) と
   パレット (`PATTERN_PLATE` / `PATTERN_RIB` / `PATTERN_RIB_LO` / `PATTERN_DEEP` / `PATTERN_BOLT`)
-- ベースを別の Mek 機械に変える → `BASE_MAP` (側面 / 上面 / 底面)
+- ベースを別の Mek 機械に変える → `BASE_MAP` (上面 / 底面)
+- 側面 / 背面のベント → `side_panel()` (ベント帯の行数・範囲を変更)
 - ティア LED 色 → `TIER_LED`
 - ベース画像そのもの → `tools/mekanism_base/` の PNG を置換
 
