@@ -1,88 +1,144 @@
-"""MOD アイコン (32x32 ドット絵) を書き出す。python3 tools/make_icon.py"""
-import zlib, struct, os, sys
+"""MOD アイコン (Hammer Machine の 3D 等角レンダリング) を書き出す。
 
-W = 32
-img = [[(0,0,0,255) for _ in range(W)] for _ in range(W)]
+使い方: python3 tools/make_icon.py
+"""
+import math
+import os
+import sys
 
-def px(x,y,c):
-    if 0 <= x < W and 0 <= y < W: img[y][x] = c
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import generate_assets as ga
 
-def rect(x0,y0,x1,y1,c):
-    for y in range(y0,y1+1):
-        for x in range(x0,x1+1): px(x,y,c)
 
-# palette
-DARK   = (18,20,24,255)
-PLATE  = (56,61,68,255)
-PLATE2 = (68,74,82,255)
-LIGHT  = (122,129,138,255)
-STEEL  = (148,154,162,255)
-STEEL_L= (198,203,210,255)
-STEEL_D= (92,97,104,255)
-EDGE   = (40,43,48,255)
-WOOD   = (128,84,44,255)
-WOOD_L = (168,116,64,255)
-WOOD_D = (82,52,26,255)
-LED    = (57,255,161,255)
-LED_D  = (22,120,80,255)
+def render_3d_icon(out_path: str, size: int, scale: float = 160.0) -> None:
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    tex_dir = os.path.join(root, "src/main/resources/assets/exmekdeorum/textures/block")
 
-rect(0,0,31,31,DARK)
-rect(1,1,30,30,PLATE)
-# vertical sheen
-for y in range(2,10):
-    c = tuple(min(255,int(PLATE2[i]+(18-y)*1.5)) for i in range(3))+(255,)
-    for x in range(2,30): px(x,y,c)
-# bevel
-rect(1,1,30,1,LIGHT); rect(1,1,1,30,LIGHT)
-rect(1,30,30,30,DARK);rect(30,1,30,30,DARK)
-rect(2,2,29,2,EDGE)
-for x in range(3,29):
-    px(x,29,EDGE)
-# corner screws
-for (sx,sy) in [(3,3),(26,3),(3,26),(26,26)]:
-    rect(sx,sy,sx+1,sy+1,STEEL_D)
-    px(sx,sy,STEEL_L)
+    top_tex = ga.decode_png(os.path.join(tex_dir, "hammer_machine_top.png"))
+    front_tex = ga.decode_png(os.path.join(tex_dir, "hammer_machine_front.png"))
+    side_tex = ga.decode_png(os.path.join(tex_dir, "hammer_machine_side.png"))
 
-# hammer head (upright)
-rect(8,7,23,7,DARK)          # top outline
-rect(8,8,23,13,STEEL)
-rect(9,8,22,8,STEEL_L)       # top highlight
-rect(8,9,8,13,STEEL_L)       # left highlight
-rect(23,8,23,13,STEEL_D)     # right shade
-rect(9,13,22,13,STEEL_D)     # bottom shade
-rect(8,14,23,14,DARK)        # bottom outline
-# claw hints: carve two notches on top
-rect(10,7,10,7,DARK); rect(21,7,21,7,DARK)
-# handle
-rect(13,14,18,26,WOOD_D)
-rect(14,15,17,26,WOOD)
-rect(14,15,14,26,WOOD_L)
-px(18,26,DARK)
-# LED strip
-rect(9,27,22,27,DARK)
-rect(10,28,21,28,LED)
-rect(10,29,21,29,LED_D)
-rect(9,29,9,29,DARK); rect(22,29,22,29,DARK)
+    canvas = [[(0, 0, 0, 0) for _ in range(size)] for _ in range(size)]
+    zbuf = [[-999999.0 for _ in range(size)] for _ in range(size)]
 
-def png(path, scale):
-    w = W*scale
-    raw = bytearray()
-    for y in range(w):
-        raw.append(0)
-        row = img[y//scale]
-        for x in range(w):
-            raw.extend(row[x//scale])
-    def chunk(t, d):
-        c = struct.pack('>I', len(d)) + t + d
-        return c + struct.pack('>I', zlib.crc32(t+d) & 0xffffffff)
-    out = b'\x89PNG\r\n\x1a\n'
-    out += chunk(b'IHDR', struct.pack('>IIBBBBB', w, w, 8, 6, 0,0,0))
-    out += chunk(b'IDAT', zlib.compress(bytes(raw), 9))
-    out += chunk(b'IEND', b'')
-    open(path,'wb').write(out)
-    print(path, w)
+    yaw = math.radians(-35)
+    pitch = math.radians(30)
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.makedirs(os.path.join(ROOT, 'src/main/resources'), exist_ok=True)
-png(os.path.join(ROOT, 'src/main/resources/icon.png'), 4)   # 128x128 in jar
-png(os.path.join(ROOT, 'docs/icon.png'), 16)                # 512x512 for CurseForge
+    cos_y, sin_y = math.cos(yaw), math.sin(yaw)
+    cos_p, sin_p = math.cos(pitch), math.sin(pitch)
+
+    def transform(x: float, y: float, z: float) -> tuple[float, float, float]:
+        x1 = x * cos_y + z * sin_y
+        y1 = y
+        z1 = -x * sin_y + z * cos_y
+        x2 = x1
+        y2 = y1 * cos_p - z1 * sin_p
+        z2 = y1 * sin_p + z1 * cos_p
+        return x2, y2, z2
+
+    def shade_color(rgba: tuple[int, int, int, int], factor: float) -> tuple[int, int, int, int]:
+        r, g, b, a = rgba
+        return (
+            min(255, max(0, int(r * factor))),
+            min(255, max(0, int(g * factor))),
+            min(255, max(0, int(b * factor))),
+            a,
+        )
+
+    # 視覚的な中心調整（上方向の突起・傾きによる重心の補正）
+    cx, cy = size / 2.0, size / 2.0 + (size * 0.02)
+
+    def to_screen(x: float, y: float, z: float) -> tuple[float, float, float]:
+        tx, ty, tz = transform(x, y, z)
+        sx = cx + tx * scale * (size / 512.0)
+        sy = cy - ty * scale * (size / 512.0)
+        return sx, sy, tz
+
+    def render_quad(
+        p0: tuple[float, float, float],
+        p1: tuple[float, float, float],
+        p2: tuple[float, float, float],
+        p3: tuple[float, float, float],
+        color: tuple[int, int, int, int],
+    ) -> None:
+        def draw_tri(
+            v0: tuple[float, float, float],
+            v1: tuple[float, float, float],
+            v2: tuple[float, float, float],
+        ) -> None:
+            min_x = max(0, int(min(v0[0], v1[0], v2[0])))
+            max_x = min(size - 1, int(max(v0[0], v1[0], v2[0]) + 1))
+            min_y = max(0, int(min(v0[1], v1[1], v2[1])))
+            max_y = min(size - 1, int(max(v0[1], v1[1], v2[1]) + 1))
+
+            denom = (v1[1] - v2[1]) * (v0[0] - v2[0]) + (v2[0] - v1[0]) * (v0[1] - v2[1])
+            if abs(denom) < 1e-6:
+                return
+
+            for y in range(min_y, max_y + 1):
+                for x in range(min_x, max_x + 1):
+                    px = x + 0.5
+                    py = y + 0.5
+                    w0 = ((v1[1] - v2[1]) * (px - v2[0]) + (v2[0] - v1[0]) * (py - v2[1])) / denom
+                    w1 = ((v2[1] - v0[1]) * (px - v2[0]) + (v0[0] - v2[0]) * (py - v2[1])) / denom
+                    w2 = 1.0 - w0 - w1
+                    if w0 >= -1e-4 and w1 >= -1e-4 and w2 >= -1e-4:
+                        z = w0 * v0[2] + w1 * v1[2] + w2 * v2[2]
+                        if z > zbuf[y][x]:
+                            zbuf[y][x] = z
+                            canvas[y][x] = color
+
+        draw_tri(p0, p1, p2)
+        draw_tri(p0, p2, p3)
+
+    # 1. 上面 (Y = 1.0, 光源係数 = 1.0)
+    for u in range(16):
+        for v in range(16):
+            c = shade_color(top_tex[v][u], 1.0)
+            x0 = -1.0 + u * (2.0 / 16.0)
+            x1 = x0 + (2.0 / 16.0)
+            z0 = -1.0 + v * (2.0 / 16.0)
+            z1 = z0 + (2.0 / 16.0)
+            p0 = to_screen(x0, 1.0, z0)
+            p1 = to_screen(x1, 1.0, z0)
+            p2 = to_screen(x1, 1.0, z1)
+            p3 = to_screen(x0, 1.0, z1)
+            render_quad(p0, p1, p2, p3, c)
+
+    # 2. 正面 (Z = 1.0, 光源係数 = 0.85)
+    for u in range(16):
+        for v in range(16):
+            c = shade_color(front_tex[v][u], 0.85)
+            x0 = -1.0 + u * (2.0 / 16.0)
+            x1 = x0 + (2.0 / 16.0)
+            y0 = 1.0 - v * (2.0 / 16.0)
+            y1 = y0 - (2.0 / 16.0)
+            p0 = to_screen(x0, y0, 1.0)
+            p1 = to_screen(x1, y0, 1.0)
+            p2 = to_screen(x1, y1, 1.0)
+            p3 = to_screen(x0, y1, 1.0)
+            render_quad(p0, p1, p2, p3, c)
+
+    # 3. 側面 (X = 1.0, 光源係数 = 0.65)
+    for u in range(16):
+        for v in range(16):
+            c = shade_color(side_tex[v][u], 0.65)
+            z0 = 1.0 - u * (2.0 / 16.0)
+            z1 = z0 - (2.0 / 16.0)
+            y0 = 1.0 - v * (2.0 / 16.0)
+            y1 = y0 - (2.0 / 16.0)
+            p0 = to_screen(1.0, y0, z0)
+            p1 = to_screen(1.0, y0, z1)
+            p2 = to_screen(1.0, y1, z1)
+            p3 = to_screen(1.0, y1, z0)
+            render_quad(p0, p1, p2, p3, c)
+
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    ga.write_png(out_path, size, size, canvas)
+    print(f"Generated {size}x{size} icon to {out_path}")
+
+
+if __name__ == "__main__":
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    render_3d_icon(os.path.join(root, "src/main/resources/icon.png"), size=128)
+    render_3d_icon(os.path.join(root, "docs/icon.png"), size=512)
