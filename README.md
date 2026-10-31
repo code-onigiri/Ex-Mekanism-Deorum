@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/icon.png" width="96" height="96" alt="Ex Mekanism Deorum"></p>
+
 # Ex Mekanism Deorum
 
 **Ex Deorum** の機械 (ハンマー / ふるい / バレル / るつぼ / 水るつぼ) を

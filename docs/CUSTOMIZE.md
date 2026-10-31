@@ -62,6 +62,14 @@ $ gradle build
 
 手で描いた PNG は再実行で上書きされるので注意してください。
 
+
+## MOD アイコン
+
+- ゲーム内の Mod 一覧用: `src/main/resources/icon.png` (128×128、`neoforge.mods.toml` の `logoFile = "icon.png"`)
+- CurseForge / GitHub 用: `docs/icon.png` (512×512)
+- 元絵は 32×32 のドット絵で `/tmp/icon.py` 相当のスクリプトから書き出しています。差し替える場合は
+  同じサイズで上書きして `gradle build` してください (アイコンはテクスチャ生成の対象外です)。
+
 ## GUI
 
 GUI は `src/main/java/dev/exmekdeorum/client/GuiDeorumMachine.java` の 1 クラスです。
