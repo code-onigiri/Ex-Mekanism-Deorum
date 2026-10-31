@@ -41,10 +41,29 @@ GUI 背景だけは生成対象外です。Mekanism の `assets/mekanism/gui/bas
 | ファミリー | 無印のベース | ファクトリーのベース |
 | --- | --- | --- |
 | ハンマー | `crusher` | `factory/crushing` |
-| ふるい | `enrichment_chamber` | `factory/enriching` |
-| バレル | `osmium_compressor` | `factory/compressing` |
-| 溶岩るつぼ | `energized_smelter` | `factory/smelting` |
-| 水るつぼ | `purification_chamber` | `factory/purifying` |
+| ふるい | `crusher` | `factory/crushing` |
+| バレル | `crusher` | `factory/crushing` |
+| 溶岩るつぼ | `crusher` | `factory/crushing` |
+| 水るつぼ | `crusher` | `factory/crushing` |
+
+全ファミリー共通で `crusher` のベースを使い、正面の 14×13 アイコンとティア LED だけを
+差し替えます (2026-10-31 変更)。`tools/mekanism_base/` には他マシンのベースも残してあるので、
+`BASE_MAP` を書き換えればファミリーごとに別ベースへ戻せます。
+
+### 手描きテクスチャの保護
+
+`tools/generate_assets.py` の `PRESERVE_TEXTURES` にファイル名を入れると、その PNG は生成時に
+上書きされません。現在は Blockbench で手直ししたハンマー正面を保護しています。
+
+```python
+PRESERVE_TEXTURES = {
+    "hammer_machine_front.png",
+    "hammer_machine_front_active.png",
+}
+```
+
+保護したテクスチャを消して生成し直したいときは、該当 PNG を削除してから
+`python3 tools/generate_assets.py` を実行してください。
 
 ベースがファミリーごとに違うため、側面・上面・底面も機械ごとに異なります。
 

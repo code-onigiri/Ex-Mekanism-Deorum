@@ -131,12 +131,19 @@ TIER_LED = {
 }
 # 各ファミリーのベースに使う Mekanism 本体テクスチャ (machines/<name>, factories/<name>)。
 BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mekanism_base")
+# すべてのファミリーで crusher のベースを使う (正面だけファミリーアイコンで差し替え)。
 BASE_MAP = {
     "hammer": ("crusher", "crushing"),
-    "sieve": ("enrichment_chamber", "enriching"),
-    "barrel": ("osmium_compressor", "compressing"),
-    "crucible": ("energized_smelter", "smelting"),
-    "water_crucible": ("purification_chamber", "purifying"),
+    "sieve": ("crusher", "crushing"),
+    "barrel": ("crusher", "crushing"),
+    "crucible": ("crusher", "crushing"),
+    "water_crucible": ("crusher", "crushing"),
+}
+
+# 手で描き直したテクスチャは生成時に上書きしない (ファイル名で指定)。
+PRESERVE_TEXTURES = {
+    "hammer_machine_front.png",
+    "hammer_machine_front_active.png",
 }
 FACES = ("front", "front_active", "side", "top", "bottom")
 ICON_W, ICON_H = 14, 13  # 16x16 の上 2px / 他 1px を縁として残した内側
@@ -428,12 +435,10 @@ def generate_models() -> None:
     for family, tier, factory in all_blocks():
         name = block_name(family, tier, factory)
         for face in FACES:
-            write_png(
-                os.path.join(ASSETS, "textures", "block", f"{name}_{face}.png"),
-                16,
-                16,
-                machine_texture(family, tier, face),
-            )
+            path = os.path.join(ASSETS, "textures", "block", f"{name}_{face}.png")
+            if os.path.basename(path) in PRESERVE_TEXTURES and os.path.isfile(path):
+                continue
+            write_png(path, 16, 16, machine_texture(family, tier, face))
         base_textures = {
             "front": f"{MOD_ID}:block/{name}_front",
             "side": f"{MOD_ID}:block/{name}_side",
