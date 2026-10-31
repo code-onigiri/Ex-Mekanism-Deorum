@@ -1,7 +1,9 @@
 {
   "textures": {
     "front": "exmekdeorum:block/sieve_machine_front_active",
-    "side": "exmekdeorum:block/sieve_machine_side",
+    "side_left": "exmekdeorum:block/sieve_machine_side_left",
+    "side_right": "exmekdeorum:block/sieve_machine_side_right",
+    "back": "exmekdeorum:block/sieve_machine_back",
     "top": "exmekdeorum:block/sieve_machine_top",
     "bottom": "exmekdeorum:block/sieve_machine_bottom"
   },
@@ -34,7 +36,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#side_right"
         },
         "south": {
           "uv": [
@@ -43,7 +45,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#back"
         },
         "west": {
           "uv": [
@@ -52,7 +54,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#side_left"
         },
         "up": {
           "uv": [

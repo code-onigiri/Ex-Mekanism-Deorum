@@ -1,7 +1,9 @@
 {
   "textures": {
     "front": "exmekdeorum:block/barrel_machine_front",
-    "side": "exmekdeorum:block/barrel_machine_side",
+    "side_left": "exmekdeorum:block/barrel_machine_side_left",
+    "side_right": "exmekdeorum:block/barrel_machine_side_right",
+    "back": "exmekdeorum:block/barrel_machine_back",
     "top": "exmekdeorum:block/barrel_machine_top",
     "bottom": "exmekdeorum:block/barrel_machine_bottom"
   },
@@ -34,7 +36,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#side_right"
         },
         "south": {
           "uv": [
@@ -43,7 +45,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#back"
         },
         "west": {
           "uv": [
@@ -52,7 +54,7 @@
             16,
             16
           ],
-          "texture": "#side"
+          "texture": "#side_left"
         },
         "up": {
           "uv": [

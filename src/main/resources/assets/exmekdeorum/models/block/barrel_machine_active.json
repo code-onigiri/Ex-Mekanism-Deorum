@@ -1,9 +1,89 @@
 {
-  "parent": "minecraft:block/orientable_with_bottom",
+  "parent": "minecraft:block/block",
   "textures": {
-    "front": "exmekdeorum:block/barrel_machine_front_active",
-    "side": "exmekdeorum:block/barrel_machine_side",
+    "particle": "exmekdeorum:block/barrel_machine_front",
+    "front": "exmekdeorum:block/barrel_machine_front",
+    "front_active": "exmekdeorum:block/barrel_machine_front_active",
+    "side_left": "exmekdeorum:block/barrel_machine_side_left",
+    "side_right": "exmekdeorum:block/barrel_machine_side_right",
+    "back": "exmekdeorum:block/barrel_machine_back",
     "top": "exmekdeorum:block/barrel_machine_top",
     "bottom": "exmekdeorum:block/barrel_machine_bottom"
-  }
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_active",
+          "cullface": "north",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#side_right",
+          "cullface": "east",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#back",
+          "cullface": "south",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side_left",
+          "cullface": "west",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#top",
+          "cullface": "up",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
 }

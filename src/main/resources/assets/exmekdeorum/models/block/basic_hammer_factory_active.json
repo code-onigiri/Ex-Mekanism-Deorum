@@ -1,9 +1,89 @@
 {
-  "parent": "minecraft:block/orientable_with_bottom",
+  "parent": "minecraft:block/block",
   "textures": {
-    "front": "exmekdeorum:block/basic_hammer_factory_front_active",
-    "side": "exmekdeorum:block/basic_hammer_factory_side",
+    "particle": "exmekdeorum:block/basic_hammer_factory_front",
+    "front": "exmekdeorum:block/basic_hammer_factory_front",
+    "front_active": "exmekdeorum:block/basic_hammer_factory_front_active",
+    "side_left": "exmekdeorum:block/basic_hammer_factory_side_left",
+    "side_right": "exmekdeorum:block/basic_hammer_factory_side_right",
+    "back": "exmekdeorum:block/basic_hammer_factory_back",
     "top": "exmekdeorum:block/basic_hammer_factory_top",
     "bottom": "exmekdeorum:block/basic_hammer_factory_bottom"
-  }
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front_active",
+          "cullface": "north",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#side_right",
+          "cullface": "east",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#back",
+          "cullface": "south",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side_left",
+          "cullface": "west",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#top",
+          "cullface": "up",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
 }

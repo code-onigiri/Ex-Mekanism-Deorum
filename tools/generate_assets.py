@@ -131,7 +131,7 @@ BASE_MAP = {
 # 手で描き直したテクスチャは生成時に上書きしない (ファイル名で指定)。
 # 現在は tools/mekanism_base/machines/custom/ の手描き正面をベースに生成しています。
 PRESERVE_TEXTURES: set[str] = set()
-FACES = ("front", "front_active", "side", "top", "bottom")
+FACES = ("front", "front_active", "side_left", "side_right", "back", "top", "bottom")
 ICON_W, ICON_H = 14, 13  # 16x16 の上 2px / 他 1px を縁として残した内側
 
 # 正面の内側 (上 2px / 他 1px の縁を残した 14x13) に描く機械的な柄。
@@ -337,13 +337,48 @@ def side_panel(family: str, tier: str | None) -> list[list[tuple[int, int, int, 
     return px
 
 
+def side_detail(px: list[list[tuple[int, int, int, int]]], face: str) -> None:
+    """左右/背面の違いを付ける。
+
+    - 左 (west): 上部の四角 (x=2..13, y=3..6) に横リブを刻む
+    - 右 (east): リブは縦、ベント帯に小さい四角を 3 つ追加
+    - 背面 (south): 十字のリブ + ベント帯中央に四角を 1 つ
+    """
+    def put(x: int, y: int, c: tuple[int, int, int]) -> None:
+        px[y][x] = (*c, 255)
+
+    if face == "side_left":
+        for y in (4, 5):
+            for x in range(4, 12):
+                put(x, y, PATTERN_RIB)
+    elif face == "side_right":
+        for x in range(4, 13, 2):
+            for y in (4, 5):
+                put(x, y, PATTERN_RIB)
+        for x in (3, 7, 11):
+            for yy in (11, 12):
+                for xx in (x, x + 1):
+                    put(xx, yy, PATTERN_RIB)
+    elif face == "back":
+        for x in (5, 8, 11):
+            for y in (4, 5):
+                put(x, y, PATTERN_RIB)
+        for y in (4, 5):
+            for x in range(6, 11):
+                put(x, y, PATTERN_DEEP)
+        for yy in (11, 12):
+            for xx in (7, 8):
+                put(xx, yy, PATTERN_RIB)
+
+
 def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple[int, int, int, int]]]:
     """正面は手描きベース + 機械的な柄、左右/背面は Energized の下半分、上下は crusher。"""
     base_face = face
     if face in ("front", "front_active"):
         px = decode_png(os.path.join(BASE, "machines", "custom", base_face + ".png"))
-    elif face == "side":
+    elif face in ("side_left", "side_right", "back"):
         px = side_panel(family, tier)
+        side_detail(px, face)
     else:
         machine_name, factory_name = BASE_MAP[family]
         sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)
@@ -353,7 +388,7 @@ def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple
 
     # ファクトリー: Mekanism の front_led と同じ位置 (テクスチャ row 1, x 5..10) に
     # led.png のティア色を市松で置く。
-    if tier is not None:
+    if tier is not None and face in ("front", "front_active"):
         bright, dark = TIER_LED[tier]
         for i, x in enumerate(range(5, 11)):
             c = bright if i % 2 == 0 else dark
@@ -394,10 +429,30 @@ def remove_stale() -> None:
         ]
     # Legacy single-face textures from the cube_all placeholder era.
     for family, tier, factory in all_blocks():
-        stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{block_name(family, tier, factory)}.png"))
+        name = block_name(family, tier, factory)
+        stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{name}.png"))
+        stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{name}_side.png"))
     for path in stale_paths:
         if os.path.isfile(path):
             os.remove(path)
+
+
+def _cube_model(textures: dict[str, str], active: bool) -> dict:
+    """左右/背面を別テクスチャにできるよう、parent ではなく elements で組む。"""
+    front = "#front_active" if active else "#front"
+    faces = {
+        "north": {"texture": front, "cullface": "north", "uv": [0, 0, 16, 16]},
+        "east": {"texture": "#side_right", "cullface": "east", "uv": [0, 0, 16, 16]},
+        "south": {"texture": "#back", "cullface": "south", "uv": [0, 0, 16, 16]},
+        "west": {"texture": "#side_left", "cullface": "west", "uv": [0, 0, 16, 16]},
+        "up": {"texture": "#top", "cullface": "up", "uv": [0, 0, 16, 16]},
+        "down": {"texture": "#bottom", "cullface": "down", "uv": [0, 0, 16, 16]},
+    }
+    return {
+        "parent": "minecraft:block/block",
+        "textures": textures,
+        "elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": faces}],
+    }
 
 
 def generate_models() -> None:
@@ -408,21 +463,18 @@ def generate_models() -> None:
             if os.path.basename(path) in PRESERVE_TEXTURES and os.path.isfile(path):
                 continue
             write_png(path, 16, 16, machine_texture(family, tier, face))
-        base_textures = {
+        textures = {
+            "particle": f"{MOD_ID}:block/{name}_front",
             "front": f"{MOD_ID}:block/{name}_front",
-            "side": f"{MOD_ID}:block/{name}_side",
+            "front_active": f"{MOD_ID}:block/{name}_front_active",
+            "side_left": f"{MOD_ID}:block/{name}_side_left",
+            "side_right": f"{MOD_ID}:block/{name}_side_right",
+            "back": f"{MOD_ID}:block/{name}_back",
             "top": f"{MOD_ID}:block/{name}_top",
             "bottom": f"{MOD_ID}:block/{name}_bottom",
         }
-        active_textures = dict(base_textures, front=f"{MOD_ID}:block/{name}_front_active")
-        write_json(
-            os.path.join(ASSETS, "models", "block", f"{name}.json"),
-            {"parent": "minecraft:block/orientable_with_bottom", "textures": base_textures},
-        )
-        write_json(
-            os.path.join(ASSETS, "models", "block", f"{name}_active.json"),
-            {"parent": "minecraft:block/orientable_with_bottom", "textures": active_textures},
-        )
+        write_json(os.path.join(ASSETS, "models", "block", f"{name}.json"), _cube_model(textures, False))
+        write_json(os.path.join(ASSETS, "models", "block", f"{name}_active.json"), _cube_model(textures, True))
         write_json(
             os.path.join(ASSETS, "models", "item", f"{name}.json"),
             {"parent": f"{MOD_ID}:block/{name}"},
