@@ -69,5 +69,5 @@ PNG を差し替えるのが一番安全です。
 
 ## 参考
 
-- テクスチャの自動生成・調整: `tools/generate_assets.py` (`FAMILY_ART` / `FAMILY_TINT` / `TIER_LED`)
+- テクスチャの自動生成・調整: `tools/generate_assets.py` (`front_pattern_pixels` / `TIER_LED` / `BASE_MAP`)
 - 手順の詳細: [docs/CUSTOMIZE.md](../CUSTOMIZE.md)

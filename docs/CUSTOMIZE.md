@@ -28,50 +28,51 @@ Blockbench でモデルごと編集したい場合は [docs/blockbench/README.md
 GUI 背景だけは生成対象外です。Mekanism の `assets/mekanism/gui/base.png` を複製した固定
 アセットで、直接編集してください (`tools/generate_assets.py` は上書きしません)。
 
-### ベースは Mekanism のテクスチャ
+### ベーステクスチャ
 
-ブロックのベースは Mekanism 本体の machine / factory テクスチャを複製したものです
-(`tools/mekanism_base/`、MIT License 表記あり)。生成時に変えるのは次の 2 点だけです。
+- **正面**: 手描きのパネル (`tools/mekanism_base/machines/custom/front.png`) がベース
+- **側面 / 上面 / 底面**: Mekanism の `crusher` (ファクトリーは `factory/crushing`) がベース
+- 生成時に変えるのは次の 2 点だけ
+  1. 正面の内側 (上 2px / 左右下 1px の縁を残した **14×13**) にファミリーごとの機械的な柄を描く
+     (`front_pattern_pixels`)
+  2. ファクトリーは Mekanism の `front_led` と同じ位置 (上端 1px・中央 6px) にティア LED を置く
+     (`TIER_LED`、色は Mekanism の `factory/led.png` から採取)
 
-1. 正面の内側 (上 2px / 左右下 1px の縁を残した **14×13**) をファミリーアイコンで塗る
-   (`FAMILY_ART` と `FAMILY_TINT`)
-2. ファクトリーは Mekanism の `front_led` と同じ位置 (上端 1px・中央 6px) にティア LED を置く
-   (`TIER_LED`、色は Mekanism の `factory/led.png` から採取)
-
-| ファミリー | 無印のベース | ファクトリーのベース |
+| ファミリー | 柄 | 実装 |
 | --- | --- | --- |
-| ハンマー | `crusher` | `factory/crushing` |
-| ふるい | `crusher` | `factory/crushing` |
-| バレル | `crusher` | `factory/crushing` |
-| 溶岩るつぼ | `crusher` | `factory/crushing` |
-| 水るつぼ | `crusher` | `factory/crushing` |
+| ハンマー | 45 度の滑り止めリブ | 斜めハッチ |
+| ふるい | パンチングメタル (4px ピッチの穴) | 穴あき板 |
+| バレル | 横ルーバー (鉄帯のスリット) | 横ストライプ |
+| 溶岩るつぼ | 丸い圧力ハッチ | 同心円リング |
+| 水るつぼ | 縦フィン (冷却ラジエーター) | 縦ストライプ |
 
-全ファミリー共通で `crusher` のベースを使い、正面の 14×13 アイコンとティア LED だけを
-差し替えます (2026-10-31 変更)。`tools/mekanism_base/` には他マシンのベースも残してあるので、
-`BASE_MAP` を書き換えればファミリーごとに別ベースへ戻せます。
+柄は「絵」ではなくパターンなので、色を変えればそのまま別の機械感を出せます。共通の
+フレーム (外周 1px + 四隅のボルト) は `_frame()` / `_bolt()` で描いています。
+
+`tools/mekanism_base/` には他マシンのベースも残してあるので、`BASE_MAP` を書き換えれば
+ファミリーごとに別ベースへ戻せます。正面だけ別の画像にしたい場合は
+`machines/custom/front.png` を差し替えてください。
 
 ### 手描きテクスチャの保護
 
 `tools/generate_assets.py` の `PRESERVE_TEXTURES` にファイル名を入れると、その PNG は生成時に
-上書きされません。現在は Blockbench で手直ししたハンマー正面を保護しています。
+上書きされません。現在は空ですが、Blockbench で直接描いた面を残したいときに使えます。
 
 ```python
 PRESERVE_TEXTURES = {
     "hammer_machine_front.png",
-    "hammer_machine_front_active.png",
 }
 ```
 
-保護したテクスチャを消して生成し直したいときは、該当 PNG を削除してから
+保護したテクスチャを消して生成し直したいときは、該当 PNG を削除するか、セットから外してから
 `python3 tools/generate_assets.py` を実行してください。
-
-ベースがファミリーごとに違うため、側面・上面・底面も機械ごとに異なります。
 
 ### 差し替え方
 
-- ベースを別の Mek 機械に変える → `tools/generate_assets.py` の `BASE_MAP`
-- アイコンの絵柄 → `FAMILY_ART` (14×13 の文字マップ。`#` = 本体、`-` = バンド、`.` = 下地)
-- アイコン色 → `FAMILY_TINT` (Mek の鋼色 `(148,148,148)` への寄せ具合は `front_icon_pixels` 内)
+- 正面のパネル自体 → `tools/mekanism_base/machines/custom/front.png` (16×16)
+- 柄 → `tools/generate_assets.py` の `front_pattern_pixels` (ファミリーごとの分岐) と
+  パレット (`PATTERN_PLATE` / `PATTERN_RIB` / `PATTERN_RIB_LO` / `PATTERN_DEEP` / `PATTERN_BOLT`)
+- ベースを別の Mek 機械に変える → `BASE_MAP` (側面 / 上面 / 底面)
 - ティア LED 色 → `TIER_LED`
 - ベース画像そのもの → `tools/mekanism_base/` の PNG を置換
 

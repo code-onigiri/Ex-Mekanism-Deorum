@@ -109,18 +109,6 @@ def shade(color: tuple[int, int, int], amount: int) -> tuple[int, int, int]:
     return tuple(clamp(c + amount) for c in color)  # type: ignore[return-value]
 
 
-def mix(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int, int, int]:
-    return tuple(clamp(round(x * (1 - t) + y * t)) for x, y in zip(a, b))  # type: ignore[return-value]
-
-
-# 正面の内側 (14x13) を塗るファミリー色。Mek の鋼色に馴染むよう彩度を落としている。
-FAMILY_TINT = {
-    "hammer": (167, 135, 90),
-    "sieve": (105, 140, 167),
-    "barrel": (145, 120, 95),
-    "crucible": (170, 106, 85),
-    "water_crucible": (95, 130, 175),
-}
 # Mekanism 本体の factory LED (assets/mekanism/textures/block/factory/led.png) から採取した
 # ティア色。明・暗の 2 色を 1px 交互に並べて LED ストリップにする。
 TIER_LED = {
@@ -141,124 +129,86 @@ BASE_MAP = {
 }
 
 # 手で描き直したテクスチャは生成時に上書きしない (ファイル名で指定)。
-PRESERVE_TEXTURES = {
-    "hammer_machine_front.png",
-    "hammer_machine_front_active.png",
-}
+# 現在は tools/mekanism_base/machines/custom/ の手描き正面をベースに生成しています。
+PRESERVE_TEXTURES: set[str] = set()
 FACES = ("front", "front_active", "side", "top", "bottom")
 ICON_W, ICON_H = 14, 13  # 16x16 の上 2px / 他 1px を縁として残した内側
 
-# 14x13 のアイコン。'#' が本体 (左上がハイライト、右下が影になる)、'-' がバンド。
-FAMILY_ART = {
-    "hammer": [
-        "..............",
-        "...########...",
-        "..##########..",
-        "..##########..",
-        "..##########..",
-        "...########...",
-        ".....####.....",
-        ".....####.....",
-        ".....####.....",
-        ".....####.....",
-        ".....####.....",
-        "....######....",
-        "..............",
-    ],
-    "sieve": [
-        "..............",
-        "..##########..",
-        "..#....#...#..",
-        "..#....#...#..",
-        "..#....#...#..",
-        "..##########..",
-        "..#....#...#..",
-        "..#....#...#..",
-        "..##########..",
-        "..#....#...#..",
-        "..#....#...#..",
-        "..##########..",
-        "..............",
-    ],
-    "barrel": [
-        "..............",
-        "...########...",
-        "..##########..",
-        "..----------..",
-        "..##########..",
-        "..##########..",
-        "..----------..",
-        "..##########..",
-        "..##########..",
-        "..----------..",
-        "..##########..",
-        "...########...",
-        "..............",
-    ],
-    "crucible": [
-        "..............",
-        "..##########..",
-        "..##########..",
-        "..##########..",
-        "..##------##..",
-        "..##------##..",
-        "...########...",
-        "....######....",
-        ".....#..#.....",
-        "....#.##.#....",
-        "...#.####.#...",
-        "..#..####..#..",
-        "..............",
-    ],
-    "water_crucible": [
-        "..............",
-        "......####....",
-        ".....######...",
-        "....########..",
-        "...##########.",
-        "...##########.",
-        "..############",
-        "..############",
-        "..############",
-        "...##########.",
-        "....########..",
-        ".....######...",
-        "..............",
-    ],
-}
+# 正面の内側 (上 2px / 他 1px の縁を残した 14x13) に描く機械的な柄。
+# 絵柄ではなく、斜めリブ・ルーバー・穴あき板・丸ハッチ・縦フィンでファミリーを区別する。
+PATTERN_PLATE = (36, 38, 42)
+PATTERN_DEEP = (25, 26, 29)
+PATTERN_RIB = (74, 78, 84)
+PATTERN_RIB_LO = (50, 52, 57)
+PATTERN_BOLT = (114, 118, 126)
+PATTERN_BOLT_DARK = (44, 46, 50)
 
 
-def front_icon_pixels(family: str, active: bool) -> list[list[tuple[int, int, int]]]:
-    # Mek の機械はほぼ無彩色なので、ファミリー色は鋼色に寄せて控えめにする。
-    tint = mix(FAMILY_TINT[family], (148, 148, 148), 0.60)
+def _frame(px: list[list[tuple[int, int, int]]]) -> None:
+    for x in range(ICON_W):
+        px[0][x] = PATTERN_RIB_LO
+        px[ICON_H - 1][x] = PATTERN_RIB_LO
+    for y in range(ICON_H):
+        px[y][0] = PATTERN_RIB_LO
+        px[y][ICON_W - 1] = PATTERN_RIB_LO
+
+
+def _bolt(px, x, y) -> None:
+    px[y][x] = PATTERN_BOLT
+    px[y][x + 1] = PATTERN_BOLT_DARK
+
+
+def front_pattern_pixels(family: str, active: bool) -> list[list[tuple[int, int, int]]]:
+    px = [[PATTERN_PLATE for _ in range(ICON_W)] for _ in range(ICON_H)]
+    if family == "hammer":
+        # 45 度の滑り止めリブ (打撃面っぽい斜めハッチ)
+        for y in range(ICON_H):
+            for x in range(ICON_W):
+                if (x + y) % 4 == 0:
+                    px[y][x] = PATTERN_RIB
+                elif (x + y) % 4 == 1:
+                    px[y][x] = PATTERN_RIB_LO
+    elif family == "sieve":
+        # 穴あき板 (パンチングメタル): 4px ピッチの丸穴 + 左上の面取り
+        for y in range(2, ICON_H - 1, 4):
+            for x in range(2, ICON_W - 1, 4):
+                px[y][x] = PATTERN_RIB
+                px[y + 1][x] = PATTERN_DEEP
+                px[y][x + 1] = PATTERN_DEEP
+                px[y + 1][x + 1] = PATTERN_DEEP
+    elif family == "barrel":
+        # 横ルーバー (樽の鉄帯っぽいスリット)
+        for y in range(ICON_H):
+            for x in range(ICON_W):
+                if y % 3 == 0:
+                    px[y][x] = PATTERN_RIB
+                elif y % 3 == 1:
+                    px[y][x] = PATTERN_DEEP
+    elif family == "crucible":
+        # 丸い圧力ハッチ + ボルト
+        for y in range(ICON_H):
+            for x in range(ICON_W):
+                dx = x - 6.5
+                dy = y - 6
+                d = dx * dx + dy * dy
+                if 16 <= d <= 24:
+                    px[y][x] = PATTERN_RIB
+                elif d < 16:
+                    px[y][x] = PATTERN_DEEP
+    elif family == "water_crucible":
+        # 縦フィン (冷却用ラジエーター)
+        for y in range(ICON_H):
+            for x in range(ICON_W):
+                if x % 4 == 1:
+                    px[y][x] = PATTERN_RIB
+                elif x % 4 == 2:
+                    px[y][x] = PATTERN_RIB_LO
+    _frame(px)
+    for bx, by in ((1, 1), (ICON_W - 3, 1), (1, ICON_H - 3), (ICON_W - 3, ICON_H - 3)):
+        _bolt(px, bx, by)
     if active:
-        tint = shade(tint, 15)
-    hi = mix(tint, (225, 225, 225), 0.30)
-    lo = shade(tint, -45)
-    plate = (34, 34, 36)
-    band = shade(tint, -55)
-    art = FAMILY_ART[family]
-    out: list[list[tuple[int, int, int]]] = []
-    for y, row in enumerate(art):
-        line = []
-        for x, ch in enumerate(row):
-            if ch == "-":
-                line.append(band)
-            elif ch == "#":
-                up = y > 0 and art[y - 1][x] == "#"
-                left = x > 0 and row[x - 1] == "#"
-                down = y < len(art) - 1 and art[y + 1][x] == "#"
-                right = x < len(row) - 1 and row[x + 1] == "#"
-                if not up or not left:
-                    line.append(hi)
-                elif not down or not right:
-                    line.append(lo)
-                else:
-                    line.append(tint)
-            else:
-                line.append(plate)
-        out.append(line)
-    return out
+        px = [[shade(c, 12) if isinstance(c, tuple) and len(c) == 3 else c for c in row] for row in px]
+    return px
 
 
 ADAM7 = ((0, 0, 8, 8), (4, 0, 8, 8), (0, 4, 4, 8), (2, 0, 4, 4), (0, 2, 2, 4), (1, 0, 2, 2), (0, 1, 1, 2))
@@ -375,16 +325,15 @@ def _pixel4(byte: int, half: int, plte, trns):
     return (r, g, b, a)
 
 
-def _mix(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int, int, int]:
-    return tuple(clamp(round(x * (1 - t) + y * t)) for x, y in zip(a, b))  # type: ignore[return-value]
-
-
 def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple[int, int, int, int]]]:
-    """Mekanism 本体のテクスチャを読み、正面のアイコンとティア LED だけ差し替える。"""
+    """正面は手描きベース + 機械的な柄、それ以外は Mekanism の crusher ベースを使う。"""
     base_face = face
-    machine_name, factory_name = BASE_MAP[family]
-    sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)
-    px = decode_png(os.path.join(BASE, sub, base_face + ".png"))
+    if face in ("front", "front_active"):
+        px = decode_png(os.path.join(BASE, "machines", "custom", base_face + ".png"))
+    else:
+        machine_name, factory_name = BASE_MAP[family]
+        sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)
+        px = decode_png(os.path.join(BASE, sub, base_face + ".png"))
     # アニメーション テクスチャは 1 フレーム目 (16x16) だけ使う。
     px = [row[:16] for row in px[:16]]
 
@@ -398,9 +347,9 @@ def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple
                 c = shade(c, 18)
             px[1][x] = (*c, 255)
 
-    # 正面の内側 (上 2px / 他 1px の縁を残した 14x13) をファミリーアイコンで塗る。
+    # 正面の内側 (上 2px / 他 1px の縁を残した 14x13) を機械的な柄で塗る。
     if face in ("front", "front_active"):
-        icon = front_icon_pixels(family, face == "front_active")
+        icon = front_pattern_pixels(family, face == "front_active")
         for gy, row in enumerate(icon):
             for gx, color in enumerate(row):
                 px[2 + gy][1 + gx] = (*color, 255)
