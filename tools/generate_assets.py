@@ -131,7 +131,7 @@ BASE_MAP = {
 # 手で描き直したテクスチャは生成時に上書きしない (ファイル名で指定)。
 # 現在は tools/mekanism_base/machines/custom/ の手描き正面をベースに生成しています。
 PRESERVE_TEXTURES: set[str] = set()
-FACES = ("front", "front_active", "side_left", "side_right", "back", "top", "bottom")
+FACES = ("front", "front_active", "side", "top", "bottom")
 ICON_W, ICON_H = 14, 13  # 16x16 の上 2px / 他 1px を縁として残した内側
 
 # 正面の内側 (上 2px / 他 1px の縁を残した 14x13) に描く機械的な柄。
@@ -337,38 +337,41 @@ def side_panel(family: str, tier: str | None) -> list[list[tuple[int, int, int, 
     return px
 
 
-def side_detail(px: list[list[tuple[int, int, int, int]]], face: str) -> None:
-    """左右/背面の違いを付ける。
-
-    - 左 (west): 上部の四角 (x=2..13, y=3..6) に横リブを刻む
-    - 右 (east): リブは縦、ベント帯に小さい四角を 3 つ追加
-    - 背面 (south): 十字のリブ + ベント帯中央に四角を 1 つ
-    """
+def side_detail(px: list[list[tuple[int, int, int, int]]], family: str) -> None:
+    """左/右/背面は同じテクスチャ。ファミリーごとに上部の四角へ違う刻みを入れる。"""
     def put(x: int, y: int, c: tuple[int, int, int]) -> None:
         px[y][x] = (*c, 255)
 
-    if face == "side_left":
+    if family == "hammer":
         for y in (4, 5):
             for x in range(4, 12):
                 put(x, y, PATTERN_RIB)
-    elif face == "side_right":
-        for x in range(4, 13, 2):
-            for y in (4, 5):
-                put(x, y, PATTERN_RIB)
-        for x in (3, 7, 11):
-            for yy in (11, 12):
-                for xx in (x, x + 1):
-                    put(xx, yy, PATTERN_RIB)
-    elif face == "back":
-        for x in (5, 8, 11):
-            for y in (4, 5):
-                put(x, y, PATTERN_RIB)
+    elif family == "sieve":
         for y in (4, 5):
-            for x in range(6, 11):
-                put(x, y, PATTERN_DEEP)
-        for yy in (11, 12):
-            for xx in (7, 8):
-                put(xx, yy, PATTERN_RIB)
+            for x in (3, 5, 7, 9, 11, 13):
+                put(x, y, PATTERN_DEEP if (x + y) % 2 else PATTERN_RIB_LO)
+    elif family == "barrel":
+        for x in (4, 6, 8, 10, 12):
+            for y in (4, 5):
+                put(x, y, PATTERN_RIB_LO)
+        for x in (4, 8, 12):
+            for y in (4, 5):
+                put(x, y, PATTERN_RIB)
+    elif family == "crucible":
+        for y in range(3, 7):
+            for x in range(3, 13):
+                dx = (x - 8) / 5.0
+                dy = (y - 4.5) / 2.0
+                d = dx * dx + dy * dy
+                if 0.55 <= d <= 1.0:
+                    put(x, y, PATTERN_RIB)
+                elif d < 0.55:
+                    put(x, y, PATTERN_DEEP)
+    elif family == "water_crucible":
+        for y in range(3, 7):
+            for x in range(2, 14):
+                if (x + 2 * y) % 5 in (0, 1):
+                    put(x, y, PATTERN_RIB_LO)
 
 
 def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple[int, int, int, int]]]:
@@ -376,9 +379,9 @@ def machine_texture(family: str, tier: str | None, face: str) -> list[list[tuple
     base_face = face
     if face in ("front", "front_active"):
         px = decode_png(os.path.join(BASE, "machines", "custom", base_face + ".png"))
-    elif face in ("side_left", "side_right", "back"):
+    elif face == "side":
         px = side_panel(family, tier)
-        side_detail(px, face)
+        side_detail(px, family)
     else:
         machine_name, factory_name = BASE_MAP[family]
         sub = os.path.join("machines", machine_name) if tier is None else os.path.join("factories", factory_name)
@@ -431,7 +434,8 @@ def remove_stale() -> None:
     for family, tier, factory in all_blocks():
         name = block_name(family, tier, factory)
         stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{name}.png"))
-        stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{name}_side.png"))
+        for face in ("side_left", "side_right", "back"):
+            stale_paths.append(os.path.join(ASSETS, "textures", "block", f"{name}_{face}.png"))
     for path in stale_paths:
         if os.path.isfile(path):
             os.remove(path)
@@ -463,18 +467,21 @@ def generate_models() -> None:
             if os.path.basename(path) in PRESERVE_TEXTURES and os.path.isfile(path):
                 continue
             write_png(path, 16, 16, machine_texture(family, tier, face))
-        textures = {
-            "particle": f"{MOD_ID}:block/{name}_front",
+        base_textures = {
             "front": f"{MOD_ID}:block/{name}_front",
-            "front_active": f"{MOD_ID}:block/{name}_front_active",
-            "side_left": f"{MOD_ID}:block/{name}_side_left",
-            "side_right": f"{MOD_ID}:block/{name}_side_right",
-            "back": f"{MOD_ID}:block/{name}_back",
+            "side": f"{MOD_ID}:block/{name}_side",
             "top": f"{MOD_ID}:block/{name}_top",
             "bottom": f"{MOD_ID}:block/{name}_bottom",
         }
-        write_json(os.path.join(ASSETS, "models", "block", f"{name}.json"), _cube_model(textures, False))
-        write_json(os.path.join(ASSETS, "models", "block", f"{name}_active.json"), _cube_model(textures, True))
+        active_textures = dict(base_textures, front=f"{MOD_ID}:block/{name}_front_active")
+        write_json(
+            os.path.join(ASSETS, "models", "block", f"{name}.json"),
+            {"parent": "minecraft:block/orientable_with_bottom", "textures": base_textures},
+        )
+        write_json(
+            os.path.join(ASSETS, "models", "block", f"{name}_active.json"),
+            {"parent": "minecraft:block/orientable_with_bottom", "textures": active_textures},
+        )
         write_json(
             os.path.join(ASSETS, "models", "item", f"{name}.json"),
             {"parent": f"{MOD_ID}:block/{name}"},

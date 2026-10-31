@@ -1,9 +1,7 @@
 {
   "textures": {
     "front": "exmekdeorum:block/crucible_machine_front",
-    "side_left": "exmekdeorum:block/crucible_machine_side_left",
-    "side_right": "exmekdeorum:block/crucible_machine_side_right",
-    "back": "exmekdeorum:block/crucible_machine_back",
+    "side": "exmekdeorum:block/crucible_machine_side",
     "top": "exmekdeorum:block/crucible_machine_top",
     "bottom": "exmekdeorum:block/crucible_machine_bottom"
   },
@@ -36,7 +34,7 @@
             16,
             16
           ],
-          "texture": "#side_right"
+          "texture": "#side"
         },
         "south": {
           "uv": [
@@ -45,7 +43,7 @@
             16,
             16
           ],
-          "texture": "#back"
+          "texture": "#side"
         },
         "west": {
           "uv": [
@@ -54,7 +52,7 @@
             16,
             16
           ],
-          "texture": "#side_left"
+          "texture": "#side"
         },
         "up": {
           "uv": [

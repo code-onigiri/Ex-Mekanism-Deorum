@@ -56,7 +56,7 @@
             16,
             16
           ],
-          "texture": 2
+          "texture": 1
         },
         "south": {
           "uv": [
@@ -65,7 +65,7 @@
             16,
             16
           ],
-          "texture": 3
+          "texture": 1
         },
         "west": {
           "uv": [
@@ -83,7 +83,7 @@
             16,
             16
           ],
-          "texture": 4
+          "texture": 2
         },
         "down": {
           "uv": [
@@ -92,7 +92,7 @@
             16,
             16
           ],
-          "texture": 5
+          "texture": 3
         }
       }
     }
@@ -118,7 +118,7 @@
     },
     {
       "path": "",
-      "name": "hammer_machine_side_left",
+      "name": "hammer_machine_side",
       "folder": "block",
       "namespace": "exmekdeorum",
       "id": "1",
@@ -127,46 +127,16 @@
       "visible": true,
       "mode": "bitmap",
       "saved": false,
-      "uuid": "261ebfe8-7a67-5589-a493-892e93606aea",
+      "uuid": "5fb42663-fec7-55c1-8b27-bb916b6c6103",
       "relative_path": "",
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB80lEQVR42oWTWWtiQRCF+2eECZIBUeOCC0YEt7hvcd+iohKNoFFUXB589ZfX8NVwnTAPMw91q7rq9OlT1X3N29ub1Go1KRaL6svlsmy3W1mtVmrT6VQ+Pz81pgYOz75GoyGm2WzKfr+X8/ksh8NBqtWqtFotBZRKpbvP5/OSTqeVfL1eK7bT6YiBbbPZyPF4VKLr9apkl8tFQbfbTWOMPARfX19qkJtKpaIEsVhMUqmUJJNJNeK/zapFo1FZLpfaikEGBBRsNptUG71/2sPDg2SzWVksFn8IkJVIJOTn09N/CR4ff6iaj48PQb3J5XKqwOfzSSQSkXA4LKFQSILBoHpyLy8vmrfqXq9XFRQKhd9D7Ha7Mp/PdTAMjmFa/nQ6abzb7dTAgEU5164KIICx3W7LZDKR4XCo9v7+rrnBYCC9Xk9zbGRNjTdhXC6XBAIBcbvd8vz8rPL8fr+2QFvkMfKYFYOx2+1iAMH0+vqqV8ljyWQyumZY8Xhc89wS3rpuMB6PR4zD4dDXRz/Iox3aQCbyWeOZONfH4MDzOtlrYGHjaDSSer1+34CHlFy/31eMNSNinjutGHoZj8d6Ip4Jz2YzJSSHEUPCJn4u/gsUMQ8DC8ycBoAY42RyAL/XyFsKdQZ8rEk7nc67pz/i73Viq4ax/gXpntzco+MGdwAAAABJRU5ErkJggg=="
-    },
-    {
-      "path": "",
-      "name": "hammer_machine_side_right",
-      "folder": "block",
-      "namespace": "exmekdeorum",
-      "id": "2",
-      "particle": false,
-      "render_mode": "default",
-      "visible": true,
-      "mode": "bitmap",
-      "saved": false,
-      "uuid": "87d7006c-7b7d-5aca-9655-c10f9052f96c",
-      "relative_path": "",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB7UlEQVR42l2T12qqURCF/xeRCBI7RtEg2HtN7B0VG9hQMXrhrU8+4ZvDPic5F+O0tZcza+/fqtfr8vHxIaVSSX2lUpHj8Sjb7VZtNpvJer3WmB44POcajYZYzWZTzuez3G43uVwuUqvVpNVqKaBcLv/1hUJBMpmMku92O8V2Oh2xYDscDnK9XpXo8Xgo2f1+V9Dz+dQYow7Bfr9Xg9yqVqtKEIvFJJVKSTKZVCP+30wvGo3KZrPRVSzGgICGzWaTWqMnTqdTvc/nU+/xeNTb7Xb1uVxOVqvVPwLGSiQSYn95UYDL5VLv9Xp/ERkCplksFsL0Vj6f1wn8fr+8v79LOByWUCgkwWBQPbVIJKJ104eQCYrF4h8Ru92uLJdLFQbhENP4r68vjU+nkxoYsEzOtesEEMDYbrdlOp3KaDRSGw6HWhsMBtLr9bTGQXJ6vAmLfd/e3lQot9ut4wUCAV2Btahj1DETg3E4HGIBgimdTutV8liy2azmiBWPx7XOLeHNdYNBZOv19VVfH/ugMMYajGly1kBxk4PndXLWgoW9xuPxrwPoYvJ+v68YkxPz3FnFYpfJZKL/iEfh+XyuhNQwYkg4xMfFd8FE6GHBwj+yAgBi7PPzU2sAf/aomwlVA36M0jxh49mP+Gef2PQw8m/YXNpMnDPGjwAAAABJRU5ErkJggg=="
-    },
-    {
-      "path": "",
-      "name": "hammer_machine_back",
-      "folder": "block",
-      "namespace": "exmekdeorum",
-      "id": "3",
-      "particle": false,
-      "render_mode": "default",
-      "visible": true,
-      "mode": "bitmap",
-      "saved": false,
-      "uuid": "a20cec42-0ee1-5cc9-b969-3fde33dda211",
-      "relative_path": "",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB/ElEQVR42n2T2WpiURBF72ekEyQdJc5oxIjgPM9jnMUEJzAqKg4Pvvrl1axqbjp0Qz9sq04N2111zjWq1arUajUpFApqS6WSbLdbWa1Wivf3d1ksFuqTow5LX6PREKPZbMp+v5fz+SyHw0EqlYq0Wi0tKBaLXzaXy0kqlVLyz89PrX17exMDts1mI8fjUYmu16uSXS4XLbrdbuoD4hCs12sF5Ea5XFaCSCQiiURC4vG4Av9vmLlwOCzL5VJHMZABAQmLxSLWpyepNLry497yD4jf3d1JJpOR+Xz+hwBZsVhMfj4+itVq/S/Bw8O9qplOp4J6I5vNqgKv1yuhUEiCwaAEAgF5eXlRS+z19VXjZt7j8aiCfD7/e4mdTkdms5kuhsWxTNOeTif1d7udghpqUc61qwIIYGy32zKZTGQ4HCoGg4HG+v2+dLtdjdHImRxvwnA4HOL3+8XlconT6VR5Pp9PR2As4oA4MH1qbDabGBTBlEwm9Sp5LOl0Ws8sKxqNapxbwprXTY3b7Rbj+flZXx/zII9xGAOZbB0wBhvn+lgc9bxOeg1YaByNRlKv15WABqxJ0Ov1tMbcET7PnVEMZhmPx/qPWDb88fGhhMQAPiQ08XHxXaCIfRiwwMwIFOAD1BCj8HuOuKlQd8CPuWm73f5lmQ//ex7fzAHOvwDf09WvHVPmrgAAAABJRU5ErkJggg=="
     },
     {
       "path": "",
       "name": "hammer_machine_top",
       "folder": "block",
       "namespace": "exmekdeorum",
-      "id": "4",
+      "id": "2",
       "particle": false,
       "render_mode": "default",
       "visible": true,
@@ -181,7 +151,7 @@
       "name": "hammer_machine_bottom",
       "folder": "block",
       "namespace": "exmekdeorum",
-      "id": "5",
+      "id": "3",
       "particle": false,
       "render_mode": "default",
       "visible": true,

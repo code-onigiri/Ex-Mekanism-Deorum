@@ -1,9 +1,7 @@
 {
   "textures": {
     "front": "exmekdeorum:block/water_crucible_machine_front_active",
-    "side_left": "exmekdeorum:block/water_crucible_machine_side_left",
-    "side_right": "exmekdeorum:block/water_crucible_machine_side_right",
-    "back": "exmekdeorum:block/water_crucible_machine_back",
+    "side": "exmekdeorum:block/water_crucible_machine_side",
     "top": "exmekdeorum:block/water_crucible_machine_top",
     "bottom": "exmekdeorum:block/water_crucible_machine_bottom"
   },
@@ -36,7 +34,7 @@
             16,
             16
           ],
-          "texture": "#side_right"
+          "texture": "#side"
         },
         "south": {
           "uv": [
@@ -45,7 +43,7 @@
             16,
             16
           ],
-          "texture": "#back"
+          "texture": "#side"
         },
         "west": {
           "uv": [
@@ -54,7 +52,7 @@
             16,
             16
           ],
-          "texture": "#side_left"
+          "texture": "#side"
         },
         "up": {
           "uv": [

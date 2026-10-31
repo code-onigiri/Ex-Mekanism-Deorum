@@ -19,9 +19,9 @@ FAMILIES = ["hammer", "sieve", "barrel", "crucible", "water_crucible"]
 FACES = {
     # face -> (texture slot, uv)
     "north": ("front", [0, 0, 16, 16]),
-    "east": ("side_right", [0, 0, 16, 16]),
-    "south": ("back", [0, 0, 16, 16]),
-    "west": ("side_left", [0, 0, 16, 16]),
+    "east": ("side", [0, 0, 16, 16]),
+    "south": ("side", [0, 0, 16, 16]),
+    "west": ("side", [0, 0, 16, 16]),
     "up": ("top", [0, 0, 16, 16]),
     "down": ("bottom", [0, 0, 16, 16]),
 }
@@ -32,9 +32,7 @@ def texture_refs(block):
     return {
         "front": f"exmekdeorum:block/{block}_front",
         "front_active": f"exmekdeorum:block/{block}_front_active",
-        "side_left": f"exmekdeorum:block/{block}_side_left",
-        "side_right": f"exmekdeorum:block/{block}_side_right",
-        "back": f"exmekdeorum:block/{block}_back",
+        "side": f"exmekdeorum:block/{block}_side",
         "top": f"exmekdeorum:block/{block}_top",
         "bottom": f"exmekdeorum:block/{block}_bottom",
     }
@@ -63,11 +61,10 @@ def make_bbmodel(block, active):
     name = block + ("_active" if active else "")
     refs = texture_refs(block)
     slots = {"front": "front_active" if active else "front",
-             "side_left": "side_left", "side_right": "side_right",
-             "back": "back", "top": "top", "bottom": "bottom"}
-    tex_index = {"front": 0, "side_left": 1, "side_right": 2, "back": 3, "top": 4, "bottom": 5}
+             "side": "side", "top": "top", "bottom": "bottom"}
+    tex_index = {"front": 0, "side": 1, "top": 2, "bottom": 3}
     textures = []
-    for slot in ("front", "side_left", "side_right", "back", "top", "bottom"):
+    for slot in ("front", "side", "top", "bottom"):
         tex_slot = slots[slot]
         png = os.path.join(TEX_DIR, f"{block}_{tex_slot}.png")
         textures.append({
@@ -130,9 +127,7 @@ def make_flat(block, active):
     return {
         "textures": {
             "front": refs[front],
-            "side_left": refs["side_left"],
-            "side_right": refs["side_right"],
-            "back": refs["back"],
+            "side": refs["side"],
             "top": refs["top"],
             "bottom": refs["bottom"],
         },

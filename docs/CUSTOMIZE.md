@@ -10,18 +10,16 @@ Blockbench でモデルごと編集したい場合は [docs/blockbench/README.md
 
 ### 生成されるファイル
 
-ブロック 1 種につき 7 枚の PNG と、モデル/blockstate を生成します。
+ブロック 1 種につき 5 枚の PNG と、モデル/blockstate を生成します。
 
 | パス | 内容 |
 | --- | --- |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_front.png` | 正面 (ファミリーアイコン) |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_front_active.png` | 稼働中の正面 |
-| `src/main/resources/assets/exmekdeorum/textures/block/<block>_side_left.png` | 左面 (横リブ) |
-| `src/main/resources/assets/exmekdeorum/textures/block/<block>_side_right.png` | 右面 (縦リブ + ベント帯の四角) |
-| `src/main/resources/assets/exmekdeorum/textures/block/<block>_back.png` | 背面 (十字リブ + 中央の四角) |
+| `src/main/resources/assets/exmekdeorum/textures/block/<block>_side.png` | 左右 / 背面 (共通、ファミリーごとの刻み) |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_top.png` | 上面 |
 | `src/main/resources/assets/exmekdeorum/textures/block/<block>_bottom.png` | 底面 |
-| `src/main/resources/assets/exmekdeorum/models/block/<block>.json` | 単一キューブの elements モデル (正面 = north / 左右背面は別テクスチャ) |
+| `src/main/resources/assets/exmekdeorum/models/block/<block>.json` | `minecraft:block/orientable_with_bottom` (正面 = north) |
 | `src/main/resources/assets/exmekdeorum/models/block/<block>_active.json` | 稼働中モデル |
 | `src/main/resources/assets/exmekdeorum/blockstates/<block>.json` | `facing` × `active` の 8 バリアント |
 | `src/main/resources/assets/exmekdeorum/models/item/<block>.json` | アイテムモデル |
@@ -34,10 +32,13 @@ GUI 背景だけは生成対象外です。Mekanism の `assets/mekanism/gui/bas
 
 - **正面**: 手描きのパネル (`tools/mekanism_base/machines/custom/front.png`) がベース
 - **左右 / 背面**: 上半分は `crusher` のパネル、下半分 (row 8〜15) は Energized Smelter のベント帯
-  (`side_panel()`)。その上で面ごとにディテールを足す (`side_detail()`):
-  - 左面: 上部の四角 (12×4) に横リブ
-  - 右面: 上部の四角に縦リブ、ベント帯に小さい四角を 3 つ
-  - 背面: 十字リブ、ベント帯中央に四角を 1 つ
+  (`side_panel()`)。左右背面は同じテクスチャで、上部の四角 (12×4) にファミリーごとの刻みを
+  入れる (`side_detail()`):
+  - ハンマー: 横リブ
+  - ふるい: パンチング (市松の穴)
+  - バレル: 縦の鎧板 (staves)
+  - 溶岩るつぼ: 楕円のハッチリング
+  - 水るつぼ: 斜めの冷却スリット
 - **上面 / 底面**: Mekanism の `crusher` (ファクトリーは `factory/crushing`) がベース
 - 生成時に変えるのは次の 2 点だけ
   1. 正面の内側 (上 2px / 左右下 1px の縁を残した **14×13**) にファミリーごとの機械的な柄を描く
@@ -84,7 +85,7 @@ PRESERVE_TEXTURES = {
 - 柄 → `tools/generate_assets.py` の `front_pattern_pixels` (ファミリーごとの分岐) と
   パレット (`PATTERN_PLATE` / `PATTERN_RIB` / `PATTERN_RIB_LO` / `PATTERN_DEEP` / `PATTERN_BOLT`)
 - ベースを別の Mek 機械に変える → `BASE_MAP` (上面 / 底面)
-- 左右 / 背面のディテール → `side_detail()` (リブや四角の位置)
+- 左右 / 背面のディテール → `side_detail()` (ファミリーごとの分岐)
 - 側面 / 背面のベント帯 → `side_panel()` (行数・範囲)
 - ティア LED 色 → `TIER_LED`
 - ベース画像そのもの → `tools/mekanism_base/` の PNG を置換
