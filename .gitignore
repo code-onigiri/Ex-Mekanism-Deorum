@@ -24,3 +24,16 @@
 # Local scratch (decompiled sources, nix fetcher cache)
 /.work/
 /.nix-cache/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Generated Blockbench exports (run tools/export_blockbench.py locally)
+/docs/blockbench/*.bbmodel
+/docs/blockbench/flat/
+
+# Logs and crash dumps
+*.log
+/logs/
+hs_err_pid*
