@@ -89,6 +89,9 @@ dependencies {
             // Dev-only: not bundled into the jar; used to compile the JEI plugin
             // and to show recipes in the dev client.
             modJar('JEI_JAR', 'jeiJar', 'jei-1.21.1-neoforge-19.54.0.429.jar'))
+    // Optional integration API (Mek Energistics pattern automation). Compile-only: the
+    // class/mixin that implements it is skipped when the mod is absent, and nothing is shipped.
+    compileOnly files(modJar('MEKENERGISTICS_JAR', 'mekenergisticsJar', 'mekenergistics-3.0.8.jar'))
 }
 
 tasks.named('processResources', ProcessResources).configure {

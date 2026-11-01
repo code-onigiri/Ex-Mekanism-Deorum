@@ -6,6 +6,9 @@
 # and put on the Gradle compile/runtime classpath via EXDEORUM_JAR / MEKANISM_JAR
 # (see flake.nix and build.gradle).
 #
+# Mek Energistics is a development-only, optional compatibility target: its pattern
+# automation API is used to compile the integration (compileOnly, never bundled).
+#
 # JEI is a development-only convenience: it is declared as an optional
 # dependency in neoforge.mods.toml, put on the classpath via JEI_JAR so the
 # dev client can show Ex Deorum recipes, and is NOT bundled with the mod.
@@ -58,6 +61,17 @@
       sha1 = "d3acaea7df222faa05598a00e6d6d439da0400fe";
       sha512 = "4e1ec70a31e03158d6210c2ec20d286b00dd235b2400a77e0cf2fbb4bddedd29f579bcacb796bb05a2c70da5b815a6498a8fadaef02432091b9cdb654212ef39";
       size = 1856734;
+    }
+
+    {
+      id = "mekenergistics";
+      fileName = "mekenergistics-3.0.8.jar";
+      version = "3.0.8";
+      url = "https://github.com/beipuo/Mek-Energistics/releases/download/3.0.8/mekenergistics-3.0.8.jar";
+      hash = "sha256-ktn+zUfAAYgMKD+dwZVteT+XF+58wHayY/Lu0hdBFLE=";
+      sha1 = "6055b89f995aff83a74e2465594af048fdf9be7e";
+      sha512 = "19ebae18cc863a3b5511fc5842d24d2d37b8f95dc8b883eed0bb350d5eb8ff6e006a9c816d322649c146efa7ed44fbfe86c68d29a90097438108961a987fe7a8";
+      size = 2254434;
     }
   ];
 }

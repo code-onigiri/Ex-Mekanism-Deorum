@@ -15,6 +15,7 @@ import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumSieve;
 import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumWaterCrucible;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -24,6 +25,8 @@ import mekanism.common.attachments.component.AttachedSideConfig;
 import mekanism.common.block.attribute.AttributeEnergy;
 import mekanism.common.block.attribute.AttributeGui;
 import mekanism.common.block.attribute.AttributeSideConfig;
+import mekanism.common.block.attribute.AttributeTier;
+import mekanism.common.block.attribute.AttributeUpgradeable;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -34,6 +37,7 @@ import mekanism.common.registration.impl.CreativeTabDeferredRegister;
 import mekanism.common.registration.impl.TileEntityTypeDeferredRegister;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.registries.MekanismDataComponents;
+import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.base.TileEntityMekanism;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -63,6 +67,7 @@ public final class ModMachines {
     public static final CreativeTabDeferredRegister TABS = new CreativeTabDeferredRegister(ExMekanismDeorum.MOD_ID);
 
     private static final List<BlockRegistryObject<?, ?>> ALL = new ArrayList<>();
+    private static final Map<String, BlockRegistryObject<?, ?>> BY_NAME = new HashMap<>();
     public static final MekanismDeferredHolder<CreativeModeTab, CreativeModeTab> TAB;
 
     /**
@@ -137,6 +142,12 @@ public final class ModMachines {
         type.add(new AttributeMachineFactory(factory));
         if (tier != null) {
             type.add(new AttributeMachineTier(tier));
+            type.add(new AttributeTier<>(FactoryTier.valueOf(tier.name())));
+            MachineTier next = tier.next();
+            if (next != null) {
+                String nextName = next.getSerializedName() + "_" + family.getName() + "_factory";
+                type.add(new AttributeUpgradeable(() -> BY_NAME.get(nextName)));
+            }
         }
 
         BlockRegistryObject<BlockDeorumMachine<T>, ItemBlockTooltip<BlockDeorumMachine<T>>> block = BLOCKS.register(name,
@@ -149,6 +160,7 @@ public final class ModMachines {
                 .serverTicker(TileEntityMekanism::tickServer)
                 .build();
         ALL.add(block);
+        BY_NAME.put(name, block);
     }
 
     /**

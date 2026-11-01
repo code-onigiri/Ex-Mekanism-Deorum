@@ -194,4 +194,9 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             }
         }
     }
+
+    @Override
+    public mekanism.api.inventory.IInventorySlot getAutomationAuxSlot() {
+        return meshSlot;
+    }
 }

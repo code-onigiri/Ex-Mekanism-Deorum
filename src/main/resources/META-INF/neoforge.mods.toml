@@ -47,3 +47,35 @@ type = "optional"
 versionRange = "[19.21,)"
 ordering = "AFTER"
 side = "CLIENT"
+
+# Optional addon compatibility. These mods are never required; when present the
+# matching integration activates (tier installers can upgrade this mod's
+# factories, Empowered's upgrades apply through Mekanism's own upgrade hooks,
+# and Mek Energistics can automate the machines through its pattern SPI).
+[[dependencies.${mod_id}]]
+modId = "evolvedmekanism"
+type = "optional"
+versionRange = "[1.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "mekanism_empowered"
+type = "optional"
+versionRange = "[21.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "mekanism_extras"
+type = "optional"
+versionRange = "[1.4,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "mekenergistics"
+type = "optional"
+versionRange = "[3.0.6,)"
+ordering = "AFTER"
+side = "BOTH"

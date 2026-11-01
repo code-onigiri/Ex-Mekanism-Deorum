@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import dev.codeonigiri.exmekdeorum.registry.ModMachines;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
@@ -22,6 +23,15 @@ public final class ExMekanismDeorum {
 
     public ExMekanismDeorum(IEventBus modEventBus, ModContainer modContainer) {
         ModMachines.register(modEventBus);
+        if (ModList.get().isLoaded("mekenergistics")) {
+            try {
+                Class.forName("dev.codeonigiri.exmekdeorum.compat.MekEnergisticsCompat")
+                        .getMethod("registerBlocks").invoke(null);
+                LOGGER.info("Registered {} machines with Mek Energistics pattern automation.", ModMachines.getAll().size());
+            } catch (ReflectiveOperationException e) {
+                LOGGER.warn("Mek Energistics is installed but its pattern automation API could not be registered.", e);
+            }
+        }
         LOGGER.info("Ex Mekanism Deorum loaded; registered {} machine blocks.", ModMachines.getAll().size());
     }
 }

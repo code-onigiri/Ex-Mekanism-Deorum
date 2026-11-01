@@ -147,3 +147,11 @@ $ nix hash convert --hash-algo sha512 --to sri <sha512-hex>
 - GUI 背景とブロックのベーステクスチャは Mekanism のもの (MIT,
   Copyright Aidancbrady and contributors)
 - Minecraft EULA (<https://aka.ms/MinecraftEULA>) への同意は利用者の責任
+
+## Optional integration API
+
+`build.gradle` also compiles against Mek Energistics 3.0.8 (`MEKENERGISTICS_JAR`,
+`-PmekenergisticsJar=...`, or `libs/mekenergistics-3.0.8.jar`) because the pattern-automation
+mixin implements its SPI at compile time. The jar is `compileOnly`: it is never shipped, and the
+mixin plugin skips the integration when the mod is not installed, so it is not a runtime
+dependency. The Nix dev shell exports the pinned jar.

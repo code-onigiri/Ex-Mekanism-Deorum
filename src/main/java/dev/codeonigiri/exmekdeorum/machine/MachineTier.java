@@ -41,6 +41,18 @@ public enum MachineTier {
         return meltMultiplier;
     }
 
+    /**
+     * @return the next tier, or {@code null} for {@link #ULTIMATE}.
+     */
+    public MachineTier next() {
+        return switch (this) {
+            case BASIC -> ADVANCED;
+            case ADVANCED -> ELITE;
+            case ELITE -> ULTIMATE;
+            case ULTIMATE -> null;
+        };
+    }
+
     public String getSerializedName() {
         return name().toLowerCase(Locale.ROOT);
     }

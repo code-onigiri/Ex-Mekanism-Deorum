@@ -134,6 +134,17 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | Elite | `mekanism:alloy_reinforced` | `mekanism:elite_control_circuit` | `minecraft:gold_ingot` |
 | Ultimate | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | `minecraft:diamond` |
 
+## 互換 MOD（すべて任意）
+
+この MOD は単体で動作します。以下が入っているときだけ、対応する連携が有効になります。
+
+| MOD | 連携内容 |
+| --- | --- |
+| Evolved Mekanism / Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate にアップグレードできます。Ultimate より上のティアは対象外で、インストーラーは何もせず失敗しません。 |
+| Mekanism: Empowered | 速度・エネルギー倍率アップグレードは Mekanism の `MekanismUtils` 経由で計算されるため、自動的に反映されます（専用コードなし）。 |
+| Mek Energistics | AE2 のパターン自動化 SPI に 25 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。 |
+| JEI | Ex Deorum のレシピにこの MOD の機械を触媒として表示します。 |
+
 ## JEI 連携
 
 JEI は任意依存です (なくても動作します。配布 jar には含まれません)。

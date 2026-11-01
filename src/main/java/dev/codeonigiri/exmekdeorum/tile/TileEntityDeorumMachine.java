@@ -15,6 +15,8 @@ import mekanism.common.attachments.component.AttachedSideConfig;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
+import mekanism.api.energy.IEnergyContainer;
+import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -31,6 +33,7 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
+import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.EnumUtils;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.core.BlockPos;
@@ -377,6 +380,57 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     /**
      * All fluid tanks in GUI order. Empty for hammer and sieve.
      */
+    /**
+     * Slot treated as a persistent (tool/catalyst) input by recipe-automation integrations.
+     * Only the hammer and sieve have one; families without an auxiliary slot return {@code null}.
+     */
+    public @Nullable IInventorySlot getAutomationAuxSlot() {
+        return null;
+    }
+
+    public List<IInventorySlot> getAutomationItemInputs() {
+        return List.copyOf(inputSlots);
+    }
+
+    public List<IInventorySlot> getAutomationItemOutputs() {
+        return List.copyOf(outputSlots);
+    }
+
+    /** Input tanks for recipe automation: the barrel's fill tank, empty for everything else. */
+    public List<IExtendedFluidTank> getAutomationFluidInputs() {
+        return family == DeorumMachineFamily.BARREL && fluidTanks.size() > 1 ? List.of(fluidTanks.get(0)) : List.of();
+    }
+
+    /** Output tanks: barrel drain tank, or the single crucible tank. */
+    public List<IExtendedFluidTank> getAutomationFluidOutputs() {
+        if (fluidTanks.size() > 1) {
+            return List.of(fluidTanks.get(1));
+        }
+        return fluidTanks.isEmpty() ? List.of() : List.of(fluidTanks.get(0));
+    }
+
+    public IEnergyContainer getAutomationEnergyContainer() {
+        return energyContainer;
+    }
+
+    public boolean hasParallelOperations() {
+        return operations() > 1;
+    }
+
+    @Override
+    public @Nullable IUpgradeData getUpgradeData(@NotNull Provider provider) {
+        return new DeorumUpgradeData(saveWithoutMetadata(provider));
+    }
+
+    @Override
+    public void parseUpgradeData(@NotNull Provider provider, @NotNull IUpgradeData data) {
+        if (data instanceof DeorumUpgradeData deorum) {
+            loadWithComponents(deorum.tag(), provider);
+        } else {
+            super.parseUpgradeData(provider, data);
+        }
+    }
+
     public List<BasicFluidTank> getFluidTanks() {
         return fluidTanks;
     }

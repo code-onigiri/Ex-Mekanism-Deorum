@@ -98,6 +98,8 @@
               # Development-only: lets the dev client display Ex Deorum recipes
               # and our machines' JEI catalyst entries.
               export JEI_JAR="${jars.jei}"
+              # Optional compatibility target (pattern automation API, compile-only).
+              export MEKENERGISTICS_JAR="${jars.mekenergistics}"
 
               # Minecraft's GLFW needs libGLX/libGL (libglvnd) plus the Mesa
               # vendor libraries. Without this, runClient fails with

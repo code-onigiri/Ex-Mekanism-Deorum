@@ -253,4 +253,9 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             laneProgress[i] = lane.getFloat("progress");
         }
     }
+
+    @Override
+    public mekanism.api.inventory.IInventorySlot getAutomationAuxSlot() {
+        return hammerSlot;
+    }
 }
