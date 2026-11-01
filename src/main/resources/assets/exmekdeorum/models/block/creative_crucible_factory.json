@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/creative_crucible_factory_front",
+    "side": "exmekdeorum:block/creative_crucible_factory_side",
+    "top": "exmekdeorum:block/creative_crucible_factory_top",
+    "bottom": "exmekdeorum:block/creative_crucible_factory_bottom"
+  }
+}

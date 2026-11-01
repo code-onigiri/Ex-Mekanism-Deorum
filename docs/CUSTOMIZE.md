@@ -128,11 +128,15 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
   無印の機械と同じです。
 - るつぼファクトリーだけはレーンを増やさず、溶解・変換速度が 5/10/20/30 倍になります。
   電力も同じ倍率で増えるため、液体 1 単位あたりの FE は無印と同じです。
+- Evolved Mekanism / Mekanism Extras の追加ティア (Overclocked〜Creative、Absolute〜Infinite)
+  は 11〜19 レーン / るつぼ 40〜80 倍です。ブロックは MOD なしでも登録され、MOD が入って
+  いるときだけその MOD のティア属性 (インストーラー用) が付きます。
 
 ### 機械・ティアを増やす
 
 - 新しいティア: `MachineTier` に列挙子を追加すると `ModMachines` のループがブロックと
   BE タイプを自動生成します。テクスチャ・blockstate・モデル・レシピ・言語は
-  `src/main/resources/` の既存ファイルを雛形に手動で追加してください。
+  `src/main/resources/` の既存ファイルを雛形に手動で追加してください (ローカルの
+  `tools/generate_assets.py` を使う場合は `TIERS` と `TIER_LED` に追記して再生成できます)。
 - 新しいファミリー: `DeorumMachineFamily` に列挙子を追加し、`ModMachines` のタイル生成
   switch と `initInventory` を実装したタイルクラスを追加します。

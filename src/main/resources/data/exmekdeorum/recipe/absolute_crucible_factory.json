@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:alloy_atomic"
+    },
+    "C": {
+      "item": "mekanism:ultimate_control_circuit"
+    },
+    "I": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "P": {
+      "item": "exmekdeorum:ultimate_crucible_factory"
+    }
+  },
+  "result": {
+    "id": "exmekdeorum:absolute_crucible_factory",
+    "count": 1
+  }
+}

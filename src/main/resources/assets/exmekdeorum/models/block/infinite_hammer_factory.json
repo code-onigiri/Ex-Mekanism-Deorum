@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/infinite_hammer_factory_front",
+    "side": "exmekdeorum:block/infinite_hammer_factory_side",
+    "top": "exmekdeorum:block/infinite_hammer_factory_top",
+    "bottom": "exmekdeorum:block/infinite_hammer_factory_bottom"
+  }
+}

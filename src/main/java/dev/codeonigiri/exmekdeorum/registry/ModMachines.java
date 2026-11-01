@@ -1,6 +1,7 @@
 package dev.codeonigiri.exmekdeorum.registry;
 
 import dev.codeonigiri.exmekdeorum.ExMekanismDeorum;
+import dev.codeonigiri.exmekdeorum.compat.TierAttributes;
 import dev.codeonigiri.exmekdeorum.block.BlockDeorumMachine;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFactory;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFamily;
@@ -45,6 +46,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 
 /**
  * Registers the machine blocks.
@@ -116,7 +118,7 @@ public final class ModMachines {
     }
 
     private static void createFactory(DeorumMachineFamily family, MachineTier tier) {
-        String name = tier.getSerializedName() + "_" + family.getName() + "_factory";
+        String name = blockName(tier, family);
         switch (family) {
             case HAMMER -> createBlock(name, family, tier, true, TileEntityDeorumHammer::new);
             case SIEVE -> createBlock(name, family, tier, true, TileEntityDeorumSieve::new);
@@ -142,10 +144,14 @@ public final class ModMachines {
         type.add(new AttributeMachineFactory(factory));
         if (tier != null) {
             type.add(new AttributeMachineTier(tier));
-            type.add(new AttributeTier<>(FactoryTier.valueOf(tier.name())));
+            FactoryTier factoryTier = resolveFactoryTier(tier);
+            if (factoryTier != null) {
+                type.add(new AttributeTier<>(factoryTier));
+            }
             MachineTier next = tier.next();
-            if (next != null) {
-                String nextName = next.getSerializedName() + "_" + family.getName() + "_factory";
+            String nextName = next == null ? null : blockName(next, family);
+            boolean extrasChain = TierAttributes.applyExtrasUpgrade(type, tier, nextName, BY_NAME);
+            if (nextName != null && !extrasChain) {
                 type.add(new AttributeUpgradeable(() -> BY_NAME.get(nextName)));
             }
         }
@@ -161,6 +167,34 @@ public final class ModMachines {
                 .build();
         ALL.add(block);
         BY_NAME.put(name, block);
+    }
+
+    private static String blockName(MachineTier tier, DeorumMachineFamily family) {
+        return tier.getSerializedName() + "_" + family.getName() + "_factory";
+    }
+
+    /**
+     * Evolved Mekanism extends Mekanism's {@code FactoryTier} enum, so its extra tiers resolve
+     * through the normal name lookup once that mod is installed. Absent addons simply return
+     * {@code null}; the block is still registered, it just has no installer tier attribute.
+     */
+    private static FactoryTier resolveFactoryTier(MachineTier tier) {
+        if (tier.isAddonTier() && !isLoaded("evolvedmekanism")) {
+            return null;
+        }
+        try {
+            return FactoryTier.valueOf(tier.name());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static boolean isLoaded(String modId) {
+        try {
+            return ModList.get().isLoaded(modId);
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     /**

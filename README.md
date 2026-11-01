@@ -17,13 +17,14 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 ## 特徴
 
-- **25 ブロック**: 無印の機械 5 種 + Basic / Advanced / Elite / Ultimate のファクトリー 20 種
+- **70 ブロック**: 無印の機械 5 種 + ファクトリー 65 種 (Mekanism の 4 ティア + Evolved Mekanism の 5 ティア + Mekanism Extras の 4 ティア、各 5 ファミリー)
 - **レシピ自動参照**: Ex Deorum のハンマー・ふるい・バレル・るつぼレシピをそのまま使用
   (データパック追加分も自動)
 - **Mekanism 統合**: FE で動作。スピード / エネルギー / マフリングのアップグレード、
   側面設定、セキュリティ、レッドストーン制御、JEI 触媒に対応
-- **ファクトリー**: Basic 3 / Advanced 5 / Elite 7 / Ultimate 9 レーンの並列処理
-  (るつぼのみ速度 5/10/20/30 倍)
+- **ファクトリー**: Basic 3 / Advanced 5 / Elite 7 / Ultimate 9 レーンの並列処理。
+  Evolved Mekanism / Mekanism Extras を入れると 11〜19 レーンの追加ティアも使えます
+  (るつぼは速度倍率)
 - **圧縮ハンマー対応**: 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理
 
 ![ブロックの正面 (上から無印 / Basic / Advanced / Elite / Ultimate、左からハンマー・ふるい・バレル・溶岩るつぼ・水るつぼ)](docs/block-fronts.png)
@@ -56,7 +57,28 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 - 設置直後の側面設定は Mekanism の機械と同じです (アイテム: 全側面入力 + 右出力 + 背面
   エネルギー、エネルギー: 全側面入力、バレル/るつぼの液体: 全側面入出力)。ケーブルやパイプは
   設置してそのまま接続できます。
-- クリエイティブタブ `Ex Mekanism Deorum` に 25 個すべて入っています。
+- クリエイティブタブ `Ex Mekanism Deorum` に 70 個すべて入っています。
+
+### Evolved Mekanism / Mekanism Extras の追加ティア
+
+| ティア | 追加元 | 並列 | るつぼ倍率 |
+| --- | --- | --- | --- |
+| Overclocked | Evolved Mekanism | 11 | 40 倍 |
+| Quantum | Evolved Mekanism | 13 | 50 倍 |
+| Dense | Evolved Mekanism | 15 | 60 倍 |
+| Multiversal | Evolved Mekanism | 17 | 70 倍 |
+| Creative | Evolved Mekanism | 19 | 80 倍 |
+| Absolute | Mekanism Extras | 11 | 40 倍 |
+| Supreme | Mekanism Extras | 13 | 50 倍 |
+| Cosmic | Mekanism Extras | 15 | 60 倍 |
+| Infinite | Mekanism Extras | 17 | 70 倍 |
+
+- 追加ティアのブロックは **MOD がなくても登録されます** (レシピは `mekanism:alloy_atomic` +
+  `mekanism:ultimate_control_circuit` + ネザライトインゴット + 1 つ下のティア)。
+- 追加 MOD が入っていると、その MOD のティアインストーラーで Basic → … → Ultimate →
+  追加ティアまでアップグレードできます。Evolved Mekanism と Mekanism Extras が同時に入って
+  いる場合、インストーラーの経路は Evolved Mekanism 側 (Overclocked 以降) を使います。
+- 追加 MOD なしでもブロック・レシピ・JEI 触媒はすべて表示されます。
 
 ## 使い方
 
@@ -140,9 +162,9 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 | MOD | 連携内容 |
 | --- | --- |
-| Evolved Mekanism / Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate にアップグレードできます。Ultimate より上のティアは対象外で、インストーラーは何もせず失敗しません。 |
+| Evolved Mekanism / Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate → その MOD の追加ティアまでアップグレードできます（追加ティアのブロックは MOD なしでも存在します）。 |
 | Mekanism: Empowered | 速度・エネルギー倍率アップグレードは Mekanism の `MekanismUtils` 経由で計算されるため、自動的に反映されます（専用コードなし）。 |
-| Mek Energistics | AE2 のパターン自動化 SPI に 25 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。 |
+| Mek Energistics | AE2 のパターン自動化 SPI に 70 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。 |
 | JEI | Ex Deorum のレシピにこの MOD の機械を触媒として表示します。 |
 
 ## JEI 連携

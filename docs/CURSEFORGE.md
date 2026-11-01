@@ -10,9 +10,10 @@ Automate all your Ex Deorum processing with FE power, upgrades, and full side co
 Ex Deorum's manual and mechanical machines are re-implemented using Mekanism's machine architecture.
 Because recipes are directly referenced from Ex Deorum at runtime, **custom recipes added via datapacks work out of the box**.
 
-- **25 Blocks**: 5 Base Machines + 20 Tiered Factories (Basic / Advanced / Elite / Ultimate)
+- **70 Blocks**: 5 Base Machines + 65 Tiered Factories (Mekanism's Basic/Advanced/Elite/Ultimate, plus the extra tiers added by Evolved Mekanism and Mekanism Extras)
 - Full Mekanism integration: Upgrades (Speed, Energy, Muffling), Side Configuration, Security, and Redstone control
 - Factory parallelism: 3 / 5 / 7 / 9 parallel lanes for Basic, Advanced, Elite, and Ultimate (Crucibles scale melting speed by 5x / 10x / 20x / 30x instead)
+- Optional addon tiers: Evolved Mekanism (Overclocked 11, Quantum 13, Dense 15, Multiversal 17, Creative 19 lanes) and Mekanism Extras (Absolute 11, Supreme 13, Cosmic 15, Infinite 17 lanes) — the blocks and recipes exist even without the addons, and their tier installers can upgrade the factories when installed
 - Compressed Hammer support: inserting a compressed hammer enables `compressed_hammer` recipes automatically
 - JEI integration: registered as catalysts for Ex Deorum categories; click the GUI progress bar to jump directly to recipes
 
