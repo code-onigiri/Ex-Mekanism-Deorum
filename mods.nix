@@ -1,10 +1,13 @@
-# Pinned dependency jars for the "Ex Mekanism Deorum" mod development
-# environment.
+# Optional pinned dependency jars for offline / reproducible builds.
 #
-# Ex Deorum and Mekanism are *required* dependencies of the example mod; they
-# are declared as `type = "required"` in src/main/resources/META-INF/neoforge.mods.toml
-# and put on the Gradle compile/runtime classpath via EXDEORUM_JAR / MEKANISM_JAR
-# (see flake.nix and build.gradle).
+# build.gradle resolves dependencies from CurseForge Maven (cursemaven.com) by
+# default: Ex Deorum, Mekanism, JEI and Mek Energistics. This file still pins the
+# exact jars so the Nix dev shell can export EXDEORUM_JAR / MEKANISM_JAR / JEI_JAR /
+# MEKENERGISTICS_JAR for offline builds; when those variables are set they take
+# priority over the Maven coordinates (use -PuseMavenDeps to force Maven).
+#
+# Ex Deorum and Mekanism are *required* dependencies of this mod; they are
+# declared as `type = "required"` in src/main/resources/META-INF/neoforge.mods.toml.
 #
 # Mek Energistics is a development-only, optional compatibility target: its pattern
 # automation API is used to compile the integration (compileOnly, never bundled).

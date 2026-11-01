@@ -23,8 +23,9 @@ $ gradle runData      # データ生成 (src/generated/resources)
 
 - `JAVA_HOME`: Nix の JDK 21
 - `GRADLE_USER_HOME`: `.gradle-user-home/` (リポジトリ内。`~/.gradle` に書けない環境でも動く)
-- `EXDEORUM_JAR` / `MEKANISM_JAR`: ハッシュ固定された jar の Nix ストアパス
-- `JEI_JAR`: 開発専用の JEI (任意。配布物には含まれません)
+- 既定では依存は **CurseForge Maven** (`https://cursemaven.com`) から取得します。
+- `EXDEORUM_JAR` / `MEKANISM_JAR` / `JEI_JAR` / `MEKENERGISTICS_JAR`: オフラインビルド用の
+  ハッシュ固定 jar パス (任意。Nix シェルでは自動で export されます)
 
 ### Linux / NixOS でクライアントが起動しない
 
@@ -50,7 +51,7 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 | Mekanism | 10.7.19.85 (jar のビルド番号) | `[10.7.19,)` |
 | JEI (開発専用・任意) | 19.54.0.429 | `[19.21,)` (クライアントのみ) |
 
-バージョンとハッシュの出典は `mods.nix`、要求範囲は `gradle.properties` と
+バージョンの出典は `build.gradle` の CurseForge 座標 (オフライン用のハッシュは `mods.nix`)、要求範囲は `gradle.properties` と
 `src/main/resources/META-INF/neoforge.mods.toml` にあります。`gradle.properties` の範囲を
 変えたら `mods.nix` のバージョンも揃えてください。
 
@@ -73,11 +74,15 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 
 ## 依存の仕組み
 
-1. `flake.nix` が `mods.nix` の URL と SRI ハッシュで jar を `fetchurl` し、devShell で
-   `EXDEORUM_JAR` / `MEKANISM_JAR` として export する
-2. `build.gradle` がそのパスを `implementation files(...)` で compile / runtime classpath に追加する
+1. `build.gradle` が `curse.maven:<slug>-<projectId>:<fileId>` を宣言し、`cursemaven.com`
+   から解決する (Ex Deorum 3.12 / Mekanism 10.7.19.85 / JEI 19.54.0.429 / Mek Energistics 3.0.8)
+2. `-Paddons` を付けると Evolved Mekanism (+ Iglee's Library) / Mekanism Extras /
+   Mekanism: Empowered (+ Core / Kotlin for Forge) も dev の classpath に追加され、
+   互換コードを実環境で試せる (`gradle runServer -PuseMavenDeps -Paddons`)
 3. 両 jar は `META-INF/neoforge.mods.toml` を持つため、dev 実行時に FML が Mod として読み込む
-4. この Mod 自身の `neoforge.mods.toml` が両方を `type = "required"` で宣言する
+4. この Mod 自身の `neoforge.mods.toml` が Ex Deorum / Mekanism を `type = "required"` で宣言する
+5. オフライン / 再現性が必要な場合は `mods.nix` の固定 jar を `EXDEORUM_JAR` などで渡すか
+   `libs/` に置くと、そちらが優先される (`-PuseMavenDeps` で Maven 強制)
 5. JEI は `JEI_JAR` から dev の classpath にだけ追加する任意依存 (`type = "optional"`,
    client のみ)。jar には含めない
 
@@ -114,7 +119,9 @@ $ nix develop -c gradle build
 ## 依存 Mod の更新
 
 1. Modrinth で新バージョンの jar URL / SHA-512 / SHA-1 / サイズを取得
-2. `mods.nix` の該当エントリを更新 (url, hash (SRI), sha1, sha512, size, version, fileName)
+2. CurseForge の該当ファイル ID を控えて `build.gradle` の座標
+   (`curse.maven:<slug>-<projectId>:<fileId>`) を更新する。オフライン用に `mods.nix` も
+   (url, hash (SRI), sha1, sha512, size, version, fileName) を揃える
 3. `gradle.properties` の対応する範囲を更新
 4. 検証:
 
