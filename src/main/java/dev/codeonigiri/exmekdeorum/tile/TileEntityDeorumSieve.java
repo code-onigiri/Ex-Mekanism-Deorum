@@ -30,23 +30,19 @@ import thedarkcolour.exdeorum.tag.EItemTags;
  * <p>The input item stays in the input slot while a lane is working and is consumed only when that
  * lane's sifting operation completes.</p>
  *
- * <p>When a compressed hammer is placed in the hammer slot, new lanes switch to Ex Deorum's
- * {@link CompressedSieveLogic}, so compressed blocks are sifted with the {@code compressed_sieve}
- * recipe table. The mesh is still required (as in Ex Deorum's compressed sieve block); lanes that
- * were already running keep their original logic.</p>
+ * <p>Compressed blocks are detected from the installed mesh and sifted with Ex Deorum's
+ * {@link CompressedSieveLogic} / {@code compressed_sieve} recipe table; regular blocks keep using
+ * the normal sieve recipes. Only a mesh is needed in the auxiliary slot.</p>
  */
 public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements SieveLogic.Owner {
 
     private static final int BASE_TICKS = 100;
     private static final String LANES_KEY = "deorum_sieve_lanes";
     private static final String COMPRESSED_LANES_KEY = "deorum_sieve_compressed_lanes";
-    private static final int HAMMER_X = 48;
-    private static final int HAMMER_Y = 54;
 
     private SieveLogic[] logics;
     private CompressedSieveLogic[] compressedLogics;
     private BasicInventorySlot meshSlot;
-    private BasicInventorySlot hammerSlot;
     private ItemStack lastMesh = ItemStack.EMPTY;
 
     public TileEntityDeorumSieve(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
@@ -64,7 +60,6 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         super.initInventory(helper, listener);
         meshSlot = helper.addSlot(BasicInventorySlot.at(stack -> stack.is(EItemTags.SIEVE_MESHES), listener, AUX_X, AUX_Y, 1));
-        hammerSlot = helper.addSlot(BasicInventorySlot.at(stack -> stack.is(EItemTags.COMPRESSED_HAMMERS), listener, HAMMER_X, HAMMER_Y, 1));
     }
 
     @Override
@@ -82,15 +77,11 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
         return logics[0].isValidInput(stack) || compressedLogics[0].isValidInput(stack);
     }
 
-    private boolean hasCompressedHammer() {
-        return hammerSlot != null && !hammerSlot.getStack().isEmpty();
-    }
 
     @Override
     protected boolean tickMachine(ServerLevel level) {
         syncMesh(level);
 
-        boolean compressed = hasCompressedHammer();
         int claimed = countRunningLanes();
         boolean active = false;
         float increment = 1.0F / ticksFor(BASE_TICKS);
@@ -105,7 +96,7 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
                     continue;
                 }
                 SieveLogic target = null;
-                if (compressed && compressedLogics[i].isValidInput(input)) {
+                if (compressedLogics[i].isValidInput(input)) {
                     target = compressedLogics[i];
                 } else if (logics[i].isValidInput(input)) {
                     target = logics[i];
