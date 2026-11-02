@@ -65,6 +65,11 @@ ext.addonDeps = [
         // Mekanism: Empowered is a Kotlin mod and requires Kotlin for Forge.
         'curse.maven:kotlin-for-forge-351264:8335665',
         'curse.maven:evolved-mekanism-extras-1268159:8678947',
+        // Mek Energistics and its required dependencies (AE2 / Applied Mekanistics / GuideME).
+        'curse.maven:mek-energistics-1564287:8969316',
+        'curse.maven:applied-energistics-2-223794:8992605',
+        'curse.maven:applied-mekanistics-574300:7096962',
+        'curse.maven:guideme-1173950:9366366',
 ]
 
 neoForge {
@@ -120,19 +125,11 @@ dependencies {
             'curse.maven:jei-238222:8857687')
     // Optional integration API (Mek Energistics pattern automation). Compile-only: the
     // class/mixin that implements it is skipped when the mod is absent, and nothing is shipped.
+    // The runtime jar is part of addonDeps below, so dev runs load it by default.
     compileOnly modDependency('MEKENERGISTICS_JAR', 'mekenergisticsJar', 'mekenergistics-3.0.8.jar',
             'curse.maven:mek-energistics-1564287:8969316')
     if (!project.hasProperty('noAddons')) {
         addonDeps.each { implementation it }
-    }
-
-    // -PwithMekEnergistics を付けたときだけ、Mek Energistics とその必須依存 (AE2 / Applied
-    // Mekanistics / GuideME) を開発実行に含める。通常の開発起動を重くしないための opt-in。
-    if (project.hasProperty('withMekEnergistics')) {
-        implementation 'curse.maven:mek-energistics-1564287:8969316'
-        implementation 'curse.maven:applied-energistics-2-223794:8992605'
-        implementation 'curse.maven:applied-mekanistics-574300:7096962'
-        implementation 'curse.maven:guideme-1173950:9366366'
     }
 }
 

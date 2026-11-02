@@ -164,11 +164,13 @@ mixin implements its SPI at compile time. The jar is `compileOnly`: it is never 
 mixin plugin skips the integration when the mod is not installed, so it is not a runtime
 dependency. The Nix dev shell exports the pinned jar.
 
-To run the server/client with Mek Energistics (and its AE2 / Applied Mekanistics / GuideME
-dependencies) for an end-to-end test, pass `-PwithMekEnergistics`:
+Mek Energistics (and its AE2 / Applied Mekanistics / GuideME dependencies) is part of the
+default development classpath together with the other optional add-ons, so a plain
+`gradle runServer` / `runClient` loads it. To start without every optional mod, pass
+`-PnoAddons`:
 
 ```sh
-nix develop --command gradle --no-daemon runServer -PwithMekEnergistics
+nix develop --command gradle --no-daemon runServer -PnoAddons
 ```
 
 The mixin itself is declared through `[[mixins]] config = "exmekdeorum.mixins.json"` in

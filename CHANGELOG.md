@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- The development environment now loads Mek Energistics (and AE2 / Applied Mekanistics /
+  GuideME) by default together with the other optional add-ons; use `-PnoAddons` to start
+  without them.
+
 ## [0.2.1] - 2026-11-03
 
 ### Added
