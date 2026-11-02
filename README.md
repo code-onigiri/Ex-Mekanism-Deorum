@@ -23,9 +23,12 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 - **Mekanism 統合**: FE で動作。スピード / エネルギー / マフリングのアップグレード、
   側面設定、セキュリティ、レッドストーン制御、JEI 触媒に対応
 - **ファクトリー**: Basic 4 / Advanced 8 / Elite 12 / Ultimate 16 レーンの並列処理。
-  Evolved Mekanism / Mekanism Extras を入れると 11〜19 レーンの追加ティアも使えます
-  (るつぼは速度倍率)
-- **圧縮ハンマー対応**: 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理
+  Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras を入れると 20〜64 レーンの
+  追加ティアも使えます (るつぼは速度倍率)
+- **圧縮ハンマー対応**: 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理し、
+  結果も `compressed_*` アイテムで出力
+- **大容量バッファ**: 入力スロットは 64 × 並列数、内部 FE は 40,000 × 並列数まで保持
+- **アニメーション**: 前面 LED が待機中は呼吸、稼働中は明滅 + 走査線
 
 ![ブロックの正面 (上から無印 / Basic / Advanced / Elite / Ultimate、左からハンマー・ふるい・バレル・溶岩るつぼ・水るつぼ)](docs/block-fronts.png)
 
@@ -253,6 +256,7 @@ JEI は任意依存です (なくても動作します。配布 jar には含ま
 
 - テクスチャ・GUI・バランスの調整: [docs/CUSTOMIZE.md](docs/CUSTOMIZE.md)
 - ビルド環境・依存の仕組み・バージョン更新: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+- 変更履歴: [CHANGELOG.md](CHANGELOG.md)
 
 ```console
 $ nix develop
