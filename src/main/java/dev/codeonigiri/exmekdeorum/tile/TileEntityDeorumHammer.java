@@ -7,14 +7,17 @@ import mekanism.common.inventory.slot.BasicInventorySlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -141,7 +144,19 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             if (count > 0 && !lane.is(compressedRecipe ? EItemTags.COMPRESSED_HAMMER_FORTUNE_BLACKLIST : EItemTags.HAMMER_FORTUNE_BLACKLIST)) {
                 count += HammerLootModifier.calculateFortuneBonus(level.registryAccess(), hammer, context.getRandom(), count == 0);
             }
-            ItemStack result = count > 0 ? recipe.result.copyWithCount(count) : ItemStack.EMPTY;
+            ItemStack result;
+            if (compressedRecipe) {
+                // 圧縮ハンマーは圧縮段階を保つ: 9 個ぶんの結果を 1 個の圧縮アイテムにまとめる。
+                ItemStack compressedResult = compressedEquivalent(recipe.result);
+                if (!compressedResult.isEmpty() && count >= 9) {
+                    compressedResult.setCount(count / 9);
+                    result = compressedResult;
+                } else {
+                    result = count > 0 ? recipe.result.copyWithCount(count) : ItemStack.EMPTY;
+                }
+            } else {
+                result = count > 0 ? recipe.result.copyWithCount(count) : ItemStack.EMPTY;
+            }
             if (!result.isEmpty() && !canInsertResult(result)) {
                 // Retry next tick: keep the progress bar full and the input in the slot.
                 laneProgress[i] = 1.0F;
@@ -168,6 +183,24 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             progress = averageProgress();
         }
         return active;
+    }
+
+    /**
+     * Maps an Ex Deorum hammer result to its compressed counterpart when one exists, e.g.
+     * {@code minecraft:gravel} to {@code exdeorum:compressed_gravel}. Used by compressed hammers so
+     * the compression level survives the operation instead of being expanded to nine items.
+     */
+    private static ItemStack compressedEquivalent(ItemStack result) {
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(result.getItem());
+        if (id == null) {
+            return ItemStack.EMPTY;
+        }
+        ResourceLocation compressedId = ResourceLocation.fromNamespaceAndPath("exdeorum", "compressed_" + id.getPath());
+        Item compressed = BuiltInRegistries.ITEM.get(compressedId);
+        if (compressed == null || compressed == Items.AIR) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(compressed);
     }
 
     /**

@@ -1,23 +1,29 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
-    "ACA",
-    "IPI",
-    "ACA"
+    "ACT",
+    "PXQ",
+    "TCA"
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "mekanism_extras:alloys/spectrum"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/infinite_multiversal"
     },
-    "I": {
-      "item": "mekanism:pellet_plutonium"
+    "T": {
+      "tag": "evolvedmekanism:alloys/exoversal"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
     },
     "P": {
-      "item": "exmekdeorum:cosmic_dense_water_crucible_factory"
+      "item": "exmekdeorum:infinite_water_crucible_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:multiversal_water_crucible_factory"
     }
   },
   "result": {

@@ -1,23 +1,29 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
-    "ACA",
-    "IPI",
-    "ACA"
+    "ACT",
+    "PXQ",
+    "TCA"
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "mekanism_extras:alloys/thermonuclear"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/supreme_quantum"
     },
-    "I": {
-      "item": "mekanism:pellet_plutonium"
+    "T": {
+      "tag": "evolvedmekanism:alloys/subatomic"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
     },
     "P": {
-      "item": "exmekdeorum:absolute_overclocked_hammer_factory"
+      "item": "exmekdeorum:supreme_hammer_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:quantum_hammer_factory"
     }
   },
   "result": {

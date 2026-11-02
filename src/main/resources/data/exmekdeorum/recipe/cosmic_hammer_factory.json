@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
     "ACA",
@@ -8,13 +8,13 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "mekanism_extras:alloys/shining"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/cosmic"
     },
     "I": {
-      "item": "mekanism:pellet_polonium"
+      "tag": "c:ingots/refined_obsidian"
     },
     "P": {
       "item": "exmekdeorum:supreme_hammer_factory"

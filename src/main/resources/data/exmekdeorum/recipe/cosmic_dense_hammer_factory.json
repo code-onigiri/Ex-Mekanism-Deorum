@@ -1,23 +1,29 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
-    "ACA",
-    "IPI",
-    "ACA"
+    "ACT",
+    "PXQ",
+    "TCA"
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "mekanism_extras:alloys/shining"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/cosmic_dense"
     },
-    "I": {
-      "item": "mekanism:pellet_plutonium"
+    "T": {
+      "tag": "evolvedmekanism:alloys/singular"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
     },
     "P": {
-      "item": "exmekdeorum:supreme_quantum_hammer_factory"
+      "item": "exmekdeorum:cosmic_hammer_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:dense_hammer_factory"
     }
   },
   "result": {

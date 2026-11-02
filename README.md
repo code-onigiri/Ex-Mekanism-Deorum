@@ -79,9 +79,16 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 - 追加ティアのブロックは **対応する MOD が入っているときだけ登録されます** (MOD なしなら
   Mekanism の 25 ブロックのみ)。レシピにも `neoforge:mod_loaded` 条件が付きます。
-- 追加ティアのレシピは基本ティアと同じ `ACA / IPI / ACA` で、`P` は 1 つ下のティア、
-  周囲は `mekanism:alloy_atomic` (A) + `mekanism:ultimate_control_circuit` (C) + 各 MOD の
-  ペレット (Evolved: antimatter / Extras: polonium / Extras Extras: plutonium) (I) です。
+- 追加ティアのレシピは、各連携 MOD のファクトリーと同じ素材構成 (`mekanism:mek_data`) に
+  揃えています。`P` は 1 つ下のティア (EM Extras は Extras / Evolved それぞれの 1 つ下) です。
+  - Evolved Mekanism: 合金 (hypercharged → subatomic → singular → exoversal → creative) +
+    回路 (overclocked → quantum → dense → multiversal → creative) + ウラン / 錫 / 青銅 /
+    ネザライト / ネザースター
+  - Mekanism Extras: 合金 (radiance → thermonuclear → shining → spectrum) +
+    回路 (absolute → supreme → cosmic → infinite) + エメラルド / ネザライト / 精製黒曜石 /
+    プルトニウム + ポロニウムのペレット
+  - Evolved Mekanism Extras: 両 MOD の合金 + `ACT / PXQ / TCA` パターン (X は
+    `mekanism:steel_casing`、P / Q は Extras / Evolved 側の 1 つ下のティア)
 - 追加 MOD が入っていると、その MOD のティアインストーラーで Basic → … → Ultimate →
   追加ティアまでアップグレードできます。Evolved Mekanism と Mekanism Extras が同時に入って
   いる場合、インストーラーの経路は Evolved Mekanism 側 (Overclocked 以降) を使います。
@@ -110,7 +117,8 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 - **ハンマー**: 1 個あたり基本 200 tick。ハンマースロット (スロット 22) のハンマーを 1 回ごとに
   1 耐久消費し、効率 (Efficiency) と幸運 (Fortune) が効きます。出力は 20 スロット。
   スロット 22 に圧縮ハンマー (`#exdeorum:compressed_hammers`) を入れると、圧縮ブロックは
-  `compressed_hammer` レシピで処理します。入力とハンマーの挿入順は問いません。
+  `compressed_hammer` レシピで処理します。入力とハンマーの挿入順は問いません。圧縮ハンマーの
+  結果は圧縮段階を保ち、9 個ぶんのドロップは 1 個の `exdeorum:compressed_*` にまとまります。
 - **ふるい**: 1 個あたり基本 100 tick。メッシュスロット (スロット 22) が必須で、
   メッシュの効率 / 幸運エンチャントが効きます。圧縮ブロックは自動判別され、同じメッシュで
   Ex Deorum の `compressed_sieve` レシピを使って処理されます。`by_hand_only: true` のレシピは機械では
@@ -165,7 +173,10 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | Advanced | `mekanism:alloy_infused` | `mekanism:advanced_control_circuit` | `mekanism:ingot_osmium` |
 | Elite | `mekanism:alloy_reinforced` | `mekanism:elite_control_circuit` | `minecraft:gold_ingot` |
 | Ultimate | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | `minecraft:diamond` |
-| 追加ティア | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | 各 MOD のペレット |
+| 追加ティア | 各 MOD の合金 | 各 MOD の回路 | 各 MOD のインゴット / ペレット |
+
+追加ティアは連携 MOD 本来のレシピを再現しています (EM Extras だけは `ACT / PXQ / TCA` の
+9 マス全体を使うレシピ)。
 
 追加ティアのレシピは対応 MOD がある時だけ読み込まれます。
 

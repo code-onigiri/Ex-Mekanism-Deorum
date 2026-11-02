@@ -1,23 +1,29 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
-    "ACA",
-    "IPI",
-    "ACA"
+    "ACT",
+    "PXQ",
+    "TCA"
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "mekanism_extras:alloys/radiance"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/absolute_overclocked"
     },
-    "I": {
-      "item": "mekanism:pellet_plutonium"
+    "T": {
+      "tag": "evolvedmekanism:alloys/hypercharged"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
     },
     "P": {
-      "item": "exmekdeorum:ultimate_barrel_factory"
+      "item": "exmekdeorum:absolute_barrel_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:overclocked_barrel_factory"
     }
   },
   "result": {

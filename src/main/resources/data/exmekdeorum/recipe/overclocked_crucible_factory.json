@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mekanism:mek_data",
   "category": "misc",
   "pattern": [
     "ACA",
@@ -8,13 +8,13 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:alloy_atomic"
+      "tag": "evolvedmekanism:alloys/hypercharged"
     },
     "C": {
-      "item": "mekanism:ultimate_control_circuit"
+      "tag": "c:circuits/overclocked"
     },
     "I": {
-      "item": "mekanism:pellet_antimatter"
+      "tag": "c:ingots/uranium"
     },
     "P": {
       "item": "exmekdeorum:ultimate_crucible_factory"
