@@ -6,7 +6,7 @@ import net.neoforged.fml.ModList;
 /**
  * Factory tiers.
  *
- * <p>The first four tiers mirror Mekanism's factories (3/5/7/9 parallel operations). The
+ * <p>The first four tiers mirror Mekanism's factories (4/8/12/16 parallel operations). The
  * remaining constants mirror the tiers added by the optional addons
  * <a href="https://www.curseforge.com/minecraft/mc-mods/evolved-mekanism">Evolved Mekanism</a>
  * (Overclocked..Creative) and
@@ -23,26 +23,26 @@ import net.neoforged.fml.ModList;
  */
 public enum MachineTier {
     // Mekanism's own ladder.
-    BASIC(3, 5),
-    ADVANCED(5, 10),
-    ELITE(7, 20),
-    ULTIMATE(9, 30),
+    BASIC(4, 5),
+    ADVANCED(8, 10),
+    ELITE(12, 20),
+    ULTIMATE(16, 30),
     // Evolved Mekanism: 11 / 13 / 15 / 17 / 19 parallel operations.
-    OVERCLOCKED(11, 40),
-    QUANTUM(13, 50),
-    DENSE(15, 60),
-    MULTIVERSAL(17, 70),
-    CREATIVE(19, 80),
+    OVERCLOCKED(20, 40),
+    QUANTUM(24, 50),
+    DENSE(28, 60),
+    MULTIVERSAL(32, 70),
+    CREATIVE(36, 80),
     // Mekanism Extras: 11 / 13 / 15 / 17 parallel operations.
-    ABSOLUTE(11, 40),
-    SUPREME(13, 50),
-    COSMIC(15, 60),
-    INFINITE(17, 70),
+    ABSOLUTE(20, 40),
+    SUPREME(24, 50),
+    COSMIC(28, 60),
+    INFINITE(32, 70),
     // Evolved Mekanism Extras: combined Evolved + Extras tiers (12 / 14 / 16 / 18 parallel).
-    ABSOLUTE_OVERCLOCKED(12, 90),
-    SUPREME_QUANTUM(14, 100),
-    COSMIC_DENSE(16, 110),
-    INFINITE_MULTIVERSAL(18, 120);
+    ABSOLUTE_OVERCLOCKED(40, 90),
+    SUPREME_QUANTUM(48, 100),
+    COSMIC_DENSE(56, 110),
+    INFINITE_MULTIVERSAL(64, 120);
 
     private final int factoryProcesses;
     private final int meltMultiplier;

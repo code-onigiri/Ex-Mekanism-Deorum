@@ -22,7 +22,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
   (データパック追加分も自動)
 - **Mekanism 統合**: FE で動作。スピード / エネルギー / マフリングのアップグレード、
   側面設定、セキュリティ、レッドストーン制御、JEI 触媒に対応
-- **ファクトリー**: Basic 3 / Advanced 5 / Elite 7 / Ultimate 9 レーンの並列処理。
+- **ファクトリー**: Basic 4 / Advanced 8 / Elite 12 / Ultimate 16 レーンの並列処理。
   Evolved Mekanism / Mekanism Extras を入れると 11〜19 レーンの追加ティアも使えます
   (るつぼは速度倍率)
 - **圧縮ハンマー対応**: 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理
@@ -48,9 +48,10 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | 溶岩るつぼ | `crucible_machine` | `basic_/advanced_/elite_/ultimate_crucible_factory` | 20 FE/t × 溶解倍率 |
 | 水るつぼ | `water_crucible_machine` | `basic_/advanced_/elite_/ultimate_water_crucible_factory` | 20 FE/t × 溶解倍率 |
 
-- ハンマー / ふるい / バレルのファクトリーは Mekanism 準拠で Basic 3 / Advanced 5 /
-  Elite 7 / Ultimate 9 本の並列処理です。ティアによる速度ボーナスはなく、1 レーンあたりの
-  FE は無印と同じです。
+- ハンマー / ふるい / バレルのファクトリーは Basic 4 / Advanced 8 / Elite 12 / Ultimate 16 本の
+  並列処理です。ティアによる速度ボーナスはなく、1 レーンあたりの FE は無印と同じです。
+  入力スロットの上限も並列数に合わせて 64 × 並列数まで増え、いろいろなアイテムを同時に
+  処理させやすくしています。
 - **るつぼファクトリーだけは例外**で、レーンを増やさず溶解速度を Basic 5 倍 / Advanced 10 倍 /
   Elite 20 倍 / Ultimate 30 倍にします。電力も同じ倍率で増えるため、液体 1 単位あたりの FE は
   無印と同じです。
@@ -63,19 +64,19 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 | ティア | 追加元 | 並列 | るつぼ倍率 |
 | --- | --- | --- | --- |
-| Overclocked | Evolved Mekanism | 11 | 40 倍 |
-| Quantum | Evolved Mekanism | 13 | 50 倍 |
-| Dense | Evolved Mekanism | 15 | 60 倍 |
-| Multiversal | Evolved Mekanism | 17 | 70 倍 |
-| Creative | Evolved Mekanism | 19 | 80 倍 |
-| Absolute | Mekanism Extras | 11 | 40 倍 |
-| Supreme | Mekanism Extras | 13 | 50 倍 |
-| Cosmic | Mekanism Extras | 15 | 60 倍 |
-| Infinite | Mekanism Extras | 17 | 70 倍 |
-| Absolute Overclocked | Evolved Mekanism Extras | 12 | 90 倍 |
-| Supreme Quantum | Evolved Mekanism Extras | 14 | 100 倍 |
-| Cosmic Dense | Evolved Mekanism Extras | 16 | 110 倍 |
-| Infinite Multiversal | Evolved Mekanism Extras | 18 | 120 倍 |
+| Overclocked | Evolved Mekanism | 20 | 40 倍 |
+| Quantum | Evolved Mekanism | 24 | 50 倍 |
+| Dense | Evolved Mekanism | 28 | 60 倍 |
+| Multiversal | Evolved Mekanism | 32 | 70 倍 |
+| Creative | Evolved Mekanism | 36 | 80 倍 |
+| Absolute | Mekanism Extras | 20 | 40 倍 |
+| Supreme | Mekanism Extras | 24 | 50 倍 |
+| Cosmic | Mekanism Extras | 28 | 60 倍 |
+| Infinite | Mekanism Extras | 32 | 70 倍 |
+| Absolute Overclocked | Evolved Mekanism Extras | 40 | 90 倍 |
+| Supreme Quantum | Evolved Mekanism Extras | 48 | 100 倍 |
+| Cosmic Dense | Evolved Mekanism Extras | 56 | 110 倍 |
+| Infinite Multiversal | Evolved Mekanism Extras | 64 | 120 倍 |
 
 - 追加ティアのブロックは **対応する MOD が入っているときだけ登録されます** (MOD なしなら
   Mekanism の 25 ブロックのみ)。レシピにも `neoforge:mod_loaded` 条件が付きます。
@@ -158,16 +159,17 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | ティア | 並列数 | 容量 |
 | --- | --- | --- |
 | 無印 | 1 | 40,000 FE |
-| Basic | 3 | 120,000 FE |
-| Advanced | 5 | 200,000 FE |
-| Elite | 7 | 280,000 FE |
-| Ultimate | 9 | 360,000 FE |
-| Evolved (Overclocked〜Creative) | 11 / 13 / 15 / 17 / 19 | 440,000 〜 760,000 FE |
-| Extras (Absolute〜Infinite) | 11 / 13 / 15 / 17 | 440,000 〜 680,000 FE |
-| EM Extras (hybrid) | 12 / 14 / 16 / 18 | 480,000 〜 720,000 FE |
+| Basic | 4 | 160,000 FE |
+| Advanced | 8 | 320,000 FE |
+| Elite | 12 | 480,000 FE |
+| Ultimate | 16 | 640,000 FE |
+| Evolved (Overclocked〜Creative) | 20 / 24 / 28 / 32 / 36 | 800,000 〜 1,440,000 FE |
+| Extras (Absolute〜Infinite) | 20 / 24 / 28 / 32 | 800,000 〜 1,280,000 FE |
+| EM Extras (hybrid) | 40 / 48 / 56 / 64 | 1,600,000 〜 2,560,000 FE |
 
 速度アップグレードを盛って 1 tick の消費が容量を超える場合は、容量を上限に動き続けます
-(完全停止はしません)。
+(完全停止はしません)。入力スロットは **64 × 並列数** (Basic 256、Ultimate 1,024 など) まで
+スタックできます。
 
 ## クラフトレシピ
 

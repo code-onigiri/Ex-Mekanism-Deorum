@@ -11,7 +11,7 @@ import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.InputInventorySlot;
+import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup.Provider;
@@ -67,7 +67,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         inputSlots = new ArrayList<>(1);
         outputSlots = new ArrayList<>(0);
-        inputSlots.add(helper.addSlot(InputInventorySlot.at(this::isValidInput, listener, CRUCIBLE_INPUT_X, CRUCIBLE_INPUT_Y)));
+        inputSlots.add(helper.addSlot(DeorumInputSlot.at(this::isValidInput, listener, CRUCIBLE_INPUT_X, CRUCIBLE_INPUT_Y, inputLimit())));
         // Energy sits directly under the single input slot.
         energySlot = helper.addSlot(EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, CRUCIBLE_INPUT_X, CRUCIBLE_INPUT_Y + 18));
     }

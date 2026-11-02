@@ -25,7 +25,7 @@ import thedarkcolour.exdeorum.tag.EItemTags;
  * <p>This machine delegates all sifting maths to Ex Deorum's own public {@link SieveLogic}, so
  * mesh enchantments (Efficiency / Fortune), {@code by_hand_only} recipes, moss drop limiting and
  * the configured sieve interval behave exactly like the Ex Deorum mechanical sieve. Each lane is
- * an independent {@link SieveLogic}; factories run 3/5/7/9 lanes in parallel.</p>
+ * an independent {@link SieveLogic}; factories run 4/8/12/16 lanes in parallel.</p>
  *
  * <p>The input item stays in the input slot while a lane is working and is consumed only when that
  * lane's sifting operation completes.</p>

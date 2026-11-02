@@ -26,7 +26,7 @@ import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableFloat;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.InputInventorySlot;
+import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.TileComponentEjector;
@@ -229,7 +229,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         inputSlots = new ArrayList<>(1);
         outputSlots = new ArrayList<>(OUTPUT_SLOTS);
-        inputSlots.add(helper.addSlot(InputInventorySlot.at(this::isValidInput, listener, INPUT_X, INPUT_Y)));
+        inputSlots.add(helper.addSlot(DeorumInputSlot.at(this::isValidInput, listener, INPUT_X, INPUT_Y, inputLimit())));
         for (int i = 0; i < OUTPUT_SLOTS; i++) {
             outputSlots.add(helper.addSlot(OutputInventorySlot.at(listener,
                     OUTPUT_X + (i % OUTPUT_COLUMNS) * 18, OUTPUT_Y + (i / OUTPUT_COLUMNS) * 18)));
@@ -271,7 +271,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     /**
-     * Number of parallel operations: 1 for an untiered machine, 3/5/7/9 for a factory.
+     * Number of parallel operations: 1 for an untiered machine, 4/8/12/16 for a factory.
      */
     public int operations() {
         return factory && tier != null ? tier.getFactoryProcesses() : 1;
@@ -312,6 +312,11 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
 
     protected void useEnergy(int operations) {
         energyContainer.extract(energyCost(operations), Action.EXECUTE, AutomationType.INTERNAL);
+    }
+
+    /** 入力スロットの上限。並列数ぶんの処理を同時に回せるよう 64 × 並列数 まで持てる。 */
+    protected int inputLimit() {
+        return 64 * Math.max(1, operations());
     }
 
     @NotNull

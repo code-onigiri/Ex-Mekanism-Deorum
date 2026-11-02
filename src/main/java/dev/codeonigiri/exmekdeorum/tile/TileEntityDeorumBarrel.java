@@ -11,7 +11,7 @@ import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.InputInventorySlot;
+import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -102,8 +102,8 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         inputSlots = new java.util.ArrayList<>(2);
         outputSlots = new java.util.ArrayList<>(1);
-        inputSlots.add(helper.addSlot(InputInventorySlot.at(this::isValidInput, listener, INPUT_A_X, INPUT_A_Y)));
-        inputSlots.add(helper.addSlot(InputInventorySlot.at(this::isValidInput, listener, INPUT_B_X, INPUT_B_Y)));
+        inputSlots.add(helper.addSlot(DeorumInputSlot.at(this::isValidInput, listener, INPUT_A_X, INPUT_A_Y, inputLimit())));
+        inputSlots.add(helper.addSlot(DeorumInputSlot.at(this::isValidInput, listener, INPUT_B_X, INPUT_B_Y, inputLimit())));
         outputSlots.add(helper.addSlot(OutputInventorySlot.at(listener, OUTPUT_X, OUTPUT_Y)));
         energySlot = helper.addSlot(EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, ENERGY_X, ENERGY_Y));
     }
