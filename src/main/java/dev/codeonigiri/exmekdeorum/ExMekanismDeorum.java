@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 public final class ExMekanismDeorum {
     public static final String MOD_ID = "exmekdeorum";
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ExMekanismDeorum(IEventBus modEventBus, ModContainer modContainer) {
         ModMachines.register(modEventBus);

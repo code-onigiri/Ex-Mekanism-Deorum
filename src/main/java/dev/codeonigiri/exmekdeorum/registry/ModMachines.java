@@ -27,7 +27,9 @@ import mekanism.common.block.attribute.AttributeEnergy;
 import mekanism.common.block.attribute.AttributeGui;
 import mekanism.common.block.attribute.AttributeSideConfig;
 import mekanism.common.block.attribute.AttributeTier;
+import mekanism.api.Upgrade;
 import mekanism.common.block.attribute.AttributeUpgradeable;
+import mekanism.common.content.blocktype.BlockType;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -144,6 +146,7 @@ public final class ModMachines {
                 ? AttributeSideConfig.create(TransmissionType.ITEM, TransmissionType.ENERGY, TransmissionType.FLUID)
                 : AttributeSideConfig.ELECTRIC_MACHINE);
         type.add(new AttributeMachineFamily(family));
+        applyEmpoweredUpgrades(type);
         type.add(new AttributeMachineFactory(factory));
         if (tier != null) {
             type.add(new AttributeMachineTier(tier));
@@ -171,6 +174,38 @@ public final class ModMachines {
                 .build();
         ALL.add(block);
         BY_NAME.put(name, block);
+    }
+
+    /**
+     * Mekanism: Empowered の追加アップグレード (empowered_speed など) は、同 MOD が
+     * Mekanism 標準のブロックタイプにだけ登録する。ここで自前のブロックタイプにも
+     * 同じ登録を行い、Empowered 製アップグレードを受け付けられるようにする。
+     * MOD が無いときは何もしない (リフレクションのみで依存しない)。
+     */
+    private static void applyEmpoweredUpgrades(BlockType type) {
+        if (!ModList.get().isLoaded("mekanism_empowered")) {
+            return;
+        }
+        try {
+            Class<?> api = Class.forName("dev.lapis256.mekanism_empowered.api.MekEmpUpgrade");
+            Class<?> util = Class.forName("dev.lapis256.mekanism_empowered.core.common.util.AdditionalUpgradeUtil");
+            List<Upgrade> upgrades = new ArrayList<>();
+            for (String getter : new String[]{"getEMPOWERED_SPEED", "getEMPOWERED_ENERGY", "getIO_CAPACITY",
+                    "getFAST_ITEM_INSERT", "getFAST_ITEM_EJECT", "getAUTO_INSERTER"}) {
+                try {
+                    upgrades.add((Upgrade) api.getMethod(getter).invoke(null));
+                } catch (NoSuchMethodException ignored) {
+                    // Older Empowered builds may not have every upgrade.
+                }
+            }
+            if (upgrades.isEmpty()) {
+                return;
+            }
+            util.getMethod("addSupported", BlockType.class, Upgrade[].class)
+                    .invoke(null, type, upgrades.toArray(new Upgrade[0]));
+        } catch (ReflectiveOperationException e) {
+            ExMekanismDeorum.LOGGER.warn("Failed to add Mekanism: Empowered upgrade support", e);
+        }
     }
 
     private static String blockName(MachineTier tier, DeorumMachineFamily family) {

@@ -182,6 +182,10 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 ## 互換 MOD（すべて任意）
 
+> Mekanism: Empowered の追加アップグレード (`empowered_speed` / `empowered_energy` /
+> `io_capacity` / `fast_item_insert` / `fast_item_eject` / `auto_inserter`) も、当 MOD の
+> 全機械で受け付けます (MOD があるときだけリフレクションで登録)。
+
 この MOD は単体で動作します。以下が入っているときだけ、対応する連携が有効になります。
 
 | MOD | 連携内容 |
