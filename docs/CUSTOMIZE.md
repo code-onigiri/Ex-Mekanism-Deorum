@@ -114,6 +114,7 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
 | ファクトリーの並列数 (3/5/7/9) | `src/main/java/dev/codeonigiri/exmekdeorum/machine/MachineTier.java` |
 | ファミリーごとの基本消費・基本容量 | `src/main/java/dev/codeonigiri/exmekdeorum/machine/DeorumMachineFamily.java` |
 | ブロック生成時のエネルギー設定 | `src/main/java/dev/codeonigiri/exmekdeorum/registry/ModMachines.java` の `createBlock` |
+| 内部バッファ容量 | `DeorumMachineFamily.BASE_ENERGY_STORAGE` (40,000) × 並列数。`createBlock` で `Math.multiplyExact` |
 | ハンマーの基本時間 (200 tick) | `tile/TileEntityDeorumHammer.java` の `BASE_TICKS` |
 | ふるいの基本時間 (100 tick) | `tile/TileEntityDeorumSieve.java` の `BASE_TICKS` |
 | バレルの堆肥速度 | Ex Deorum の `EConfig.SERVER.barrelProgressStep` |

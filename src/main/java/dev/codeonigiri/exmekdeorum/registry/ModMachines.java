@@ -137,7 +137,10 @@ public final class ModMachines {
             MachineTier tier, boolean factory, TileFactory<T> tileFactory) {
         TileTypeRef<T> ref = new TileTypeRef<>();
         long usage = family.getBaseEnergyUsage();
-        long storage = DeorumMachineFamily.BASE_ENERGY_STORAGE;
+        // ファクトリーは並列数だけ 1 tick の消費も増えるため、内部バッファも同じ比率で
+        // 増やす (バッファで動ける時間を無印と揃える)。ティアが上がるほど貯蓄も増える。
+        int processes = factory && tier != null ? tier.getFactoryProcesses() : 1;
+        long storage = Math.multiplyExact(DeorumMachineFamily.BASE_ENERGY_STORAGE, processes);
 
         Machine<T> type = new Machine<>(ref::get, new DeorumLangEntry("description." + name));
         type.add(new AttributeGui(() -> ModContainers.DEORUM_MACHINE, null));
