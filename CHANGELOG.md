@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- The development environment now loads Mek Energistics (and AE2 / Applied Mekanistics /
-  GuideME) by default together with the other optional add-ons; use `-PnoAddons` to start
-  without them.
+- Simplified the development setup: `flake.nix` only provides JDK 21, Gradle and the client
+  native libraries, and `build.gradle` resolves every mod from CurseForge Maven. The pinned
+  jar machinery (`mods.nix`, `-PuseMavenDeps` and `-PnoAddons`) is gone;
+  all optional mods load in development by default.
 
 ## [0.2.1] - 2026-11-03
 

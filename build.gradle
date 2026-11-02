@@ -18,7 +18,7 @@ java {
 
 repositories {
     mavenCentral()
-    // Optional mods (Ex Deorum, Mekanism, JEI, Mek Energistics) resolve from CurseForge Maven.
+    // All mod dependencies resolve from CurseForge Maven.
     maven {
         name = 'CurseForge'
         url = 'https://cursemaven.com'
@@ -28,49 +28,27 @@ repositories {
     }
 }
 
-// Dependencies are resolved from CurseForge Maven by default (see the repositories block).
-// Offline / reproducible builds can override each coordinate with a local jar:
-//   - inside the Nix shell: EXDEORUM_JAR / MEKANISM_JAR / JEI_JAR / MEKENERGISTICS_JAR
-//   - Gradle properties: -PexdeorumJar=... / -PmekanismJar=... / -PjeiJar=... / -PmekenergisticsJar=...
-//   - or a file in libs/
-// Pass -PuseMavenDeps to ignore all of those and always resolve from Maven.
-// The optional addon mods are on the dev runtime classpath by default (-PnoAddons disables).
-def useMavenDeps = project.hasProperty('useMavenDeps')
-
-def modDependency = { String envName, String propertyName, String fileName, String coordinate ->
-    if (!useMavenDeps) {
-        def path = System.getenv(envName) ?: project.findProperty(propertyName)
-        if (path == null) {
-            def lib = file('libs/' + fileName)
-            if (lib.isFile()) {
-                path = lib.absolutePath
-            }
-        }
-        if (path != null) {
-            return files(path)
-        }
-    }
-    return coordinate
+dependencies {
+    // Everything (required mods, JEI, compatibility targets and add-ons) is resolved from
+    // CurseForge Maven, so the Nix dev shell only needs to provide Java and Gradle.
+    // Dev runs load all of these; the built jar bundles none of them.
+    implementation 'curse.maven:ex-deorum-901420:8384464'
+    implementation 'curse.maven:mekanism-268560:7904058'
+    implementation 'curse.maven:jei-238222:8857687'
+    implementation 'curse.maven:mek-energistics-1564287:8969316'
+    implementation 'curse.maven:applied-energistics-2-223794:8992605'
+    implementation 'curse.maven:applied-mekanistics-574300:7096962'
+    implementation 'curse.maven:guideme-1173950:9366366'
+    implementation 'curse.maven:evolved-mekanism-1230085:9352850'
+    // Evolved Mekanism requires Iglee's Library (igleelib).
+    implementation 'curse.maven:iglee-library-541199:7000755'
+    implementation 'curse.maven:mekanism-extras-1026040:8677677'
+    implementation 'curse.maven:mekanism-empowered-1256390:8064666'
+    implementation 'curse.maven:mekanism-empowered-core-1256399:8064667'
+    // Mekanism: Empowered is a Kotlin mod and requires Kotlin for Forge.
+    implementation 'curse.maven:kotlin-for-forge-351264:8335665'
+    implementation 'curse.maven:evolved-mekanism-extras-1268159:8678947'
 }
-
-// Dev runtime addons for the optional integrations. They are included by default so local
-// runs exercise the compatibility code; pass -PnoAddons to start without them.
-ext.addonDeps = [
-        'curse.maven:evolved-mekanism-1230085:9352850',
-        // Evolved Mekanism requires Iglee's Library (igleelib).
-        'curse.maven:iglee-library-541199:7000755',
-        'curse.maven:mekanism-extras-1026040:8677677',
-        'curse.maven:mekanism-empowered-1256390:8064666',
-        'curse.maven:mekanism-empowered-core-1256399:8064667',
-        // Mekanism: Empowered is a Kotlin mod and requires Kotlin for Forge.
-        'curse.maven:kotlin-for-forge-351264:8335665',
-        'curse.maven:evolved-mekanism-extras-1268159:8678947',
-        // Mek Energistics and its required dependencies (AE2 / Applied Mekanistics / GuideME).
-        'curse.maven:mek-energistics-1564287:8969316',
-        'curse.maven:applied-energistics-2-223794:8992605',
-        'curse.maven:applied-mekanistics-574300:7096962',
-        'curse.maven:guideme-1173950:9366366',
-]
 
 neoForge {
     version = neo_version
@@ -111,25 +89,6 @@ neoForge {
         "${mod_id}" {
             sourceSet sourceSets.main
         }
-    }
-}
-
-dependencies {
-    implementation modDependency('EXDEORUM_JAR', 'exdeorumJar', 'exdeorum-3.12.jar',
-            'curse.maven:ex-deorum-901420:8384464')
-    implementation modDependency('MEKANISM_JAR', 'mekanismJar', 'Mekanism-1.21.1-10.7.19.85.jar',
-            'curse.maven:mekanism-268560:7904058')
-    // Dev-only: not bundled into the jar; used to compile the JEI plugin
-    // and to show recipes in the dev client.
-    implementation modDependency('JEI_JAR', 'jeiJar', 'jei-1.21.1-neoforge-19.54.0.429.jar',
-            'curse.maven:jei-238222:8857687')
-    // Optional integration API (Mek Energistics pattern automation). Compile-only: the
-    // class/mixin that implements it is skipped when the mod is absent, and nothing is shipped.
-    // The runtime jar is part of addonDeps below, so dev runs load it by default.
-    compileOnly modDependency('MEKENERGISTICS_JAR', 'mekenergisticsJar', 'mekenergistics-3.0.8.jar',
-            'curse.maven:mek-energistics-1564287:8969316')
-    if (!project.hasProperty('noAddons')) {
-        addonDeps.each { implementation it }
     }
 }
 
