@@ -290,8 +290,20 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     protected boolean hasEnergy(int operations) {
-        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations);
+        long usage = energyCost(operations);
         return energyContainer.extract(usage, Action.SIMULATE, AutomationType.INTERNAL) >= usage;
+    }
+
+    /**
+     * 1 tick あたりの消費 FE。高速アップグレード (特に Mekanism: Empowered を併用) では
+     * 計算上の消費がマシンの内部バッファ容量を超えることがあり、その場合はバッファを
+     * 使い切るだけで一切動かなくなる。ここでバッファ容量を上限にして「動き続ける」側に
+     * 倒す (実効速度は容量で頭打ちになる)。
+     */
+    protected long energyCost(int operations) {
+        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations);
+        long capacity = energyContainer.getMaxEnergy();
+        return capacity > 0 ? Math.min(usage, capacity) : usage;
     }
 
     protected void useEnergy() {
@@ -299,8 +311,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     protected void useEnergy(int operations) {
-        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations);
-        energyContainer.extract(usage, Action.EXECUTE, AutomationType.INTERNAL);
+        energyContainer.extract(energyCost(operations), Action.EXECUTE, AutomationType.INTERNAL);
     }
 
     @NotNull
