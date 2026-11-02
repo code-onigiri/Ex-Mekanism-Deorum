@@ -59,7 +59,8 @@ public final class DeorumJeiPlugin implements IModPlugin {
             ItemStack catalyst = new ItemStack(block.value());
             switch (family) {
                 case HAMMER -> registration.addRecipeCatalyst(catalyst, DeorumJeiRecipeTypes.HAMMER, DeorumJeiRecipeTypes.COMPRESSED_HAMMER);
-                case SIEVE -> registration.addRecipeCatalyst(catalyst, DeorumJeiRecipeTypes.SIEVE);
+                case SIEVE -> registration.addRecipeCatalyst(catalyst,
+                        DeorumJeiRecipeTypes.SIEVE, DeorumJeiRecipeTypes.COMPRESSED_SIEVE);
                 case BARREL -> registration.addRecipeCatalyst(catalyst, DeorumJeiRecipeTypes.BARREL_COMPOST,
                         DeorumJeiRecipeTypes.BARREL_MIXING, DeorumJeiRecipeTypes.BARREL_FLUID_MIXING);
                 case CRUCIBLE -> registration.addRecipeCatalyst(catalyst, DeorumJeiRecipeTypes.LAVA_CRUCIBLE,

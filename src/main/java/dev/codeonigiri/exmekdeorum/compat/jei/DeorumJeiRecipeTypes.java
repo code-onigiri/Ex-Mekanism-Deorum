@@ -26,6 +26,7 @@ public final class DeorumJeiRecipeTypes {
     public static final RecipeType<HammerRecipe> HAMMER = create("hammer", HammerRecipe.class);
     public static final RecipeType<CompressedHammerRecipe> COMPRESSED_HAMMER = create("compressed_hammer", CompressedHammerRecipe.class);
     public static final RecipeType<XeiSieveRecipe> SIEVE = create("sieve", XeiSieveRecipe.class);
+    public static final RecipeType<XeiSieveRecipe> COMPRESSED_SIEVE = create("compressed_sieve", XeiSieveRecipe.class);
     public static final RecipeType<BarrelCompostRecipe> BARREL_COMPOST = create("barrel_compost", BarrelCompostRecipe.class);
     public static final RecipeType<BarrelMixingRecipe> BARREL_MIXING = create("barrel_mixing", BarrelMixingRecipe.class);
     public static final RecipeType<BarrelFluidMixingRecipe> BARREL_FLUID_MIXING = create("barrel_fluid_mixing", BarrelFluidMixingRecipe.class);

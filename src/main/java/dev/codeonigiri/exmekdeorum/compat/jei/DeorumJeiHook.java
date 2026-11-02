@@ -29,7 +29,7 @@ final class DeorumJeiHook {
         }
         List<RecipeType<?>> categories = switch (family) {
             case HAMMER -> List.of(DeorumJeiRecipeTypes.HAMMER, DeorumJeiRecipeTypes.COMPRESSED_HAMMER);
-            case SIEVE -> List.of(DeorumJeiRecipeTypes.SIEVE);
+            case SIEVE -> List.of(DeorumJeiRecipeTypes.SIEVE, DeorumJeiRecipeTypes.COMPRESSED_SIEVE);
             case BARREL -> List.of(DeorumJeiRecipeTypes.BARREL_COMPOST, DeorumJeiRecipeTypes.BARREL_MIXING,
                     DeorumJeiRecipeTypes.BARREL_FLUID_MIXING);
             case CRUCIBLE -> List.of(DeorumJeiRecipeTypes.LAVA_CRUCIBLE, DeorumJeiRecipeTypes.CRUCIBLE_HEAT_SOURCES);
