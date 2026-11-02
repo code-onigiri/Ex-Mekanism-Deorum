@@ -77,15 +77,18 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | Cosmic Dense | Evolved Mekanism Extras | 16 | 110 倍 |
 | Infinite Multiversal | Evolved Mekanism Extras | 18 | 120 倍 |
 
-- 追加ティアのブロックは **MOD がなくても登録されます** (レシピは `mekanism:alloy_atomic` +
-  `mekanism:ultimate_control_circuit` + ネザライトインゴット + 1 つ下のティア)。
+- 追加ティアのブロックは **対応する MOD が入っているときだけ登録されます** (MOD なしなら
+  Mekanism の 25 ブロックのみ)。レシピにも `neoforge:mod_loaded` 条件が付きます。
+- 追加ティアのレシピは基本ティアと同じ `ACA / IPI / ACA` で、`P` は 1 つ下のティア、
+  周囲は `mekanism:alloy_atomic` (A) + `mekanism:ultimate_control_circuit` (C) + 各 MOD の
+  ペレット (Evolved: antimatter / Extras: polonium / Extras Extras: plutonium) (I) です。
 - 追加 MOD が入っていると、その MOD のティアインストーラーで Basic → … → Ultimate →
   追加ティアまでアップグレードできます。Evolved Mekanism と Mekanism Extras が同時に入って
   いる場合、インストーラーの経路は Evolved Mekanism 側 (Overclocked 以降) を使います。
 - Evolved Mekanism Extras のティアは同 MOD のインストーラー (Absolute Overclocked →
   Supreme Quantum → Cosmic Dense → Infinite Multiversal) に対応しています。この 4 ティアは
   合成で直接作れます (インストーラーはティア内の昇格用)。
-- 追加 MOD なしでもブロック・レシピ・JEI 触媒はすべて表示されます。
+- 追加 MOD なしでは追加ティアのブロック・レシピ・JEI 触媒は表示されません。
 
 ## 使い方
 
@@ -143,16 +146,15 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 無印の機械は、Mekanism の基本回路 + 赤石 + 鉄のリングで Ex Deorum の機械パーツを囲みます
 (パターンはすべて `ACA / IPI / ACA`、`P` が中央)。
 
-| 機械 | 中央のパーツ |
-| --- | --- |
-| ハンマー機 | `exdeorum:mechanical_hammer` |
-| ふるい機 | `exdeorum:mechanical_sieve` |
-| バレル機 | `exdeorum:oak_barrel` |
-| 溶岩るつぼ | `exdeorum:porcelain_crucible` + 最下段に `minecraft:lava_bucket` |
-| 水るつぼ | `exdeorum:porcelain_crucible` + 最下段に `minecraft:water_bucket` |
+| 機械 | 中央 (P) | 左右 (I) |
+| --- | --- | --- |
+| ハンマー機 | `exdeorum:mechanical_hammer` | `minecraft:iron_ingot` |
+| ふるい機 | `exdeorum:mechanical_sieve` | `minecraft:iron_ingot` |
+| バレル機 | `exdeorum:oak_barrel` | `minecraft:iron_ingot` |
+| 溶岩るつぼ | `exdeorum:porcelain_crucible` | `minecraft:lava_bucket` |
+| 水るつぼ | `exdeorum:porcelain_crucible` | `minecraft:water_bucket` |
 
-周囲は `mekanism:basic_control_circuit` (C)・`minecraft:redstone` (A)・
-`minecraft:iron_ingot` (I) です。
+周囲は `mekanism:basic_control_circuit` (C)・`minecraft:redstone` (A) です。
 
 ファクトリーは Mekanism の工場と同じアップグレード段階で、1 つ下のティアを中央に置きます。
 
@@ -162,6 +164,9 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | Advanced | `mekanism:alloy_infused` | `mekanism:advanced_control_circuit` | `mekanism:ingot_osmium` |
 | Elite | `mekanism:alloy_reinforced` | `mekanism:elite_control_circuit` | `minecraft:gold_ingot` |
 | Ultimate | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | `minecraft:diamond` |
+| 追加ティア | `mekanism:alloy_atomic` | `mekanism:ultimate_control_circuit` | 各 MOD のペレット |
+
+追加ティアのレシピは対応 MOD がある時だけ読み込まれます。
 
 ## 互換 MOD（すべて任意）
 
@@ -169,7 +174,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 | MOD | 連携内容 |
 | --- | --- |
-| Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate → その MOD の追加ティアまでアップグレードできます（追加ティアのブロックは MOD なしでも存在します）。 |
+| Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate → その MOD の追加ティアまでアップグレードできます（追加ティアのブロックは対応 MOD がある時だけ登録されます）。 |
 | Mekanism: Empowered | 速度・エネルギー倍率アップグレードは Mekanism の `MekanismUtils` 経由で計算されるため、自動的に反映されます（専用コードなし）。 |
 | Mek Energistics | AE2 のパターン自動化 SPI に 90 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。 |
 | JEI | Ex Deorum のレシピにこの MOD の機械を触媒として表示します。 |

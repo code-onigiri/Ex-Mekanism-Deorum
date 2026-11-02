@@ -4,7 +4,7 @@
   "pattern": [
     "ACA",
     "IPI",
-    "ABA"
+    "ACA"
   ],
   "key": {
     "A": {
@@ -14,13 +14,10 @@
       "item": "mekanism:basic_control_circuit"
     },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:lava_bucket"
     },
     "P": {
       "item": "exdeorum:porcelain_crucible"
-    },
-    "B": {
-      "item": "minecraft:lava_bucket"
     }
   },
   "result": {

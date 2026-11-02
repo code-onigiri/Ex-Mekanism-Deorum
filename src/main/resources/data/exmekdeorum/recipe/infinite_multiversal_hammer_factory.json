@@ -14,7 +14,7 @@
       "item": "mekanism:ultimate_control_circuit"
     },
     "I": {
-      "item": "minecraft:netherite_ingot"
+      "item": "mekanism:pellet_plutonium"
     },
     "P": {
       "item": "exmekdeorum:cosmic_dense_hammer_factory"
@@ -23,5 +23,11 @@
   "result": {
     "id": "exmekdeorum:infinite_multiversal_hammer_factory",
     "count": 1
-  }
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "emextras"
+    }
+  ]
 }

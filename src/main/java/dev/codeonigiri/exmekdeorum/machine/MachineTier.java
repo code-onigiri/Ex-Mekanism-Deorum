@@ -11,9 +11,11 @@ import net.neoforged.fml.ModList;
  * <a href="https://www.curseforge.com/minecraft/mc-mods/evolved-mekanism">Evolved Mekanism</a>
  * (Overclocked..Creative) and
  * <a href="https://www.curseforge.com/minecraft/mc-mods/mekanism-extras">Mekanism Extras</a>
- * (Absolute..Infinite). They are always registered so the blocks exist even without the addon;
- * the addon's tier installer can only reach them when it is installed, because the block then
- * also carries the addon's tier attribute.</p>
+ * (Absolute..Infinite) and
+ * <a href="https://www.curseforge.com/minecraft/mc-mods/evolved-mekanism-extras">Evolved Mekanism
+ * Extras</a> (Absolute Overclocked..Infinite Multiversal). Addon tiers are only registered when
+ * the corresponding addon is installed, and their recipes carry a {@code neoforge:mod_loaded}
+ * condition, so an addon-less game sees only the 25 base blocks.</p>
  *
  * <p>Per-operation time and energy are the same for every tier, so a factory is exactly
  * {@code processes} machines in one block. Crucible factories use the melt multiplier instead of
@@ -74,6 +76,55 @@ public enum MachineTier {
     }
 
     /**
+     * @return whether this tier belongs to the Evolved Mekanism ladder.
+     */
+    public boolean isEvolvedTier() {
+        return ordinal() >= OVERCLOCKED.ordinal() && ordinal() <= CREATIVE.ordinal();
+    }
+
+    /**
+     * @return whether this tier belongs to the Mekanism Extras ladder.
+     */
+    public boolean isExtrasTier() {
+        return ordinal() >= ABSOLUTE.ordinal() && ordinal() <= INFINITE.ordinal();
+    }
+
+    /**
+     * @return whether this tier belongs to the Evolved Mekanism Extras ladder.
+     */
+    public boolean isEmExtrasTier() {
+        return ordinal() >= ABSOLUTE_OVERCLOCKED.ordinal();
+    }
+
+    /**
+     * @return whether the addon that provides this tier is installed. Base tiers are always
+     *         available; addon tiers are only registered when their addon is present, so the
+     *         blocks do not show up in an addon-less world.
+     */
+    public boolean isAvailable() {
+        if (!isAddonTier()) {
+            return true;
+        }
+        return isModLoaded(requiredModId());
+    }
+
+    /**
+     * @return the mod id that provides this tier ({@code null} for base tiers).
+     */
+    public String requiredModId() {
+        if (isEvolvedTier()) {
+            return "evolvedmekanism";
+        }
+        if (isExtrasTier()) {
+            return "mekanism_extras";
+        }
+        if (isEmExtrasTier()) {
+            return "emextras";
+        }
+        return null;
+    }
+
+    /**
      * @return the next tier in the upgrade ladder, or {@code null} when no further tier exists.
      *
      * <p>After Ultimate the ladder continues into whichever addon is installed; when both are
@@ -81,7 +132,7 @@ public enum MachineTier {
      * parallel counts, so chaining one ladder keeps the installer path unambiguous).</p>
      */
     public MachineTier next() {
-        return switch (this) {
+        MachineTier next = switch (this) {
             case BASIC -> ADVANCED;
             case ADVANCED -> ELITE;
             case ELITE -> ULTIMATE;
@@ -100,6 +151,7 @@ public enum MachineTier {
             case COSMIC_DENSE -> INFINITE_MULTIVERSAL;
             case INFINITE_MULTIVERSAL -> null;
         };
+        return next != null && next.isAvailable() ? next : null;
     }
 
     private static MachineTier firstInstalledAddonTier() {

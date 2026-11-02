@@ -96,6 +96,9 @@ public final class ModMachines {
         for (DeorumMachineFamily family : DeorumMachineFamily.values()) {
             createMachine(family);
             for (MachineTier tier : MachineTier.values()) {
+                if (!tier.isAvailable()) {
+                    continue;
+                }
                 createFactory(family, tier);
             }
         }
