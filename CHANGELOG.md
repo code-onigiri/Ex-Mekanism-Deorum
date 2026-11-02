@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+(次回リリース向けの変更はここに追記します)
+
+## [0.2.0] - 2026-11-02
+
 ### Added
 
 - **Mekanism: Empowered 連携**: `empowered_speed` / `empowered_energy` / `io_capacity` /

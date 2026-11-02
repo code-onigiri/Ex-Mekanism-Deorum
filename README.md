@@ -11,7 +11,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 - Minecraft **1.21.1** / NeoForge **21.1.265**
 - 必須依存: **Ex Deorum 3.12+** / **Mekanism 10.7.19+**
-- バージョン: `0.1.0` (テクスチャ・GUI は仮アセットです)
+- バージョン: `0.2.0` (テクスチャ・GUI は仮アセットです)
 
 ![GUI プレビュー](docs/gui-preview.png)
 

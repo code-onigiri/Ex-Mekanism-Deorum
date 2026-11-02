@@ -13,7 +13,7 @@ JDK 21・Gradle・依存 jar は Nix flake が供給し、Mod 本体のビルド
 
 ```console
 $ nix develop
-$ gradle build        # build/libs/exmekdeorum-0.1.0.jar
+$ gradle build        # build/libs/exmekdeorum-0.2.0.jar
 $ gradle runClient    # Minecraft クライアント (dev プロファイル)
 $ gradle runServer    # 専用サーバー (--nogui, run/ を使用)
 $ gradle runData      # データ生成 (src/generated/resources)
@@ -114,7 +114,7 @@ $ nix develop -c gradle build
 ```
 
 - `checks.mods`: 依存 jar がハッシュ通りに取得できる
-- `gradle build`: Mod がコンパイルでき、`build/libs/exmekdeorum-0.1.0.jar` ができる
+- `gradle build`: Mod がコンパイルでき、`build/libs/exmekdeorum-0.2.0.jar` ができる
 - 起動確認 (任意): `nix develop -c gradle runServer` が `run/` で起動する
 
 ## 依存 Mod の更新
