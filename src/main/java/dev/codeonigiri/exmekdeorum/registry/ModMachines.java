@@ -151,7 +151,8 @@ public final class ModMachines {
             MachineTier next = tier.next();
             String nextName = next == null ? null : blockName(next, family);
             boolean extrasChain = TierAttributes.applyExtrasUpgrade(type, tier, nextName, BY_NAME);
-            if (nextName != null && !extrasChain) {
+            boolean emExtrasChain = TierAttributes.applyEmExtrasUpgrade(type, tier, nextName, BY_NAME);
+            if (nextName != null && !extrasChain && !emExtrasChain) {
                 type.add(new AttributeUpgradeable(() -> BY_NAME.get(nextName)));
             }
         }

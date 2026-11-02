@@ -35,7 +35,12 @@ public enum MachineTier {
     ABSOLUTE(11, 40),
     SUPREME(13, 50),
     COSMIC(15, 60),
-    INFINITE(17, 70);
+    INFINITE(17, 70),
+    // Evolved Mekanism Extras: combined Evolved + Extras tiers (12 / 14 / 16 / 18 parallel).
+    ABSOLUTE_OVERCLOCKED(12, 90),
+    SUPREME_QUANTUM(14, 100),
+    COSMIC_DENSE(16, 110),
+    INFINITE_MULTIVERSAL(18, 120);
 
     private final int factoryProcesses;
     private final int meltMultiplier;
@@ -90,6 +95,10 @@ public enum MachineTier {
             case SUPREME -> COSMIC;
             case COSMIC -> INFINITE;
             case INFINITE -> null;
+            case ABSOLUTE_OVERCLOCKED -> SUPREME_QUANTUM;
+            case SUPREME_QUANTUM -> COSMIC_DENSE;
+            case COSMIC_DENSE -> INFINITE_MULTIVERSAL;
+            case INFINITE_MULTIVERSAL -> null;
         };
     }
 

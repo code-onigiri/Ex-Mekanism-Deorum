@@ -10,10 +10,10 @@ Automate all your Ex Deorum processing with FE power, upgrades, and full side co
 Ex Deorum's manual and mechanical machines are re-implemented using Mekanism's machine architecture.
 Because recipes are directly referenced from Ex Deorum at runtime, **custom recipes added via datapacks work out of the box**.
 
-- **70 Blocks**: 5 Base Machines + 65 Tiered Factories (Mekanism's Basic/Advanced/Elite/Ultimate, plus the extra tiers added by Evolved Mekanism and Mekanism Extras)
+- **90 Blocks**: 5 Base Machines + 85 Tiered Factories (Mekanism's Basic/Advanced/Elite/Ultimate, plus the extra tiers added by Evolved Mekanism, Mekanism Extras and Evolved Mekanism Extras)
 - Full Mekanism integration: Upgrades (Speed, Energy, Muffling), Side Configuration, Security, and Redstone control
 - Factory parallelism: 3 / 5 / 7 / 9 parallel lanes for Basic, Advanced, Elite, and Ultimate (Crucibles scale melting speed by 5x / 10x / 20x / 30x instead)
-- Optional addon tiers: Evolved Mekanism (Overclocked 11, Quantum 13, Dense 15, Multiversal 17, Creative 19 lanes) and Mekanism Extras (Absolute 11, Supreme 13, Cosmic 15, Infinite 17 lanes) — the blocks and recipes exist even without the addons, and their tier installers can upgrade the factories when installed
+- Optional addon tiers: Evolved Mekanism (Overclocked 11, Quantum 13, Dense 15, Multiversal 17, Creative 19 lanes), Mekanism Extras (Absolute 11, Supreme 13, Cosmic 15, Infinite 17 lanes) and Evolved Mekanism Extras (Absolute Overclocked 12, Supreme Quantum 14, Cosmic Dense 16, Infinite Multiversal 18 lanes) — the blocks and recipes exist even without the addons, and their tier installers can upgrade the factories when installed
 - Compressed Hammer support: inserting a compressed hammer enables `compressed_hammer` recipes automatically
 - JEI integration: registered as catalysts for Ex Deorum categories; click the GUI progress bar to jump directly to recipes
 
@@ -106,7 +106,7 @@ Tiered factories follow Mekanism's tier upgrade progression (Basic -> Advanced -
 
 All of the following are optional; the mod works without them.
 
-- **Evolved Mekanism / Mekanism Extras** — their tier installers can upgrade these factories from Basic to Ultimate. Tiers above Ultimate are not supported and the installer is left untouched.
+- **Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras** — their tier installers can upgrade these factories from Basic through the addon tiers (Evolved: Overclocked..Creative; Extras: Absolute..Infinite; EM Extras: Absolute Overclocked..Infinite Multiversal).
 - **Mekanism: Empowered** — its speed/energy upgrades apply automatically through Mekanism's upgrade path.
 - **Mek Energistics** — the machines are registered with the AE2 pattern automation SPI (item and fluid I/O, persistent hammer/mesh inputs, factory parallelism).
 - **JEI** — Ex Deorum recipes list these machines as catalysts.

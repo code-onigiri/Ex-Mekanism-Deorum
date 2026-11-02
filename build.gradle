@@ -62,6 +62,7 @@ ext.addonDeps = [
         'curse.maven:mekanism-empowered-core-1256399:8064667',
         // Mekanism: Empowered is a Kotlin mod and requires Kotlin for Forge.
         'curse.maven:kotlin-for-forge-351264:8335665',
+        'curse.maven:evolved-mekanism-extras-1268159:8678947',
 ]
 
 neoForge {

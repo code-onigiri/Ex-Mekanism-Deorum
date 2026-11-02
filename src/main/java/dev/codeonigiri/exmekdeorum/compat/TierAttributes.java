@@ -25,7 +25,13 @@ public final class TierAttributes {
     private static final String EXTRAS_TIER_ATTRIBUTE = "com.jerry.mekextras.common.block.attribute.ExtraAttributeTier";
     private static final String EXTRAS_UPGRADEABLE = "com.jerry.mekextras.common.block.attribute.ExtraAttributeUpgradeable";
 
+    private static final String EM_TIER = "io.github.masyumero.emextras.common.tier.EMExtraFactoryTier";
+    private static final String EM_I_TIER = "io.github.masyumero.emextras.api.tier.IEMExtraTier";
+    private static final String EM_TIER_ATTRIBUTE = "io.github.masyumero.emextras.common.block.attribute.EMExtraAttributeTier";
+    private static final String EM_UPGRADEABLE = "io.github.masyumero.emextras.common.block.attribute.EMExtraAttributeUpgradeable";
+
     private static Boolean extrasPresent;
+    private static Boolean emExtrasPresent;
 
     private TierAttributes() {
     }
@@ -63,8 +69,61 @@ public final class TierAttributes {
         }
     }
 
+    /**
+     * Evolved Mekanism Extras adds hybrid tiers (Absolute-Overclocked etc.) with its own tier
+     * attribute and installer. These are constructed reflectively for the same reason as the
+     * Mekanism Extras ones; the mod is a no-op when absent.
+     *
+     * @return {@code true} when the EM Extras upgrade chain was registered for this tier.
+     */
+    public static boolean applyEmExtrasUpgrade(BlockType type, MachineTier tier, String nextName,
+            Map<String, BlockRegistryObject<?, ?>> byName) {
+        if (!emExtrasPresent()) {
+            return false;
+        }
+        try {
+            Class<?> tierClass = Class.forName(EM_TIER);
+            Object extraTier;
+            try {
+                extraTier = Enum.valueOf((Class) tierClass, tier.name());
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+            Class<?> tierInterface = Class.forName(EM_I_TIER);
+            Constructor<?> ctor = Class.forName(EM_TIER_ATTRIBUTE).getConstructor(tierInterface);
+            add(type, ctor.newInstance(extraTier));
+            if (nextName != null) {
+                Supplier<BlockRegistryObject<?, ?>> supplier = () -> byName.get(nextName);
+                Object attribute = Class.forName(EM_UPGRADEABLE).getConstructor(Supplier.class).newInstance(supplier);
+                add(type, attribute);
+            }
+            return true;
+        } catch (ReflectiveOperationException | LinkageError e) {
+            return false;
+        }
+    }
+
     private static void add(BlockType type, Object attribute) {
         type.add((Attribute) attribute);
+    }
+
+    private static boolean emExtrasPresent() {
+        if (emExtrasPresent == null) {
+            try {
+                emExtrasPresent = ModList.get().isLoaded("emextras");
+            } catch (RuntimeException e) {
+                emExtrasPresent = false;
+            }
+            if (!emExtrasPresent) {
+                try {
+                    Class.forName(EM_TIER);
+                    emExtrasPresent = true;
+                } catch (ClassNotFoundException | LinkageError e) {
+                    emExtrasPresent = false;
+                }
+            }
+        }
+        return emExtrasPresent;
     }
 
     private static boolean extrasPresent() {

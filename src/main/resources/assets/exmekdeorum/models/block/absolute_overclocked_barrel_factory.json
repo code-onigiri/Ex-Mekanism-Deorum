@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "exmekdeorum:block/absolute_overclocked_barrel_factory_front",
+    "side": "exmekdeorum:block/absolute_overclocked_barrel_factory_side",
+    "top": "exmekdeorum:block/absolute_overclocked_barrel_factory_top",
+    "bottom": "exmekdeorum:block/absolute_overclocked_barrel_factory_bottom"
+  }
+}
