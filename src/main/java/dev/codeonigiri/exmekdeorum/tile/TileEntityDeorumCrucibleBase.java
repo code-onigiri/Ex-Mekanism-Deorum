@@ -158,7 +158,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         }
         useEnergy(multiplier);
 
-        meltProgress += (rate * multiplier) / (result.getAmount() * 10.0F);
+        meltProgress += (rate * multiplier * stackMultiplier()) / (result.getAmount() * 10.0F);
         if (meltProgress >= 1.0F) {
             tank.insert(result.copy(), Action.EXECUTE, AutomationType.INTERNAL);
             input.shrink(1);

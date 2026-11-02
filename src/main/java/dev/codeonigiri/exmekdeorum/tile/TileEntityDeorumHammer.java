@@ -90,7 +90,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         ItemStack hammer = hammerSlot.getStack();
         boolean compressed = hammer.is(EItemTags.COMPRESSED_HAMMERS);
         float efficiency = hammer.isEmpty() ? 1.0F : 2.0F + enchantLevel(hammer, Enchantments.EFFICIENCY, level) * 0.33F;
-        float increment = efficiency / ticksFor(BASE_TICKS);
+        float increment = efficiency * stackMultiplier() / ticksFor(BASE_TICKS);
 
         // Every running lane has claimed one item from the input slot; do not start more lanes than
         // there are items available. The item itself stays in the slot until a lane completes.

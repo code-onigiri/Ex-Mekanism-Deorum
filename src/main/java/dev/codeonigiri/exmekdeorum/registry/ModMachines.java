@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.function.Supplier;
 import mekanism.api.text.ILangEntry;
@@ -28,6 +30,7 @@ import mekanism.common.block.attribute.AttributeGui;
 import mekanism.common.block.attribute.AttributeSideConfig;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.api.Upgrade;
+import mekanism.common.block.attribute.AttributeUpgradeSupport;
 import mekanism.common.block.attribute.AttributeUpgradeable;
 import mekanism.common.content.blocktype.BlockType;
 import mekanism.common.content.blocktype.Machine;
@@ -150,6 +153,7 @@ public final class ModMachines {
                 : AttributeSideConfig.ELECTRIC_MACHINE);
         type.add(new AttributeMachineFamily(family));
         applyEmpoweredUpgrades(type);
+        applyExtrasUpgrades(type);
         type.add(new AttributeMachineFactory(factory));
         if (tier != null) {
             type.add(new AttributeMachineTier(tier));
@@ -208,6 +212,30 @@ public final class ModMachines {
                     .invoke(null, type, upgrades.toArray(new Upgrade[0]));
         } catch (ReflectiveOperationException e) {
             ExMekanismDeorum.LOGGER.warn("Failed to add Mekanism: Empowered upgrade support", e);
+        }
+    }
+
+    /**
+     * Mekanism Extras の追加アップグレード (STACK / CREATIVE) を自前のブロックタイプでも
+     * 受け付けられるようにする。Empowered 側の登録が先に走っている場合はその集合に追加する。
+     */
+    private static void applyExtrasUpgrades(BlockType type) {
+        if (!ModList.get().isLoaded("mekanism_extras")) {
+            return;
+        }
+        try {
+            Class<?> api = Class.forName("com.jerry.mekextras.api.ExtraUpgrade");
+            Set<Upgrade> upgrades = new LinkedHashSet<>();
+            AttributeUpgradeSupport current = type.get(AttributeUpgradeSupport.class);
+            if (current != null) {
+                upgrades.addAll(current.supportedUpgrades());
+            }
+            for (String fieldName : new String[]{"STACK", "CREATIVE"}) {
+                upgrades.add((Upgrade) api.getField(fieldName).get(null));
+            }
+            type.add(AttributeUpgradeSupport.create(upgrades.toArray(new Upgrade[0])));
+        } catch (ReflectiveOperationException e) {
+            ExMekanismDeorum.LOGGER.warn("Failed to add Mekanism Extras upgrade support", e);
         }
     }
 

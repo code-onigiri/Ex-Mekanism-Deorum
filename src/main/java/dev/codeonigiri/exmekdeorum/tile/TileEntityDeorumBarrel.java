@@ -181,7 +181,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
 
         // 4. Composting.
         if (compost >= getCompostCapacity()) {
-            compostProgress += EConfig.SERVER.barrelProgressStep.get().floatValue();
+            compostProgress += EConfig.SERVER.barrelProgressStep.get().floatValue() * stackMultiplier();
             active = true;
             if (compostProgress >= 1.0F) {
                 ItemStack dirt = new ItemStack(Items.DIRT, operations());
@@ -311,7 +311,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
             return false;
         }
 
-        transformProgress += (float) catalysts / (float) recipe.duration();
+        transformProgress += (float) catalysts * stackMultiplier() / (float) recipe.duration();
         if (transformProgress >= 0.99999F) {
             transformProgress = 0.0F;
             if (outputTank.isEmpty()) {

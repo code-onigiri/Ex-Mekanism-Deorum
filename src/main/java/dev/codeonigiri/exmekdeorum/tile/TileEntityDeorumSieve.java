@@ -84,7 +84,7 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
 
         int claimed = countRunningLanes();
         boolean active = false;
-        float increment = 1.0F / ticksFor(BASE_TICKS);
+        float increment = stackMultiplier() / (float) ticksFor(BASE_TICKS);
         for (int i = 0; i < logics.length; i++) {
             // A lane keeps whichever logic it started with, so swapping the hammer mid-operation
             // never mixes compressed and normal drops for the same item.

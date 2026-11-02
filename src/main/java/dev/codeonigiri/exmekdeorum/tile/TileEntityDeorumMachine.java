@@ -11,6 +11,7 @@ import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.Upgrade;
 import mekanism.common.attachments.component.AttachedSideConfig;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -30,6 +31,7 @@ import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.TileComponentEjector;
+import net.neoforged.fml.ModList;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
@@ -301,9 +303,46 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
      * 倒す (実効速度は容量で頭打ちになる)。
      */
     protected long energyCost(int operations) {
-        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations);
+        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations) * stackMultiplier();
         long capacity = energyContainer.getMaxEnergy();
         return capacity > 0 ? Math.min(usage, capacity) : usage;
+    }
+
+    /**
+     * Mekanism Extras の STACK アップグレード (1 レベルごとに処理速度 2 倍) を反映した倍率。
+     * MOD が無い、またはアップグレードが入っていなければ 1。
+     */
+    protected int stackMultiplier() {
+        Upgrade stack = extraStackUpgrade();
+        if (stack == null) {
+            return 1;
+        }
+        int level = getComponent().getUpgrades(stack);
+        return level <= 0 ? 1 : 1 << Math.min(level, 10);
+    }
+
+    private static java.lang.reflect.Field EXTRA_STACK_FIELD;
+    private static boolean extraStackResolved;
+
+    private static Upgrade extraStackUpgrade() {
+        if (!extraStackResolved) {
+            extraStackResolved = true;
+            if (ModList.get().isLoaded("mekanism_extras")) {
+                try {
+                    EXTRA_STACK_FIELD = Class.forName("com.jerry.mekextras.api.ExtraUpgrade").getField("STACK");
+                } catch (ReflectiveOperationException ignored) {
+                    EXTRA_STACK_FIELD = null;
+                }
+            }
+        }
+        if (EXTRA_STACK_FIELD == null) {
+            return null;
+        }
+        try {
+            return (Upgrade) EXTRA_STACK_FIELD.get(null);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
     }
 
     protected void useEnergy() {

@@ -6,7 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-(Changes for the next release will be listed here.)
+### Added
+
+- **Mekanism Extras upgrades**: all machines now accept `STACK` (doubles processing
+  speed per level, energy cost scales with it) and `CREATIVE` (zero energy usage).
+
+### Fixed
+
+- Extras upgrade items could not be inserted into the machines' upgrade slots because
+  the custom block types did not declare them as supported.
 
 ## [0.2.0] - 2026-11-02
 
