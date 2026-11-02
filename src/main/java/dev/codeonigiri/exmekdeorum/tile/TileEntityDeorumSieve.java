@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import thedarkcolour.exdeorum.blockentity.logic.CompressedSieveLogic;
 import thedarkcolour.exdeorum.blockentity.logic.SieveLogic;
 import thedarkcolour.exdeorum.recipe.RecipeCaches;
 import thedarkcolour.exdeorum.tag.EItemTags;
@@ -28,22 +29,34 @@ import thedarkcolour.exdeorum.tag.EItemTags;
  *
  * <p>The input item stays in the input slot while a lane is working and is consumed only when that
  * lane's sifting operation completes.</p>
+ *
+ * <p>When a compressed hammer is placed in the hammer slot, new lanes switch to Ex Deorum's
+ * {@link CompressedSieveLogic}, so compressed blocks are sifted with the {@code compressed_sieve}
+ * recipe table. The mesh is still required (as in Ex Deorum's compressed sieve block); lanes that
+ * were already running keep their original logic.</p>
  */
 public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements SieveLogic.Owner {
 
     private static final int BASE_TICKS = 100;
     private static final String LANES_KEY = "deorum_sieve_lanes";
+    private static final String COMPRESSED_LANES_KEY = "deorum_sieve_compressed_lanes";
+    private static final int HAMMER_X = 48;
+    private static final int HAMMER_Y = 54;
 
     private SieveLogic[] logics;
+    private CompressedSieveLogic[] compressedLogics;
     private BasicInventorySlot meshSlot;
+    private BasicInventorySlot hammerSlot;
     private ItemStack lastMesh = ItemStack.EMPTY;
 
     public TileEntityDeorumSieve(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
         int lanes = operations();
         logics = new SieveLogic[lanes];
+        compressedLogics = new CompressedSieveLogic[lanes];
         for (int i = 0; i < lanes; i++) {
             logics[i] = new SieveLogic(this, true);
+            compressedLogics[i] = new CompressedSieveLogic(this, true);
         }
     }
 
@@ -51,6 +64,7 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         super.initInventory(helper, listener);
         meshSlot = helper.addSlot(BasicInventorySlot.at(stack -> stack.is(EItemTags.SIEVE_MESHES), listener, AUX_X, AUX_Y, 1));
+        hammerSlot = helper.addSlot(BasicInventorySlot.at(stack -> stack.is(EItemTags.COMPRESSED_HAMMERS), listener, HAMMER_X, HAMMER_Y, 1));
     }
 
     @Override
@@ -62,31 +76,51 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             return true;
         }
         ItemStack mesh = meshSlot.getStack();
-        return !mesh.isEmpty() && logics[0].isValidInput(stack);
+        if (mesh.isEmpty()) {
+            return false;
+        }
+        return logics[0].isValidInput(stack) || compressedLogics[0].isValidInput(stack);
+    }
+
+    private boolean hasCompressedHammer() {
+        return hammerSlot != null && !hammerSlot.getStack().isEmpty();
     }
 
     @Override
     protected boolean tickMachine(ServerLevel level) {
         syncMesh(level);
 
+        boolean compressed = hasCompressedHammer();
         int claimed = countRunningLanes();
         boolean active = false;
         float increment = 1.0F / ticksFor(BASE_TICKS);
-        for (SieveLogic logic : logics) {
-            ItemStack contents = logic.getContents();
-            if (contents.isEmpty()) {
+        for (int i = 0; i < logics.length; i++) {
+            // A lane keeps whichever logic it started with, so swapping the hammer mid-operation
+            // never mixes compressed and normal drops for the same item.
+            SieveLogic lane = !logics[i].getContents().isEmpty() ? logics[i]
+                    : !compressedLogics[i].getContents().isEmpty() ? compressedLogics[i] : null;
+            if (lane == null) {
                 ItemStack input = getInputStack();
-                if (input.isEmpty() || claimed >= input.getCount() || !logic.isValidInput(input)) {
+                if (input.isEmpty() || claimed >= input.getCount()) {
+                    continue;
+                }
+                SieveLogic target = null;
+                if (compressed && compressedLogics[i].isValidInput(input)) {
+                    target = compressedLogics[i];
+                } else if (logics[i].isValidInput(input)) {
+                    target = logics[i];
+                }
+                if (target == null) {
                     continue;
                 }
                 // Keep the item in the input slot; it is consumed when the sifting operation completes.
-                logic.startSifting(input.copyWithCount(1));
-                contents = logic.getContents();
+                target.startSifting(input.copyWithCount(1));
+                lane = target;
                 claimed++;
-            } else if (!matchesInput(contents)) {
+            } else if (!matchesInput(lane.getContents())) {
                 // The player removed or replaced the input: cancel rather than produce free drops.
-                logic.setContents(ItemStack.EMPTY);
-                logic.setProgress(0.0F);
+                lane.setContents(ItemStack.EMPTY);
+                lane.setProgress(0.0F);
                 claimed--;
                 continue;
             }
@@ -94,10 +128,10 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             if (!hasEnergy()) {
                 break;
             }
-            logic.sift(increment, level.getGameTime());
+            lane.sift(increment, level.getGameTime());
             useEnergy();
             active = true;
-            if (logic.getContents().isEmpty()) {
+            if (lane.getContents().isEmpty()) {
                 // sift() only clears its contents after the operation has completed and the drops
                 // have been handled; at that point the source item may be consumed.
                 getInputStack().shrink(1);
@@ -109,10 +143,12 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             // that reaches 1.0 when its single running operation completes.
             float total = 0.0F;
             int running = 0;
-            for (SieveLogic logic : logics) {
-                if (!logic.getContents().isEmpty()) {
-                    total += logic.getProgress();
-                    running++;
+            for (int i = 0; i < logics.length; i++) {
+                for (SieveLogic lane : new SieveLogic[]{logics[i], compressedLogics[i]}) {
+                    if (!lane.getContents().isEmpty()) {
+                        total += lane.getProgress();
+                        running++;
+                    }
                 }
             }
             progress = running == 0 ? 0.0F : total / running;
@@ -127,8 +163,11 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
 
     private int countRunningLanes() {
         int running = 0;
-        for (SieveLogic logic : logics) {
-            if (!logic.getContents().isEmpty()) {
+        for (int i = 0; i < logics.length; i++) {
+            if (!logics[i].getContents().isEmpty()) {
+                running++;
+            }
+            if (!compressedLogics[i].getContents().isEmpty()) {
                 running++;
             }
         }
@@ -141,8 +180,9 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             return;
         }
         lastMesh = mesh.copy();
-        for (SieveLogic logic : logics) {
-            logic.setMesh(level.registryAccess(), mesh.copy());
+        for (int i = 0; i < logics.length; i++) {
+            logics[i].setMesh(level.registryAccess(), mesh.copy());
+            compressedLogics[i].setMesh(level.registryAccess(), mesh.copy());
         }
     }
 
@@ -181,6 +221,13 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             lanes.put("lane_" + i, lane);
         }
         nbt.put(LANES_KEY, lanes);
+        CompoundTag compressedLanes = new CompoundTag();
+        for (int i = 0; i < compressedLogics.length; i++) {
+            CompoundTag lane = new CompoundTag();
+            compressedLogics[i].saveNbt(lane, provider);
+            compressedLanes.put("lane_" + i, lane);
+        }
+        nbt.put(COMPRESSED_LANES_KEY, compressedLanes);
     }
 
     @Override
@@ -191,6 +238,13 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             String key = "lane_" + i;
             if (lanes.contains(key, Tag.TAG_COMPOUND)) {
                 logics[i].loadNbt(lanes.getCompound(key), provider);
+            }
+        }
+        CompoundTag compressedLanes = nbt.getCompound(COMPRESSED_LANES_KEY);
+        for (int i = 0; i < compressedLogics.length; i++) {
+            String key = "lane_" + i;
+            if (compressedLanes.contains(key, Tag.TAG_COMPOUND)) {
+                compressedLogics[i].loadNbt(compressedLanes.getCompound(key), provider);
             }
         }
     }

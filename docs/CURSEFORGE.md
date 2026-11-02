@@ -88,7 +88,8 @@ Tiered factories follow Mekanism's tier upgrade progression (Basic -> Advanced -
 ## Known Limitations
 
 - Textures and GUIs are currently placeholder assets (open for customization and tuning).
-- `compressed_sieve` recipes are not automated (compressed hammer recipes are supported).
+- Compressed sieving requires a Compressed Hammer in the dedicated hammer slot (slot 23) next to
+  the mesh; the hammer is a catalyst and is not damaged.
 - Barrels taking fire damage from hot fluids is not implemented.
 
 ## Credits & License

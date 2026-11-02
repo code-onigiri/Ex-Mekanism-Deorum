@@ -76,9 +76,10 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 
 1. `build.gradle` が `curse.maven:<slug>-<projectId>:<fileId>` を宣言し、`cursemaven.com`
    から解決する (Ex Deorum 3.12 / Mekanism 10.7.19.85 / JEI 19.54.0.429 / Mek Energistics 3.0.8)
-2. `-Paddons` を付けると Evolved Mekanism (+ Iglee's Library) / Mekanism Extras /
-   Evolved Mekanism Extras / Mekanism: Empowered (+ Core / Kotlin for Forge) も dev の classpath に追加され、
-   互換コードを実環境で試せる (`gradle runServer -PuseMavenDeps -Paddons`)
+2. 互換 MOD (Evolved Mekanism + Iglee's Library / Mekanism Extras / Evolved Mekanism Extras /
+   Mekanism: Empowered + Core / Kotlin for Forge) は**既定で** dev の classpath に入り、
+   互換コードを実環境で試せる。外すときは `-PnoAddons`
+   (`gradle runServer -PuseMavenDeps -PnoAddons`)
 3. 両 jar は `META-INF/neoforge.mods.toml` を持つため、dev 実行時に FML が Mod として読み込む
 4. この Mod 自身の `neoforge.mods.toml` が Ex Deorum / Mekanism を `type = "required"` で宣言する
 5. オフライン / 再現性が必要な場合は `mods.nix` の固定 jar を `EXDEORUM_JAR` などで渡すか

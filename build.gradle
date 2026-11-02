@@ -34,6 +34,7 @@ repositories {
 //   - Gradle properties: -PexdeorumJar=... / -PmekanismJar=... / -PjeiJar=... / -PmekenergisticsJar=...
 //   - or a file in libs/
 // Pass -PuseMavenDeps to ignore all of those and always resolve from Maven.
+// The optional addon mods are on the dev runtime classpath by default (-PnoAddons disables).
 def useMavenDeps = project.hasProperty('useMavenDeps')
 
 def modDependency = { String envName, String propertyName, String fileName, String coordinate ->
@@ -52,7 +53,8 @@ def modDependency = { String envName, String propertyName, String fileName, Stri
     return coordinate
 }
 
-// Dev-only runtime addons for testing the optional integrations (-Paddons).
+// Dev runtime addons for the optional integrations. They are included by default so local
+// runs exercise the compatibility code; pass -PnoAddons to start without them.
 ext.addonDeps = [
         'curse.maven:evolved-mekanism-1230085:9352850',
         // Evolved Mekanism requires Iglee's Library (igleelib).
@@ -120,7 +122,7 @@ dependencies {
     // class/mixin that implements it is skipped when the mod is absent, and nothing is shipped.
     compileOnly modDependency('MEKENERGISTICS_JAR', 'mekenergisticsJar', 'mekenergistics-3.0.8.jar',
             'curse.maven:mek-energistics-1564287:8969316')
-    if (project.hasProperty('addons')) {
+    if (!project.hasProperty('noAddons')) {
         addonDeps.each { implementation it }
     }
 }
