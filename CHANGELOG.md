@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Verified and documented the Mek Energistics ME upgrade path: every machine accepts the
+  ME Pattern Provider, ME Passive Crafting and ME Output Interface upgrades and becomes an
+  ME-network-connected pattern automation host once one is installed.
+
 ### Changed
 
 - Simplified the development setup: `flake.nix` only provides JDK 21, Gradle and the client

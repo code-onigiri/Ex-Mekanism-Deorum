@@ -110,5 +110,5 @@ All of the following are optional; the mod works without them.
 
 - **Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras** — their tier installers can upgrade these factories from Basic through the addon tiers (Evolved: Overclocked..Creative; Extras: Absolute..Infinite; EM Extras: Absolute Overclocked..Infinite Multiversal).
 - **Mekanism: Empowered** — its speed/energy upgrades apply automatically through Mekanism's upgrade path.
-- **Mek Energistics** — the machines are registered with the AE2 pattern automation SPI (item and fluid I/O, persistent hammer/mesh inputs, factory parallelism).
+- **Mek Energistics** — the machines are registered with the AE2 pattern automation SPI (item and fluid I/O, persistent hammer/mesh inputs, factory parallelism). The **ME Pattern Provider / ME Passive Crafting / ME Output Interface upgrades can be installed in every machine**, turning it into an ME-network-connected pattern automation host.
 - **JEI** — Ex Deorum recipes list these machines as catalysts.
