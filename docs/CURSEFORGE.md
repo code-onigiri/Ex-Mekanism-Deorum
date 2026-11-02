@@ -12,7 +12,8 @@ Because recipes are directly referenced from Ex Deorum at runtime, **custom reci
 
 - **90 Blocks**: 5 Base Machines + 85 Tiered Factories (Mekanism's Basic/Advanced/Elite/Ultimate, plus the extra tiers added by Evolved Mekanism, Mekanism Extras and Evolved Mekanism Extras)
 - Full Mekanism integration: Upgrades (Speed, Energy, Muffling), Side Configuration, Security, and Redstone control
-- Factory parallelism: 3 / 5 / 7 / 9 parallel lanes for Basic, Advanced, Elite, and Ultimate (Crucibles scale melting speed by 5x / 10x / 20x / 30x instead)
+- Factory parallelism: 4 / 8 / 12 / 16 parallel lanes for Basic, Advanced, Elite, and Ultimate (add-on tiers go up to 64; Crucibles scale melting speed by 5x / 10x / 20x / 30x instead)
+- Input slots and the internal FE buffer scale with parallelism (64 items / 40,000 FE per lane)
 - Optional addon tiers: Evolved Mekanism (Overclocked 11, Quantum 13, Dense 15, Multiversal 17, Creative 19 lanes), Mekanism Extras (Absolute 11, Supreme 13, Cosmic 15, Infinite 17 lanes) and Evolved Mekanism Extras (Absolute Overclocked 12, Supreme Quantum 14, Cosmic Dense 16, Infinite Multiversal 18 lanes) — the blocks and recipes are only registered when the matching addon is installed, and their tier installers can upgrade the factories
 - Compressed Hammer support: inserting a compressed hammer enables `compressed_hammer` recipes automatically
 - JEI integration: registered as catalysts for Ex Deorum categories; click the GUI progress bar to jump directly to recipes
