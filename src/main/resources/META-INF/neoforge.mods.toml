@@ -79,3 +79,8 @@ type = "optional"
 versionRange = "[3.0.6,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# Optional Mek Energistics pattern-automation bridge. The mixin plugin applies the mixin
+# only when the Mek Energistics API is present, so the mod still loads without it.
+[[mixins]]
+config = "exmekdeorum.mixins.json"

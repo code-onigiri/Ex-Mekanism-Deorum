@@ -11,7 +11,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 
 - Minecraft **1.21.1** / NeoForge **21.1.265**
 - 必須依存: **Ex Deorum 3.12+** / **Mekanism 10.7.19+**
-- バージョン: `0.2.0` (テクスチャ・GUI は仮アセットです)
+- バージョン: `0.2.1` (テクスチャ・GUI は仮アセットです)
 
 ![GUI プレビュー](docs/gui-preview.png)
 
@@ -217,7 +217,7 @@ Ex Deorum のレシピをそのまま自動化できます。レシピは Ex Deo
 | Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras | 各 MOD のティアインストーラーで、この MOD のファクトリーを Basic → Advanced → Elite → Ultimate → その MOD の追加ティアまでアップグレードできます（追加ティアのブロックは対応 MOD がある時だけ登録されます）。 |
 | Mekanism: Empowered | 速度・エネルギー倍率アップグレードは Mekanism の `MekanismUtils` 経由で計算されるため、自動的に反映されます（専用コードなし）。 |
 | Mekanism Extras | 追加アップグレード `STACK`（1 レベルごとに処理速度 2 倍・消費電力も同倍率）と `CREATIVE`（消費電力 0）を全機械で受け付けます。 |
-| Mek Energistics | AE2 のパターン自動化 SPI に 90 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。 |
+| Mek Energistics | AE2 のパターン自動化 SPI に 90 ブロックを登録します。アイテム/液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。Mek Energistics 3.0.8 + AE2 19.2 で動作確認済みです。 |
 | JEI | Ex Deorum のレシピにこの MOD の機械を触媒として表示します。 |
 
 ## JEI 連携

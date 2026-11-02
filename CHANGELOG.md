@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.2.1] - 2026-11-03
 
 ### Added
 
@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Extras upgrade items could not be inserted into the machines' upgrade slots because
   the custom block types did not declare them as supported.
+- **Mek Energistics integration**: machines were registered with the pattern-automation SPI
+  using block instances before they were bound, which crashed mod construction. Registration now
+  uses plain block ids, and the compatibility mixin is actually applied (its config is declared
+  in `neoforge.mods.toml`, and the plugin probes a non-mixin class so Mek Energistics' own
+  interface mixin is not forced to load too early).
 
 ## [0.2.0] - 2026-11-02
 

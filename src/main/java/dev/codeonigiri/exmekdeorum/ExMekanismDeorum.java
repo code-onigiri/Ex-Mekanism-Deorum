@@ -27,11 +27,11 @@ public final class ExMekanismDeorum {
             try {
                 Class.forName("dev.codeonigiri.exmekdeorum.compat.MekEnergisticsCompat")
                         .getMethod("registerBlocks").invoke(null);
-                LOGGER.info("Registered {} machines with Mek Energistics pattern automation.", ModMachines.getAll().size());
+                LOGGER.info("Registered {} machines with Mek Energistics pattern automation.", ModMachines.getBlockIds().size());
             } catch (ReflectiveOperationException e) {
                 LOGGER.warn("Mek Energistics is installed but its pattern automation API could not be registered.", e);
             }
         }
-        LOGGER.info("Ex Mekanism Deorum loaded; registered {} machine blocks.", ModMachines.getAll().size());
+        LOGGER.info("Ex Mekanism Deorum loaded; registered {} machine blocks.", ModMachines.getBlockIds().size());
     }
 }

@@ -2,7 +2,7 @@ package dev.codeonigiri.exmekdeorum.compat;
 
 import com.beipuo.mekenergistics.api.upgrade.MePatternAutomation;
 import dev.codeonigiri.exmekdeorum.registry.ModMachines;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Registers this mod's block entities with Mek Energistics' pattern-automation SPI.
@@ -16,8 +16,9 @@ public final class MekEnergisticsCompat {
     }
 
     public static void registerBlocks() {
-        for (var block : ModMachines.getAll()) {
-            MePatternAutomation.registerBlock(BuiltInRegistries.BLOCK.getKey(block.value()));
+        // Mod 構築時点では DeferredRegister の値がまだバインドされていないため、ID で登録する。
+        for (ResourceLocation id : ModMachines.getBlockIds()) {
+            MePatternAutomation.registerBlock(id);
         }
     }
 }

@@ -270,6 +270,13 @@ public final class ModMachines {
     /**
      * @return every machine block, in registration order (hammer machine first).
      */
+    /** 登録済みブロックの ID。DeferredRegister のバインド前 (Mod 構築中) でも使える。 */
+    public static List<net.minecraft.resources.ResourceLocation> getBlockIds() {
+        return BY_NAME.keySet().stream()
+                .map(name -> net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(ExMekanismDeorum.MOD_ID, name))
+                .toList();
+    }
+
     public static List<BlockRegistryObject<?, ?>> getAll() {
         return List.copyOf(ALL);
     }

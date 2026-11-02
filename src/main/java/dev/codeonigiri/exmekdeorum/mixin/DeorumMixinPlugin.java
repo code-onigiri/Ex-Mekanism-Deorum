@@ -10,13 +10,16 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
  * Applies the Mek Energistics mixin only when that mod is installed.
  *
  * <p>Mixin plugins are constructed before the mod list is available, so this uses a plain
- * class-presence check on the SPI interface instead of {@code ModList}. When the class is
- * missing the mixin (and its {@code implements IMePatternAutomationHost} clause) is never
+ * class-presence check instead of {@code ModList}. It deliberately probes
+ * {@code MePatternAutomation} rather than {@code IMePatternAutomationHost}: the interface is
+ * itself a mixin target of Mek Energistics, and loading it here would make the game abort with
+ * "was loaded too early" before that mod's own mixin config is prepared. When the probe class
+ * is missing the mixin (and its {@code implements IMePatternAutomationHost} clause) is never
  * loaded, so the mod keeps working without the optional dependency.</p>
  */
 public final class DeorumMixinPlugin implements IMixinConfigPlugin {
 
-    private static final boolean MEKENERGISTICS_PRESENT = isPresent("com.beipuo.mekenergistics.api.upgrade.IMePatternAutomationHost");
+    private static final boolean MEKENERGISTICS_PRESENT = isPresent("com.beipuo.mekenergistics.api.upgrade.MePatternAutomation");
 
     private static boolean isPresent(String name) {
         try {

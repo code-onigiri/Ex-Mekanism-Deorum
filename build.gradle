@@ -125,6 +125,15 @@ dependencies {
     if (!project.hasProperty('noAddons')) {
         addonDeps.each { implementation it }
     }
+
+    // -PwithMekEnergistics を付けたときだけ、Mek Energistics とその必須依存 (AE2 / Applied
+    // Mekanistics / GuideME) を開発実行に含める。通常の開発起動を重くしないための opt-in。
+    if (project.hasProperty('withMekEnergistics')) {
+        implementation 'curse.maven:mek-energistics-1564287:8969316'
+        implementation 'curse.maven:applied-energistics-2-223794:8992605'
+        implementation 'curse.maven:applied-mekanistics-574300:7096962'
+        implementation 'curse.maven:guideme-1173950:9366366'
+    }
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -13,7 +13,7 @@ JDK 21・Gradle・依存 jar は Nix flake が供給し、Mod 本体のビルド
 
 ```console
 $ nix develop
-$ gradle build        # build/libs/exmekdeorum-0.2.0.jar
+$ gradle build        # build/libs/exmekdeorum-0.2.1.jar
 $ gradle runClient    # Minecraft クライアント (dev プロファイル)
 $ gradle runServer    # 専用サーバー (--nogui, run/ を使用)
 $ gradle runData      # データ生成 (src/generated/resources)
@@ -114,7 +114,7 @@ $ nix develop -c gradle build
 ```
 
 - `checks.mods`: 依存 jar がハッシュ通りに取得できる
-- `gradle build`: Mod がコンパイルでき、`build/libs/exmekdeorum-0.2.0.jar` ができる
+- `gradle build`: Mod がコンパイルでき、`build/libs/exmekdeorum-0.2.1.jar` ができる
 - 起動確認 (任意): `nix develop -c gradle runServer` が `run/` で起動する
 
 ## 依存 Mod の更新
@@ -163,3 +163,13 @@ $ nix hash convert --hash-algo sha512 --to sri <sha512-hex>
 mixin implements its SPI at compile time. The jar is `compileOnly`: it is never shipped, and the
 mixin plugin skips the integration when the mod is not installed, so it is not a runtime
 dependency. The Nix dev shell exports the pinned jar.
+
+To run the server/client with Mek Energistics (and its AE2 / Applied Mekanistics / GuideME
+dependencies) for an end-to-end test, pass `-PwithMekEnergistics`:
+
+```sh
+nix develop --command gradle --no-daemon runServer -PwithMekEnergistics
+```
+
+The mixin itself is declared through `[[mixins]] config = "exmekdeorum.mixins.json"` in
+`META-INF/neoforge.mods.toml`; without that declaration the config is never applied.
