@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   ME-network-connected pattern automation host once one is installed.
 - Split the README by language: `README.md` is now the English version and the Japanese
   version moved to `README.ja.md`, with language links at the top of both.
+- Slimmed `docs/CURSEFORGE.md` down to a simple listing (what the mod is, requirements,
+  installation) and pointed readers to the GitHub README for the detailed specs,
+  tier tables and recipes.
 
 ### Changed
 
