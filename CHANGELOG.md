@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Verified and documented the Mek Energistics ME upgrade path: every machine accepts the
   ME Pattern Provider, ME Passive Crafting and ME Output Interface upgrades and becomes an
   ME-network-connected pattern automation host once one is installed.
+- Split the README by language: `README.md` is now the English version and the Japanese
+  version moved to `README.ja.md`, with language links at the top of both.
 
 ### Changed
 
