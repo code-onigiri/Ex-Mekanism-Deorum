@@ -3,6 +3,10 @@
 この Mod の見た目と数値は、すべてリポジトリ内のテクスチャ・GUI コード・定数で完結しています。
 ここでは「どこを触れば何が変わるか」をまとめます。
 
+- [テクスチャ / モデル](#テクスチャ--モデル)
+- [GUI](#gui)
+- [バランス](#バランス)
+
 ## テクスチャ / モデル
 
 ブロック 1 種につき 5 枚の PNG、モデル 2 種、blockstate、アイテムモデルを持ちます。
@@ -119,7 +123,7 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
 | ハンマーの基本時間 (200 tick) | `tile/TileEntityDeorumHammer.java` の `BASE_TICKS` |
 | ふるいの基本時間 (100 tick) | `tile/TileEntityDeorumSieve.java` の `BASE_TICKS` |
 | バレルの堆肥速度 | Ex Deorum の `EConfig.SERVER.barrelProgressStep` |
-| るつぼのファクトリー倍率 (5/10/20/30) | `machine/MachineTier.java` の `getMeltMultiplier()` |
+| るつぼのファクトリー倍率 (基本ティア 5/10/20/30、追加ティア 40〜120) | `machine/MachineTier.java` の各列挙子の第 2 引数 (`getMeltMultiplier()`) |
 | るつぼの水の溶解速度 (4) / タンク容量 | `tile/TileEntityDeorumCrucibleBase.java` |
 | バレルのタンク・堆肥容量 | `tile/TileEntityDeorumBarrel.java` |
 | 機械自体のクラフトレシピ | `src/main/resources/data/exmekdeorum/recipe/*.json` |
@@ -128,11 +132,17 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
 - ファクトリーは「同じ処理時間のレーンを並列数だけ回す」設計で、1 レーンが動くたびに
   `基本消費 FE/t` を 1 回ぶん消費します (3 レーン同時なら 3 倍)。1 レーンあたりのコストは
   無印の機械と同じです。
-- るつぼファクトリーだけはレーンを増やさず、溶解・変換速度が 5/10/20/30 倍になります。
+- るつぼファクトリーだけはレーンを増やさず、溶解・変換速度がティアの倍率ぶん上がります
+  (基本ティアで 5 / 10 / 20 / 30 倍、追加ティアでは最大 120 倍)。
   電力も同じ倍率で増えるため、液体 1 単位あたりの FE は無印と同じです。
-- Evolved Mekanism / Mekanism Extras の追加ティア (Overclocked〜Creative、Absolute〜Infinite)
-  は 11〜19 レーン / るつぼ 40〜80 倍です。ブロックは MOD なしでも登録され、MOD が入って
-  いるときだけその MOD のティア属性 (インストーラー用) が付きます。
+- 追加ティアの並列数とるつぼ倍率は次のとおりです (出典: `MachineTier`)。
+  - Evolved Mekanism (Overclocked〜Creative): 20 / 24 / 28 / 32 / 36 レーン、るつぼ 40〜80 倍
+  - Mekanism Extras (Absolute〜Infinite): 20 / 24 / 28 / 32 レーン、るつぼ 40〜70 倍
+  - Evolved Mekanism Extras (Absolute Overclocked〜Infinite Multiversal):
+    40 / 48 / 56 / 64 レーン、るつぼ 90〜120 倍
+- 追加ティアのブロックは、**対応する Mod が入っているときだけ登録されます**
+  (`MachineTier.isAvailable()` で判定し、`ModMachines` のループでスキップ)。
+  Mod が入っている環境では、その Mod のティア属性 (インストーラー用) も付きます。
 
 ### 機械・ティアを増やす
 

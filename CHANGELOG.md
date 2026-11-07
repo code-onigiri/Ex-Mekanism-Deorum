@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   native libraries, and `build.gradle` resolves every mod from CurseForge Maven. The pinned
   jar machinery (`mods.nix`, `-PuseMavenDeps` and `-PnoAddons`) is gone;
   all optional mods load in development by default.
+- Reorganised the documentation for readability: the README and the CurseForge page now
+  share one tier table (parallel lanes, crucible multiplier, FE capacity), and stale
+  addon-tier numbers were corrected to the current values (Evolved 20–36,
+  Extras 20–32, Evolved Mekanism Extras 40–64 lanes; crucible multipliers up to 120x).
+  `docs/CUSTOMIZE.md` now also states correctly that addon-tier blocks are only
+  registered when the corresponding addon is installed.
 
 ## [0.2.1] - 2026-11-03
 

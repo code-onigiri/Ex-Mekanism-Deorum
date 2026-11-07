@@ -4,6 +4,18 @@ JDK 21・Gradle・クライアント用のネイティブライブラリは Nix 
 Gradle (ModDevGradle) が行います。Mod の依存はすべて CurseForge Maven から解決するので、
 Nix 側で jar を固定する必要はありません。
 
+- [必要なもの](#必要なもの)
+- [クイックスタート](#クイックスタート)
+- [固定バージョン](#固定バージョン)
+- [ディレクトリ構成](#ディレクトリ構成)
+- [依存の仕組み](#依存の仕組み)
+- [開発の流れ](#開発の流れ)
+- [動作確認](#動作確認)
+- [依存 Mod の更新](#依存-mod-の更新)
+- [NeoForge / Minecraft の更新](#neoforge--minecraft-の更新)
+- [任意連携 (Mek Energistics)](#任意連携-mek-energistics)
+- [ライセンスと再配布](#ライセンスと再配布)
+
 ## 必要なもの
 
 - Nix (flakes 有効)。NixOS 26.11 / x86_64-linux で動作確認
@@ -63,7 +75,10 @@ Mesa・X11・ALSA/Pulse を追加し、`LD_LIBRARY_PATH` に `/run/opengl-driver
 | `src/main/java/dev/codeonigiri/exmekdeorum/tile/` | 5 種類の機械のブロックエンティティ |
 | `src/main/java/dev/codeonigiri/exmekdeorum/registry/` | ブロック・BE タイプ・コンテナ・クリエイティブタブ |
 | `src/main/java/dev/codeonigiri/exmekdeorum/client/` | GUI とスクリーン登録 |
+| `src/main/java/dev/codeonigiri/exmekdeorum/compat/` | 任意連携の共通処理 (ティア属性、Mek Energistics 連携) |
 | `src/main/java/dev/codeonigiri/exmekdeorum/compat/jei/` | JEI プラグイン (触媒登録・進行バークリック) |
+| `src/main/java/dev/codeonigiri/exmekdeorum/mixin/` | Mek Energistics 用 Mixin と、その適用可否を判定するプラグイン |
+| `src/main/java/dev/codeonigiri/exmekdeorum/block/` / `inventory/` | 機械ブロック本体 / 入力スロット |
 | `src/main/resources/assets/exmekdeorum/` | テクスチャ・モデル・blockstate・言語 |
 | `src/main/resources/data/exmekdeorum/` | クラフトレシピ・ルートテーブル |
 | `docs/` | スクリーンショットとドキュメント |
