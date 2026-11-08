@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-08
+
 ### Added
 
+- Added a GitHub Actions workflow that builds the mod on every push and pull request,
+  and attaches the built jar to the GitHub release when a version tag is pushed.
 - Verified and documented the Mek Energistics ME upgrade path: every machine accepts the
   ME Pattern Provider, ME Passive Crafting and ME Output Interface upgrades and becomes an
   ME-network-connected pattern automation host once one is installed.
