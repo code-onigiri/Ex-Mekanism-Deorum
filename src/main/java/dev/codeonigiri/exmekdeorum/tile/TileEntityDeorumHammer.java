@@ -51,6 +51,9 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
 
     private ItemStack[] laneInputs;
     private float[] laneProgress;
+    /** Rolled results of lanes that finished but could not insert yet (output blocked). */
+    private ItemStack[][] laneResults;
+    private boolean[] laneFinished;
     private BasicInventorySlot hammerSlot;
 
     public TileEntityDeorumHammer(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
@@ -59,6 +62,8 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         laneInputs = new ItemStack[lanes];
         Arrays.fill(laneInputs, ItemStack.EMPTY);
         laneProgress = new float[lanes];
+        laneResults = new ItemStack[lanes][];
+        laneFinished = new boolean[lanes];
     }
 
     @Override
@@ -99,6 +104,14 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
 
         boolean active = false;
         for (int i = 0; i < laneInputs.length; i++) {
+            if (laneFinished[i]) {
+                // The operation already finished and its result was rolled once; just wait
+                // until the output accepts it. No energy is spent and nothing is re-rolled.
+                if (finishLane(i, level)) {
+                    claimed--;
+                }
+                continue;
+            }
             ItemStack lane = laneInputs[i];
             if (lane.isEmpty()) {
                 ItemStack input = getInputStack();
@@ -144,45 +157,79 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             if (count > 0 && !lane.is(compressedRecipe ? EItemTags.COMPRESSED_HAMMER_FORTUNE_BLACKLIST : EItemTags.HAMMER_FORTUNE_BLACKLIST)) {
                 count += HammerLootModifier.calculateFortuneBonus(level.registryAccess(), hammer, context.getRandom(), count == 0);
             }
-            ItemStack result;
-            if (compressedRecipe) {
-                // 圧縮ハンマーは圧縮段階を保つ: 9 個ぶんの結果を 1 個の圧縮アイテムにまとめる。
-                ItemStack compressedResult = compressedEquivalent(recipe.result);
-                if (!compressedResult.isEmpty() && count >= 9) {
-                    compressedResult.setCount(count / 9);
-                    result = compressedResult;
-                } else {
-                    result = count > 0 ? recipe.result.copyWithCount(count) : ItemStack.EMPTY;
-                }
-            } else {
-                result = count > 0 ? recipe.result.copyWithCount(count) : ItemStack.EMPTY;
-            }
-            if (!result.isEmpty() && !canInsertResult(result)) {
-                // Retry next tick: keep the progress bar full and the input in the slot.
-                laneProgress[i] = 1.0F;
-                continue;
-            }
-            if (!matchesInput(lane)) {
-                laneInputs[i] = ItemStack.EMPTY;
-                laneProgress[i] = 0.0F;
+            // Roll once and keep the result with the lane; while the output is blocked the
+            // lane waits in the finished state instead of re-rolling (and re-charging) per tick.
+            laneResults[i] = buildResults(recipe, compressedRecipe, count);
+            laneFinished[i] = true;
+            laneProgress[i] = 1.0F;
+            if (finishLane(i, level)) {
                 claimed--;
-                continue;
             }
-            // The operation finished: now consume the input item.
-            getInputStack().shrink(1);
-            if (!result.isEmpty()) {
-                insertResult(result);
-            }
-            damageHammer(level);
-            laneInputs[i] = ItemStack.EMPTY;
-            laneProgress[i] = 0.0F;
-            claimed--;
         }
 
         if (active) {
             progress = averageProgress();
         }
         return active;
+    }
+
+    /**
+     * Builds the (up to two) result stacks for a finished operation. A compressed recipe keeps
+     * its compression level: every full 9 results become one compressed item, and the remainder
+     * is returned as ordinary items so nothing is lost.
+     */
+    private static ItemStack[] buildResults(HammerRecipe recipe, boolean compressedRecipe, int count) {
+        if (count <= 0) {
+            return new ItemStack[0];
+        }
+        if (compressedRecipe) {
+            ItemStack compressedResult = compressedEquivalent(recipe.result);
+            if (!compressedResult.isEmpty()) {
+                if (count < 9) {
+                    return new ItemStack[]{recipe.result.copyWithCount(count)};
+                }
+                compressedResult.setCount(count / 9);
+                int remainder = count % 9;
+                return remainder == 0
+                        ? new ItemStack[]{compressedResult}
+                        : new ItemStack[]{compressedResult, recipe.result.copyWithCount(remainder)};
+            }
+        }
+        return new ItemStack[]{recipe.result.copyWithCount(count)};
+    }
+
+    /**
+     * Tries to deliver a finished lane's stored results.
+     *
+     * @return true when the lane was resolved (delivered, or cancelled because the player
+     * changed the input) and is free again.
+     */
+    private boolean finishLane(int i, ServerLevel level) {
+        ItemStack[] results = laneResults[i];
+        if (results.length > 0 && !canInsertResults(java.util.List.of(results))) {
+            // Output still blocked: keep the input and the full progress bar, wait.
+            return false;
+        }
+        if (!matchesInput(laneInputs[i])) {
+            // The player removed or replaced the input: cancel without consuming anything.
+            clearLane(i);
+            return true;
+        }
+        // The operation finished: now consume the input item.
+        getInputStack().shrink(1);
+        for (ItemStack result : results) {
+            insertResult(result);
+        }
+        damageHammer(level);
+        clearLane(i);
+        return true;
+    }
+
+    private void clearLane(int i) {
+        laneInputs[i] = ItemStack.EMPTY;
+        laneProgress[i] = 0.0F;
+        laneResults[i] = null;
+        laneFinished[i] = false;
     }
 
     /**
@@ -271,6 +318,13 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
                 lane.put("input", laneInputs[i].save(provider));
             }
             lane.putFloat("progress", laneProgress[i]);
+            if (laneFinished[i] && laneResults[i] != null) {
+                ListTag results = new ListTag();
+                for (ItemStack result : laneResults[i]) {
+                    results.add(result.save(provider));
+                }
+                lane.put("results", results);
+            }
             lanes.add(lane);
         }
         nbt.put(LANES_KEY, lanes);
@@ -284,6 +338,18 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             CompoundTag lane = lanes.getCompound(i);
             laneInputs[i] = lane.contains("input") ? ItemStack.parseOptional(provider, lane.getCompound("input")) : ItemStack.EMPTY;
             laneProgress[i] = lane.getFloat("progress");
+            if (lane.contains("results", Tag.TAG_LIST)) {
+                ListTag results = lane.getList("results", Tag.TAG_COMPOUND);
+                laneResults[i] = new ItemStack[results.size()];
+                for (int j = 0; j < results.size(); j++) {
+                    laneResults[i][j] = ItemStack.parseOptional(provider, results.getCompound(j));
+                }
+                laneFinished[i] = true;
+            } else {
+                // Older saves stored no results; a full bar simply completes and rolls again.
+                laneResults[i] = null;
+                laneFinished[i] = false;
+            }
         }
     }
 

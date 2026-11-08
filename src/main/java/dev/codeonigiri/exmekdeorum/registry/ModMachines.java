@@ -140,10 +140,14 @@ public final class ModMachines {
             MachineTier tier, boolean factory, TileFactory<T> tileFactory) {
         TileTypeRef<T> ref = new TileTypeRef<>();
         long usage = family.getBaseEnergyUsage();
-        // ファクトリーは並列数だけ 1 tick の消費も増えるため、内部バッファも同じ比率で
-        // 増やす (バッファで動ける時間を無印と揃える)。ティアが上がるほど貯蓄も増える。
+        // ファクトリーは 1 tick の消費が増える分だけ内部バッファも同じ比率で増やす
+        // (バッファで動ける時間を無印と揃える)。ティアが上がるほど貯蓄も増える。
+        // 消費の倍率は通常ファミリーでは並列数だが、るつぼ系は並列レーンではなく
+        // 溶解倍率で消費が増えるため、そちらに合わせる。
         int processes = factory && tier != null ? tier.getFactoryProcesses() : 1;
-        long storage = Math.multiplyExact(DeorumMachineFamily.BASE_ENERGY_STORAGE, processes);
+        int scale = factory && tier != null && (family == DeorumMachineFamily.CRUCIBLE || family == DeorumMachineFamily.WATER_CRUCIBLE)
+                ? tier.getMeltMultiplier() : processes;
+        long storage = Math.multiplyExact(DeorumMachineFamily.BASE_ENERGY_STORAGE, scale);
 
         Machine<T> type = new Machine<>(ref::get, new DeorumLangEntry("description." + name));
         type.add(new AttributeGui(() -> ModContainers.DEORUM_MACHINE, null));

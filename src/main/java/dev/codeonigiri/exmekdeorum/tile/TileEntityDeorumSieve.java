@@ -83,6 +83,12 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
         syncMesh(level);
 
         int claimed = countRunningLanes();
+        // Lanes beyond the current input count are not backed by an item: if the player
+        // reduced the input stack mid-operation, the excess lanes are cancelled below.
+        // matchesInput alone only compares the item type, so without this count check a
+        // lane could complete (and drop items) for an item that is no longer there.
+        int available = getInputStack().getCount();
+        int backed = 0;
         boolean active = false;
         float increment = stackMultiplier() / (float) ticksFor(BASE_TICKS);
         for (int i = 0; i < logics.length; i++) {
@@ -108,12 +114,15 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
                 target.startSifting(input.copyWithCount(1));
                 lane = target;
                 claimed++;
-            } else if (!matchesInput(lane.getContents())) {
-                // The player removed or replaced the input: cancel rather than produce free drops.
+            } else if (!matchesInput(lane.getContents()) || backed >= available) {
+                // The player removed or replaced the input, or reduced its count below the
+                // number of running lanes: cancel rather than produce free drops.
                 lane.setContents(ItemStack.EMPTY);
                 lane.setProgress(0.0F);
                 claimed--;
                 continue;
+            } else {
+                backed++;
             }
 
             if (!hasEnergy()) {
@@ -135,11 +144,13 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
             float total = 0.0F;
             int running = 0;
             for (int i = 0; i < logics.length; i++) {
-                for (SieveLogic lane : new SieveLogic[]{logics[i], compressedLogics[i]}) {
-                    if (!lane.getContents().isEmpty()) {
-                        total += lane.getProgress();
-                        running++;
-                    }
+                if (!logics[i].getContents().isEmpty()) {
+                    total += logics[i].getProgress();
+                    running++;
+                }
+                if (!compressedLogics[i].getContents().isEmpty()) {
+                    total += compressedLogics[i].getProgress();
+                    running++;
                 }
             }
             progress = running == 0 ? 0.0F : total / running;

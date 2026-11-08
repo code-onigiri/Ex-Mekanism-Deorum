@@ -49,7 +49,7 @@
   連携 Mod を入れると 20〜64 レーンの追加ティアも使えます（るつぼはレーンではなく速度倍率）。
 - **圧縮ハンマー対応** — 圧縮ハンマーをセットすると `compressed_hammer` レシピを処理し、
   結果も `compressed_*` アイテムで出力します。
-- **大容量バッファ** — 入力スロットは 64 × 並列数、内部 FE は 40,000 × 並列数まで保持します。
+- **大容量バッファ** — 入力スロットは 64 × 並列数、内部 FE は 40,000 × 並列数まで保持します（るつぼ系ファクトリーは × るつぼ倍率）。
 - **アニメーション** — 前面 LED が待機中は呼吸、稼働中は明滅 + 走査線で光ります。
 
 ![ブロックの正面 (上から無印 / Basic / Advanced / Elite / Ultimate、左からハンマー・ふるい・バレル・溶岩るつぼ・水るつぼ)](docs/block-fronts.png)
@@ -86,30 +86,32 @@
 
 ### ティア一覧（並列数・るつぼ倍率・エネルギー容量）
 
-内部 FE バッファは **40,000 FE × 並列数** です。ファクトリーは 1 tick の消費も
-並列数だけ増えるため、容量も同じ比率で増やして「バッファで動ける時間」を無印と揃えています。
+内部 FE バッファは **40,000 FE × 並列数** です。ただし るつぼ系ファクトリーは
+1 tick の消費が並列数ではなく るつぼ倍率で増えるため、容量は **40,000 FE × るつぼ倍率**
+になります（下表の FE 容量は るつぼ系の値）。いずれも消費と同じ比率で容量を増やし、
+「バッファで動ける時間」を無印と揃えています。
 入力スロットの上限も **64 × 並列数** です（例: Basic 256、Ultimate 1,024）。
 
 | ティア | 追加元 | 並列数 | るつぼ倍率 | FE 容量 |
 | --- | --- | ---: | ---: | ---: |
 | 無印 | — | 1 | 1 倍 | 40,000 FE |
-| Basic | Mekanism | 4 | 5 倍 | 160,000 FE |
-| Advanced | Mekanism | 8 | 10 倍 | 320,000 FE |
-| Elite | Mekanism | 12 | 20 倍 | 480,000 FE |
-| Ultimate | Mekanism | 16 | 30 倍 | 640,000 FE |
-| Overclocked | Evolved Mekanism | 20 | 40 倍 | 800,000 FE |
-| Quantum | Evolved Mekanism | 24 | 50 倍 | 960,000 FE |
-| Dense | Evolved Mekanism | 28 | 60 倍 | 1,120,000 FE |
-| Multiversal | Evolved Mekanism | 32 | 70 倍 | 1,280,000 FE |
-| Creative | Evolved Mekanism | 36 | 80 倍 | 1,440,000 FE |
-| Absolute | Mekanism Extras | 20 | 40 倍 | 800,000 FE |
-| Supreme | Mekanism Extras | 24 | 50 倍 | 960,000 FE |
-| Cosmic | Mekanism Extras | 28 | 60 倍 | 1,120,000 FE |
-| Infinite | Mekanism Extras | 32 | 70 倍 | 1,280,000 FE |
-| Absolute Overclocked | Evolved Mekanism Extras | 40 | 90 倍 | 1,600,000 FE |
-| Supreme Quantum | Evolved Mekanism Extras | 48 | 100 倍 | 1,920,000 FE |
-| Cosmic Dense | Evolved Mekanism Extras | 56 | 110 倍 | 2,240,000 FE |
-| Infinite Multiversal | Evolved Mekanism Extras | 64 | 120 倍 | 2,560,000 FE |
+| Basic | Mekanism | 4 | 5 倍 | 200,000 FE |
+| Advanced | Mekanism | 8 | 10 倍 | 400,000 FE |
+| Elite | Mekanism | 12 | 20 倍 | 800,000 FE |
+| Ultimate | Mekanism | 16 | 30 倍 | 1,200,000 FE |
+| Overclocked | Evolved Mekanism | 20 | 40 倍 | 1,600,000 FE |
+| Quantum | Evolved Mekanism | 24 | 50 倍 | 2,000,000 FE |
+| Dense | Evolved Mekanism | 28 | 60 倍 | 2,400,000 FE |
+| Multiversal | Evolved Mekanism | 32 | 70 倍 | 2,800,000 FE |
+| Creative | Evolved Mekanism | 36 | 80 倍 | 3,200,000 FE |
+| Absolute | Mekanism Extras | 20 | 40 倍 | 1,600,000 FE |
+| Supreme | Mekanism Extras | 24 | 50 倍 | 2,000,000 FE |
+| Cosmic | Mekanism Extras | 28 | 60 倍 | 2,400,000 FE |
+| Infinite | Mekanism Extras | 32 | 70 倍 | 2,800,000 FE |
+| Absolute Overclocked | Evolved Mekanism Extras | 40 | 90 倍 | 3,600,000 FE |
+| Supreme Quantum | Evolved Mekanism Extras | 48 | 100 倍 | 4,000,000 FE |
+| Cosmic Dense | Evolved Mekanism Extras | 56 | 110 倍 | 4,400,000 FE |
+| Infinite Multiversal | Evolved Mekanism Extras | 64 | 120 倍 | 4,800,000 FE |
 
 速度アップグレードを盛って 1 tick の消費が容量を超える場合は、容量を上限に動き続けます
 （完全停止はしません）。

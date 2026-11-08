@@ -129,6 +129,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         ItemStack input = getInputStack();
         if (input.isEmpty()) {
             meltProgress = 0.0F;
+            progress = 0.0F;
             return false;
         }
 
@@ -140,10 +141,12 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         if (recipe == null) {
             // No recipe: hold the item and do nothing (the input slot filter normally prevents this).
             meltProgress = 0.0F;
+            progress = 0.0F;
             return false;
         }
         FluidStack result = recipe.getResult();
         if (!canAccept(result)) {
+            progress = Math.min(1.0F, meltProgress);
             return false;
         }
 
@@ -151,9 +154,11 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         int rate = isLava() ? caches.getHeatValue(level.getBlockState(worldPosition.below())) : WATER_MELTING_RATE;
         if (rate <= 0) {
             // Lava crucible without a heat source below: nothing melts, but keep the item.
+            progress = Math.min(1.0F, meltProgress);
             return false;
         }
         if (!hasEnergy(multiplier)) {
+            progress = Math.min(1.0F, meltProgress);
             return false;
         }
         useEnergy(multiplier);
@@ -182,11 +187,18 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
     public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
         super.saveAdditional(nbt, provider);
         nbt.putFloat("melt_progress", meltProgress);
+        // The melting item must be saved together with the progress: without it the first
+        // tick after a reload sees a different item than the (empty) melting item and
+        // resets the restored progress to zero.
+        if (!meltingItem.isEmpty()) {
+            nbt.put("melting_item", meltingItem.save(provider));
+        }
     }
 
     @Override
     public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
         super.loadAdditional(nbt, provider);
         meltProgress = nbt.getFloat("melt_progress");
+        meltingItem = nbt.contains("melting_item") ? ItemStack.parseOptional(provider, nbt.getCompound("melting_item")) : ItemStack.EMPTY;
     }
 }

@@ -407,6 +407,45 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     /**
+     * @return true if all of the given stacks can be merged into the output slots together.
+     * Simulates against copies of the current slot contents, so stacks of different items
+     * competing for the same empty slot are accounted for.
+     */
+    protected boolean canInsertResults(java.util.List<ItemStack> stacks) {
+        java.util.List<ItemStack> simulated = new java.util.ArrayList<>(outputSlots.size());
+        for (IInventorySlot slot : outputSlots) {
+            simulated.add(slot.getStack().copy());
+        }
+        for (ItemStack stack : stacks) {
+            if (stack.isEmpty()) {
+                continue;
+            }
+            int remaining = stack.getCount();
+            for (int i = 0; i < outputSlots.size() && remaining > 0; i++) {
+                ItemStack existing = simulated.get(i);
+                int limit = outputSlots.get(i).getLimit(stack);
+                if (existing.isEmpty()) {
+                    int moved = Math.min(remaining, limit);
+                    if (moved > 0) {
+                        simulated.set(i, stack.copyWithCount(moved));
+                        remaining -= moved;
+                    }
+                } else if (ItemStack.isSameItemSameComponents(existing, stack)) {
+                    int moved = Math.min(remaining, limit - existing.getCount());
+                    if (moved > 0) {
+                        existing.grow(moved);
+                        remaining -= moved;
+                    }
+                }
+            }
+            if (remaining > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Inserts the full stack. Callers should have checked {@link #canInsertResult(ItemStack)}.
      */
     protected boolean insertResult(ItemStack stack) {

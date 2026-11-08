@@ -51,7 +51,7 @@ by data packs work as-is**.
 - **Compressed hammer support** — inserting a compressed hammer processes
   `compressed_hammer` recipes, and outputs `compressed_*` items.
 - **Large buffers** — input slots hold 64 × lane count, and the internal FE buffer
-  holds up to 40,000 × lane count.
+  holds 40,000 FE × lane count (crucible factories: × crucible multiplier).
 - **Animations** — the front LED breathes while idle, and blinks with a scanline
   while running.
 
@@ -92,31 +92,34 @@ Install it on both client and server. There is no config.
 
 ### Tier list (lane count, crucible multiplier, energy capacity)
 
-The internal FE buffer is **40,000 FE × lane count**. Factories also consume
-that many times more FE per tick, so the buffer is scaled by the same ratio
-to keep "how long the buffer lasts" equal to the base machine.
+The internal FE buffer is **40,000 FE × lane count** — except for crucible
+factories, whose per-tick consumption scales with the crucible multiplier
+instead of the lane count, so their buffer is **40,000 FE × crucible
+multiplier** (the FE capacity column below shows the crucible value).
+Either way the buffer scales with the per-tick consumption, keeping "how
+long the buffer lasts" equal to the base machine.
 The input slot limit is also **64 × lane count** (e.g. Basic 256, Ultimate 1,024).
 
 | Tier | From | Lanes | Crucible multiplier | FE capacity |
 | --- | --- | ---: | ---: | ---: |
 | Base | — | 1 | 1× | 40,000 FE |
-| Basic | Mekanism | 4 | 5× | 160,000 FE |
-| Advanced | Mekanism | 8 | 10× | 320,000 FE |
-| Elite | Mekanism | 12 | 20× | 480,000 FE |
-| Ultimate | Mekanism | 16 | 30× | 640,000 FE |
-| Overclocked | Evolved Mekanism | 20 | 40× | 800,000 FE |
-| Quantum | Evolved Mekanism | 24 | 50× | 960,000 FE |
-| Dense | Evolved Mekanism | 28 | 60× | 1,120,000 FE |
-| Multiversal | Evolved Mekanism | 32 | 70× | 1,280,000 FE |
-| Creative | Evolved Mekanism | 36 | 80× | 1,440,000 FE |
-| Absolute | Mekanism Extras | 20 | 40× | 800,000 FE |
-| Supreme | Mekanism Extras | 24 | 50× | 960,000 FE |
-| Cosmic | Mekanism Extras | 28 | 60× | 1,120,000 FE |
-| Infinite | Mekanism Extras | 32 | 70× | 1,280,000 FE |
-| Absolute Overclocked | Evolved Mekanism Extras | 40 | 90× | 1,600,000 FE |
-| Supreme Quantum | Evolved Mekanism Extras | 48 | 100× | 1,920,000 FE |
-| Cosmic Dense | Evolved Mekanism Extras | 56 | 110× | 2,240,000 FE |
-| Infinite Multiversal | Evolved Mekanism Extras | 64 | 120× | 2,560,000 FE |
+| Basic | Mekanism | 4 | 5× | 200,000 FE |
+| Advanced | Mekanism | 8 | 10× | 400,000 FE |
+| Elite | Mekanism | 12 | 20× | 800,000 FE |
+| Ultimate | Mekanism | 16 | 30× | 1,200,000 FE |
+| Overclocked | Evolved Mekanism | 20 | 40× | 1,600,000 FE |
+| Quantum | Evolved Mekanism | 24 | 50× | 2,000,000 FE |
+| Dense | Evolved Mekanism | 28 | 60× | 2,400,000 FE |
+| Multiversal | Evolved Mekanism | 32 | 70× | 2,800,000 FE |
+| Creative | Evolved Mekanism | 36 | 80× | 3,200,000 FE |
+| Absolute | Mekanism Extras | 20 | 40× | 1,600,000 FE |
+| Supreme | Mekanism Extras | 24 | 50× | 2,000,000 FE |
+| Cosmic | Mekanism Extras | 28 | 60× | 2,400,000 FE |
+| Infinite | Mekanism Extras | 32 | 70× | 2,800,000 FE |
+| Absolute Overclocked | Evolved Mekanism Extras | 40 | 90× | 3,600,000 FE |
+| Supreme Quantum | Evolved Mekanism Extras | 48 | 100× | 4,000,000 FE |
+| Cosmic Dense | Evolved Mekanism Extras | 56 | 110× | 4,400,000 FE |
+| Infinite Multiversal | Evolved Mekanism Extras | 64 | 120× | 4,800,000 FE |
 
 If speed upgrades push per-tick consumption above the capacity, the machine
 keeps running capped at the capacity (it never fully stops).

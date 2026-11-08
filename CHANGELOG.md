@@ -17,6 +17,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   installation) and pointed readers to the GitHub README for the detailed specs,
   tier tables and recipes.
 
+### Fixed
+
+- Hammer: a lane whose output was blocked kept consuming FE and re-rolling its result
+  every tick. The rolled result is now kept with the lane (and saved) and the lane simply
+  waits until the output accepts it.
+- Sieve: reducing the input stack's count mid-operation could let lanes complete for
+  items that were no longer there, producing drops from nothing. Lanes beyond the
+  current input count are now cancelled.
+- Crucibles: melt progress was always lost on reload because the item being melted was
+  not saved; `melting_item` is now persisted together with `melt_progress`.
+- Compressed hammer: results above 9 lost the `count % 9` remainder (17 rolled results
+  produced a single compressed item). The remainder is now returned as ordinary items
+  alongside the compressed ones.
+- Crucible factories: the internal FE buffer scaled with the factory process count
+  while consumption scales with the melt multiplier, so the buffer lasted only about
+  half as long as on the base machine. Crucible buffers now scale with the melt
+  multiplier (the README tier table shows the corrected capacities).
+- Declared `emextras` (Evolved Mekanism Extras) as an optional dependency in
+  `neoforge.mods.toml`; it was the only supported addon not listed there.
+
 ### Changed
 
 - Simplified the development setup: `flake.nix` only provides JDK 21, Gradle and the client

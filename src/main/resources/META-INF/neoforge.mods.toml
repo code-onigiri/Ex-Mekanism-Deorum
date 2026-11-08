@@ -80,6 +80,15 @@ versionRange = "[3.0.6,)"
 ordering = "AFTER"
 side = "BOTH"
 
+# Evolved Mekanism Extras provides the four hybrid tiers (Absolute Overclocked
+# and up). It itself requires Evolved Mekanism and Mekanism Extras.
+[[dependencies.${mod_id}]]
+modId = "emextras"
+type = "optional"
+versionRange = "[1.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
 # Optional Mek Energistics pattern-automation bridge. The mixin plugin applies the mixin
 # only when the Mek Energistics API is present, so the mod still loads without it.
 [[mixins]]
