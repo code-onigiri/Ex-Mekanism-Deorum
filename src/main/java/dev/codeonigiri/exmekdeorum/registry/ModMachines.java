@@ -1,8 +1,8 @@
 package dev.codeonigiri.exmekdeorum.registry;
 
 import dev.codeonigiri.exmekdeorum.ExMekanismDeorum;
-import dev.codeonigiri.exmekdeorum.compat.TierAttributes;
 import dev.codeonigiri.exmekdeorum.block.BlockDeorumMachine;
+import dev.codeonigiri.exmekdeorum.compat.TierAttributes;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFactory;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFamily;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineTier;
@@ -15,39 +15,41 @@ import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumMachine;
 import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumSieve;
 import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumWaterCrucible;
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
-import mekanism.api.text.ILangEntry;
-import mekanism.common.attachments.component.AttachedEjector;
-import mekanism.common.attachments.component.AttachedSideConfig;
+import mekanism.api.Upgrade;
+import mekanism.api.math.FloatingLong;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.block.attribute.AttributeEnergy;
 import mekanism.common.block.attribute.AttributeGui;
-import mekanism.common.block.attribute.AttributeSideConfig;
+import mekanism.common.block.attribute.AttributeParticleFX;
+import mekanism.common.block.attribute.AttributeStateFacing;
 import mekanism.common.block.attribute.AttributeTier;
-import mekanism.api.Upgrade;
 import mekanism.common.block.attribute.AttributeUpgradeSupport;
 import mekanism.common.block.attribute.AttributeUpgradeable;
+import mekanism.common.block.attribute.Attributes;
 import mekanism.common.content.blocktype.BlockType;
-import mekanism.common.content.blocktype.Machine;
+import mekanism.common.content.blocktype.BlockTypeTile;
 import mekanism.common.item.block.ItemBlockTooltip;
-import mekanism.common.lib.transmitter.TransmissionType;
-import mekanism.common.registration.MekanismDeferredHolder;
+import mekanism.common.lib.math.Pos3D;
 import mekanism.common.registration.impl.BlockDeferredRegister;
 import mekanism.common.registration.impl.BlockRegistryObject;
+import mekanism.common.registration.impl.ContainerTypeRegistryObject;
 import mekanism.common.registration.impl.CreativeTabDeferredRegister;
+import mekanism.common.registration.impl.CreativeTabRegistryObject;
 import mekanism.common.registration.impl.TileEntityTypeDeferredRegister;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
-import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.base.TileEntityMekanism;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -63,9 +65,13 @@ import net.minecraftforge.fml.ModList;
  * blocks).</p>
  *
  * <p>Each block gets its own block entity type because Mekanism's
- * {@code TileEntityTypeDeferredRegister.mekBuilder} builds a type that contains exactly one block.
+ * {@code TileEntityTypeDeferredRegister} builds a type that contains exactly one block.
  * The tile class is shared per family; the family / factory / tier data is carried by block
  * attributes and read by the tile in {@code presetVariables()}.</p>
+ *
+ * <p>Mekanism 10.4 (1.20.1) has no item data components: side configuration and the ejector
+ * live in the tile components and are persisted in tile NBT. The tile therefore installs its
+ * own default side configuration when it is constructed.</p>
  */
 public final class ModMachines {
 
@@ -75,27 +81,7 @@ public final class ModMachines {
 
     private static final List<BlockRegistryObject<?, ?>> ALL = new ArrayList<>();
     private static final Map<String, BlockRegistryObject<?, ?>> BY_NAME = new HashMap<>();
-    public static final MekanismDeferredHolder<CreativeModeTab, CreativeModeTab> TAB;
-
-    /**
-     * Item side configuration used by the two fluid families (barrel, crucible).
-     *
-     * <p>Item and energy behave exactly like a normal Mekanism machine; the fluid tank can be both
-     * filled and drained from every side, so Mekanism mechanical pipes connect to the barrel and
-     * the crucible out of the box. Mekanism's own machines carry this information on the item
-     * ({@code SIDE_CONFIG} data component) and apply it to the tile when placed. Without it every
-     * side would default to {@code DataType.NONE}, the energy/fluid/item capabilities would be
-     * disabled and cables/pipes would not connect at all.</p>
-     */
-    private static final AttachedSideConfig FLUID_MACHINE;
-
-    static {
-        Map<TransmissionType, AttachedSideConfig.LightConfigInfo> configInfo = new EnumMap<>(TransmissionType.class);
-        configInfo.put(TransmissionType.ITEM, AttachedSideConfig.LightConfigInfo.MACHINE);
-        configInfo.put(TransmissionType.ENERGY, AttachedSideConfig.LightConfigInfo.INPUT_ONLY);
-        configInfo.put(TransmissionType.FLUID, AttachedSideConfig.LightConfigInfo.INPUT_OUT_ALL);
-        FLUID_MACHINE = new AttachedSideConfig(configInfo);
-    }
+    public static final CreativeTabRegistryObject TAB;
 
     static {
         for (DeorumMachineFamily family : DeorumMachineFamily.values()) {
@@ -107,7 +93,7 @@ public final class ModMachines {
                 createFactory(family, tier);
             }
         }
-        TAB = TABS.registerMain(new DeorumLangEntry("itemGroup.exmekdeorum"), ALL.get(0).getItemHolder(),
+        TAB = TABS.registerMain(new DeorumLangEntry("itemGroup.exmekdeorum"), ALL.get(0),
                 builder -> builder.displayItems((params, output) -> CreativeTabDeferredRegister.addToDisplay(BLOCKS, output)));
     }
 
@@ -149,12 +135,16 @@ public final class ModMachines {
                 ? tier.getMeltMultiplier() : processes;
         long storage = Math.multiplyExact(DeorumMachineFamily.BASE_ENERGY_STORAGE, scale);
 
-        Machine<T> type = new Machine<>(ref::get, new DeorumLangEntry("description." + name));
+        BlockTypeTile<T> type = new BlockTypeTile<>(ref::get, new DeorumLangEntry("description." + name));
+        // These are the attributes Mekanism's own Machine block type adds.
+        type.add(new AttributeParticleFX()
+                        .add(ParticleTypes.SMOKE, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, 0.52))
+                        .add(DustParticleOptions.REDSTONE, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, 0.52)),
+                Attributes.ACTIVE_LIGHT, new AttributeStateFacing(), Attributes.INVENTORY,
+                Attributes.SECURITY, Attributes.REDSTONE, Attributes.COMPARATOR,
+                new AttributeUpgradeSupport(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING)));
         type.add(new AttributeGui(() -> ModContainers.DEORUM_MACHINE, null));
-        type.add(new AttributeEnergy(() -> usage, () -> storage));
-        type.add(family.isFluidMachine()
-                ? AttributeSideConfig.create(TransmissionType.ITEM, TransmissionType.ENERGY, TransmissionType.FLUID)
-                : AttributeSideConfig.ELECTRIC_MACHINE);
+        type.add(new AttributeEnergy(() -> FloatingLong.create(usage), () -> FloatingLong.create(storage)));
         type.add(new AttributeMachineFamily(family));
         applyEmpoweredUpgrades(type);
         applyExtrasUpgrades(type);
@@ -174,15 +164,11 @@ public final class ModMachines {
             }
         }
 
-        BlockRegistryObject<BlockDeorumMachine<T>, ItemBlockTooltip<BlockDeorumMachine<T>>> block = BLOCKS.register(name,
+        BlockRegistryObject<BlockDeorumMachine<T>, ItemBlockTooltip<BlockDeorumMachine<T>>> block = BLOCKS.registerDefaultProperties(name,
                 () -> new BlockDeorumMachine<>(type),
-                (created, properties) -> new ItemBlockTooltip<>(created, true, properties
-                        .component(MekanismDataComponents.SIDE_CONFIG, family.isFluidMachine() ? FLUID_MACHINE : AttachedSideConfig.ELECTRIC_MACHINE)
-                        .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)));
-        ref.value = TILE_TYPES.mekBuilder(block, (pos, state) -> tileFactory.create(block, pos, state))
-                .clientTicker(TileEntityMekanism::tickClient)
-                .serverTicker(TileEntityMekanism::tickServer)
-                .build();
+                (created, properties) -> new ItemBlockTooltip<>(created, properties));
+        ref.value = TILE_TYPES.register(block, (pos, state) -> tileFactory.create(block, pos, state),
+                TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
         ALL.add(block);
         BY_NAME.put(name, block);
     }
@@ -237,7 +223,7 @@ public final class ModMachines {
             for (String fieldName : new String[]{"STACK", "CREATIVE"}) {
                 upgrades.add((Upgrade) api.getField(fieldName).get(null));
             }
-            type.add(AttributeUpgradeSupport.create(upgrades.toArray(new Upgrade[0])));
+            type.add(new AttributeUpgradeSupport(upgrades));
         } catch (ReflectiveOperationException e) {
             ExMekanismDeorum.LOGGER.warn("Failed to add Mekanism Extras upgrade support", e);
         }
@@ -272,12 +258,11 @@ public final class ModMachines {
     }
 
     /**
-     * @return every machine block, in registration order (hammer machine first).
+     * 登録済みブロックの ID。DeferredRegister のバインド前 (Mod 構築中) でも使える。
      */
-    /** 登録済みブロックの ID。DeferredRegister のバインド前 (Mod 構築中) でも使える。 */
-    public static List<net.minecraft.resources.ResourceLocation> getBlockIds() {
+    public static List<ResourceLocation> getBlockIds() {
         return BY_NAME.keySet().stream()
-                .map(name -> net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(ExMekanismDeorum.MOD_ID, name))
+                .map(name -> new ResourceLocation(ExMekanismDeorum.MOD_ID, name))
                 .toList();
     }
 
@@ -294,7 +279,7 @@ public final class ModMachines {
 
     @FunctionalInterface
     private interface TileFactory<T extends TileEntityMekanism> {
-        T create(Holder<Block> block, BlockPos pos, BlockState state);
+        T create(IBlockProvider blockProvider, BlockPos pos, BlockState state);
     }
 
     private static final class TileTypeRef<T extends TileEntityMekanism> implements Supplier<TileEntityTypeRegistryObject<T>> {

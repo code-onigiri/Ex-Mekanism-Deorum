@@ -6,6 +6,7 @@ import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.inventory.IInventorySlot;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -14,8 +15,6 @@ import mekanism.common.inventory.slot.EnergyInventorySlot;
 import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +74,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
     @Nullable
     private FluidTransformationRecipe currentTransform;
 
-    public TileEntityDeorumBarrel(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    public TileEntityDeorumBarrel(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
     }
 
@@ -92,7 +91,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
                 (stack, automationType) -> automationType == AutomationType.INTERNAL,
                 ConstantPredicates.alwaysTrue(), listener);
         setFluidTanks(List.of(inputTank, outputTank));
-        FluidTankHelper helper = FluidTankHelper.forSideWithConfig(this);
+        FluidTankHelper helper = FluidTankHelper.forSideWithConfig(this::getDirection, this::getConfig);
         helper.addTank(inputTank);
         helper.addTank(outputTank);
         return helper.build();
@@ -324,16 +323,16 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.saveAdditional(nbt, provider);
+    public void saveAdditional(@NotNull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("compost", compost);
         nbt.putFloat("compost_progress", compostProgress);
         nbt.putFloat("transform_progress", transformProgress);
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         compost = nbt.getInt("compost");
         compostProgress = nbt.getFloat("compost_progress");
         transformProgress = nbt.getFloat("transform_progress");

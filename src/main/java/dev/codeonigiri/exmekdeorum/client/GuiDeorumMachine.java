@@ -82,7 +82,7 @@ public class GuiDeorumMachine extends GuiMekanismTile<TileEntityDeorumMachine, D
     public static final int GAUGE_H = 54;
 
     private static final ResourceLocation BACKGROUND =
-            ResourceLocation.fromNamespaceAndPath(ExMekanismDeorum.MOD_ID, "textures/gui/deorum_machine.png");
+            new ResourceLocation(ExMekanismDeorum.MOD_ID, "textures/gui/deorum_machine.png");
 
     private GuiSideConfigurationTab<TileEntityDeorumMachine> sideConfigTab;
 
@@ -123,7 +123,7 @@ public class GuiDeorumMachine extends GuiMekanismTile<TileEntityDeorumMachine, D
         List<BasicFluidTank> tanks = tile.getFluidTanks();
         if (tanks.size() == 1) {
             // Crucible: item input on the left, output fluid on the right, progress bar centred.
-            addFluidGauge(tanks.getFirst(), GAUGE_RIGHT_X, GAUGE_Y, GAUGE_W, GAUGE_H);
+            addFluidGauge(tanks.get(0), GAUGE_RIGHT_X, GAUGE_Y, GAUGE_W, GAUGE_H);
         } else if (tanks.size() >= 2) {
             // Barrel: input tank left of the progress bar, output tank right of it.
             addFluidGauge(tanks.get(0), GAUGE_X, GAUGE_Y, GAUGE_W, GAUGE_H);
@@ -148,5 +148,9 @@ public class GuiDeorumMachine extends GuiMekanismTile<TileEntityDeorumMachine, D
         renderTitleText(guiGraphics);
         renderInventoryText(guiGraphics);
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    }
+
+    private void renderInventoryText(GuiGraphics guiGraphics) {
+        guiGraphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 4210752, false);
     }
 }

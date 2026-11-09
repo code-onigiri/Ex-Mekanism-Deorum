@@ -1,15 +1,12 @@
 package dev.codeonigiri.exmekdeorum.tile;
 
+import dev.codeonigiri.exmekdeorum.inventory.DeorumAuxSlot;
 import java.util.Arrays;
 import mekanism.api.IContentsListener;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.inventory.slot.BasicInventorySlot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,9 +51,9 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
     /** Rolled results of lanes that finished but could not insert yet (output blocked). */
     private ItemStack[][] laneResults;
     private boolean[] laneFinished;
-    private BasicInventorySlot hammerSlot;
+    private DeorumAuxSlot hammerSlot;
 
-    public TileEntityDeorumHammer(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    public TileEntityDeorumHammer(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
         int lanes = operations();
         laneInputs = new ItemStack[lanes];
@@ -69,8 +66,8 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
     @Override
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         super.initInventory(helper, listener);
-        hammerSlot = helper.addSlot(BasicInventorySlot.at(
-                stack -> stack.is(EItemTags.HAMMERS) || stack.is(EItemTags.COMPRESSED_HAMMERS), listener, AUX_X, AUX_Y, 1));
+        hammerSlot = helper.addSlot(DeorumAuxSlot.at(
+                stack -> stack.is(EItemTags.HAMMERS) || stack.is(EItemTags.COMPRESSED_HAMMERS), listener, AUX_X, AUX_Y));
     }
 
     @Override
@@ -94,7 +91,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         RecipeCaches caches = getRecipeCaches();
         ItemStack hammer = hammerSlot.getStack();
         boolean compressed = hammer.is(EItemTags.COMPRESSED_HAMMERS);
-        float efficiency = hammer.isEmpty() ? 1.0F : 2.0F + enchantLevel(hammer, Enchantments.EFFICIENCY, level) * 0.33F;
+        float efficiency = hammer.isEmpty() ? 1.0F : 2.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.EFFICIENCY, hammer) * 0.33F;
         float increment = efficiency * stackMultiplier() / ticksFor(BASE_TICKS);
 
         // Every running lane has claimed one item from the input slot; do not start more lanes than
@@ -242,7 +239,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         if (id == null) {
             return ItemStack.EMPTY;
         }
-        ResourceLocation compressedId = ResourceLocation.fromNamespaceAndPath("exdeorum", "compressed_" + id.getPath());
+        ResourceLocation compressedId = new ResourceLocation("exdeorum", "compressed_" + id.getPath());
         Item compressed = BuiltInRegistries.ITEM.get(compressedId);
         if (compressed == null || compressed == Items.AIR) {
             return ItemStack.EMPTY;
@@ -269,7 +266,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
      */
     private boolean matchesInput(ItemStack lane) {
         ItemStack input = getInputStack();
-        return !input.isEmpty() && ItemStack.isSameItemSameComponents(input, lane);
+        return !input.isEmpty() && ItemStack.isSameItemSameTags(input, lane);
     }
 
     private int countRunningLanes() {
@@ -304,24 +301,20 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         return running == 0 ? 0.0F : total / running;
     }
 
-    private static int enchantLevel(ItemStack stack, ResourceKey<Enchantment> enchantment, ServerLevel level) {
-        return stack.getEnchantmentLevel(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantment));
-    }
-
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.saveAdditional(nbt, provider);
+    public void saveAdditional(@NotNull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         ListTag lanes = new ListTag();
         for (int i = 0; i < laneInputs.length; i++) {
             CompoundTag lane = new CompoundTag();
             if (!laneInputs[i].isEmpty()) {
-                lane.put("input", laneInputs[i].save(provider));
+                lane.put("input", laneInputs[i].save(new CompoundTag()));
             }
             lane.putFloat("progress", laneProgress[i]);
             if (laneFinished[i] && laneResults[i] != null) {
                 ListTag results = new ListTag();
                 for (ItemStack result : laneResults[i]) {
-                    results.add(result.save(provider));
+                    results.add(result.save(new CompoundTag()));
                 }
                 lane.put("results", results);
             }
@@ -331,18 +324,18 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         ListTag lanes = nbt.getList(LANES_KEY, Tag.TAG_COMPOUND);
         for (int i = 0; i < laneInputs.length && i < lanes.size(); i++) {
             CompoundTag lane = lanes.getCompound(i);
-            laneInputs[i] = lane.contains("input") ? ItemStack.parseOptional(provider, lane.getCompound("input")) : ItemStack.EMPTY;
+            laneInputs[i] = lane.contains("input") ? ItemStack.of(lane.getCompound("input")) : ItemStack.EMPTY;
             laneProgress[i] = lane.getFloat("progress");
             if (lane.contains("results", Tag.TAG_LIST)) {
                 ListTag results = lane.getList("results", Tag.TAG_COMPOUND);
                 laneResults[i] = new ItemStack[results.size()];
                 for (int j = 0; j < results.size(); j++) {
-                    laneResults[i][j] = ItemStack.parseOptional(provider, results.getCompound(j));
+                    laneResults[i][j] = ItemStack.of(results.getCompound(j));
                 }
                 laneFinished[i] = true;
             } else {

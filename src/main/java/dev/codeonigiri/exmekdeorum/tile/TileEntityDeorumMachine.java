@@ -1,5 +1,6 @@
 package dev.codeonigiri.exmekdeorum.tile;
 
+import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFactory;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineFamily;
 import dev.codeonigiri.exmekdeorum.machine.AttributeMachineTier;
@@ -7,17 +8,20 @@ import dev.codeonigiri.exmekdeorum.machine.DeorumMachineFamily;
 import dev.codeonigiri.exmekdeorum.machine.MachineTier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
-import mekanism.common.attachments.component.AttachedSideConfig;
+import mekanism.api.energy.IEnergyContainer;
+import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.inventory.IInventorySlot;
+import mekanism.api.math.FloatingLong;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
-import mekanism.api.energy.IEnergyContainer;
-import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -25,13 +29,11 @@ import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableFloat;
-import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
+import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
-import net.minecraftforge.fml.ModList;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
@@ -39,13 +41,12 @@ import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.EnumUtils;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import thedarkcolour.exdeorum.recipe.RecipeCaches;
@@ -54,8 +55,8 @@ import thedarkcolour.exdeorum.recipe.RecipeUtil;
 /**
  * Shared base for the Ex Deorum machine variants.
  *
- * <p>Recipes are not re-declared: every tick the concrete machine asks Ex Deorum's
- * {@link RecipeCaches} (rebuilt from the server recipe manager on reload), so any recipe added by
+ * <p>Recipes are not re-declared: every tick the concrete machine asks Ex Deorum's recipe
+ * caches (rebuilt from the server recipe manager on reload), so any recipe added by
  * a datapack, by Ex Deorum itself or by another addon is picked up automatically.</p>
  *
  * <p>Tier / family / factory variant are stored as block attributes and read in
@@ -100,7 +101,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
      */
     protected float progress;
 
-    protected TileEntityDeorumMachine(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    protected TileEntityDeorumMachine(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
         ejectorComponent = new TileComponentEjector(this);
         if (family.isFluidMachine()) {
@@ -114,23 +115,28 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
             fluidTanks = List.of();
         }
         setupFluidConfig();
-        applyDefaultSideConfig();
     }
 
     /**
      * Registers the fluid transmission.
      *
      * <p>One tank (crucibles) can be both filled and drained; two tanks (barrel) are registered as
-     * an input/output pair so pipes fill the input tank and drain the output tank.</p>
+     * an input/output pair. Every side starts as INPUT_OUTPUT to match the item/energy
+     * configuration the machine used to carry on its item; the tanks' own fill/drain predicates
+     * enforce the actual direction.</p>
      */
     private void setupFluidConfig() {
         if (fluidTanks.isEmpty()) {
             return;
         }
+        ConfigInfo info;
         if (fluidTanks.size() == 1) {
-            configComponent.setupIOConfig(TransmissionType.FLUID, fluidTanks.get(0), RelativeSide.RIGHT);
+            info = configComponent.setupIOConfig(TransmissionType.FLUID, fluidTanks.get(0), RelativeSide.RIGHT);
         } else {
-            configComponent.setupIOConfig(TransmissionType.FLUID, fluidTanks.get(0), fluidTanks.get(1), RelativeSide.RIGHT);
+            info = configComponent.setupIOConfig(TransmissionType.FLUID, fluidTanks.get(0), fluidTanks.get(1), RelativeSide.RIGHT);
+        }
+        if (info != null) {
+            info.fill(DataType.INPUT_OUTPUT);
         }
     }
 
@@ -142,71 +148,24 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
         this.tank = tanks.isEmpty() ? null : tanks.get(0);
     }
 
-    /**
-     * Migration for machines that were saved before the default side config existed: their stored
-     * config contains {@code NONE} on every side, which disables the capabilities (cables and pipes
-     * do not connect). Only an all-{@code NONE} config is touched, so a player-configured machine is
-     * never overwritten.
-     */
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        ConfigInfo energy = configComponent.getConfig(TransmissionType.ENERGY);
-        if (energy != null && allSidesNone(energy)) {
-            applyDefaultSideConfig();
-        }
-    }
-
-    private static boolean allSidesNone(ConfigInfo info) {
-        for (RelativeSide side : EnumUtils.SIDES) {
-            if (info.getDataType(side) != DataType.NONE) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Sets the side config a freshly placed machine starts with.
-     *
-     * <p>This mirrors the {@code SIDE_CONFIG} data component that the block item carries, so the
-     * machine also works when it is created without item placement (structure blocks, /setblock,
-     * world generation, ...). A side config of {@code DataType.NONE} on every side would disable
-     * the item/energy/fluid capabilities, which in turn stops Mekanism cables and pipes from
-     * connecting to the machine at all.</p>
-     */
-    private void applyDefaultSideConfig() {
-        applySideConfig(TransmissionType.ITEM, AttachedSideConfig.LightConfigInfo.MACHINE);
-        applySideConfig(TransmissionType.ENERGY, AttachedSideConfig.LightConfigInfo.INPUT_ONLY);
-        if (!fluidTanks.isEmpty()) {
-            applySideConfig(TransmissionType.FLUID, AttachedSideConfig.LightConfigInfo.INPUT_OUT_ALL);
-        }
-    }
-
-    private void applySideConfig(TransmissionType type, AttachedSideConfig.LightConfigInfo lightConfigInfo) {
-        ConfigInfo info = configComponent.getConfig(type);
-        if (info == null) {
-            return;
-        }
-        info.setEjecting(lightConfigInfo.isEjecting());
-        for (RelativeSide side : EnumUtils.SIDES) {
-            info.setDataType(lightConfigInfo.getDataType(side), side);
-        }
-    }
-
     @Override
     protected void presetVariables() {
         super.presetVariables();
-        AttributeMachineTier tierAttribute = Attribute.get(getBlockHolder(), AttributeMachineTier.class);
+        AttributeMachineTier tierAttribute = Attribute.get(getBlockType(), AttributeMachineTier.class);
         tier = tierAttribute == null ? null : tierAttribute.tier();
-        family = Attribute.getOrThrow(getBlockHolder(), AttributeMachineFamily.class).family();
-        factory = Attribute.getOrThrow(getBlockHolder(), AttributeMachineFactory.class).factory();
+        AttributeMachineFamily familyAttribute = Attribute.get(getBlockType(), AttributeMachineFamily.class);
+        family = Objects.requireNonNull(familyAttribute, "Missing machine family attribute").family();
+        AttributeMachineFactory factoryAttribute = Attribute.get(getBlockType(), AttributeMachineFactory.class);
+        factory = factoryAttribute != null && factoryAttribute.factory();
+        configComponent = new TileComponentConfig(this, family.isFluidMachine()
+                ? new TransmissionType[]{TransmissionType.ITEM, TransmissionType.ENERGY, TransmissionType.FLUID}
+                : new TransmissionType[]{TransmissionType.ITEM, TransmissionType.ENERGY});
     }
 
     @Override
     protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
         energyContainer = MachineEnergyContainer.input(this, listener);
-        EnergyContainerHelper helper = EnergyContainerHelper.forSideWithConfig(this);
+        EnergyContainerHelper helper = EnergyContainerHelper.forSideWithConfig(this::getDirection, this::getConfig);
         helper.addContainer(energyContainer);
         return helper.build();
     }
@@ -219,7 +178,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
 
     @Override
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper helper = InventorySlotHelper.forSideWithConfig(this);
+        InventorySlotHelper helper = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
         initInventory(helper, listener);
         return helper.build();
     }
@@ -292,8 +251,8 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     protected boolean hasEnergy(int operations) {
-        long usage = energyCost(operations);
-        return energyContainer.extract(usage, Action.SIMULATE, AutomationType.INTERNAL) >= usage;
+        FloatingLong usage = energyCost(operations);
+        return energyContainer.extract(usage, Action.SIMULATE, AutomationType.INTERNAL).equals(usage);
     }
 
     /**
@@ -302,10 +261,10 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
      * 使い切るだけで一切動かなくなる。ここでバッファ容量を上限にして「動き続ける」側に
      * 倒す (実効速度は容量で頭打ちになる)。
      */
-    protected long energyCost(int operations) {
-        long usage = energyContainer.getEnergyPerTick() * Math.max(1, operations) * stackMultiplier();
-        long capacity = energyContainer.getMaxEnergy();
-        return capacity > 0 ? Math.min(usage, capacity) : usage;
+    protected FloatingLong energyCost(int operations) {
+        FloatingLong usage = energyContainer.getEnergyPerTick().multiply(Math.max(1, operations)).multiply(stackMultiplier());
+        FloatingLong capacity = energyContainer.getMaxEnergy();
+        return capacity.greaterThan(FloatingLong.ZERO) ? usage.min(capacity) : usage;
     }
 
     /**
@@ -375,7 +334,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
             ItemStack existing = slot.getStack();
             if (existing.isEmpty()) {
                 remaining -= Math.min(remaining, slot.getLimit(stack));
-            } else if (ItemStack.isSameItemSameComponents(existing, stack)) {
+            } else if (ItemStack.isSameItemSameTags(existing, stack)) {
                 remaining -= Math.min(remaining, slot.getLimit(existing) - existing.getCount());
             }
             if (remaining <= 0) {
@@ -430,7 +389,7 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
                         simulated.set(i, stack.copyWithCount(moved));
                         remaining -= moved;
                     }
-                } else if (ItemStack.isSameItemSameComponents(existing, stack)) {
+                } else if (ItemStack.isSameItemSameTags(existing, stack)) {
                     int moved = Math.min(remaining, limit - existing.getCount());
                     if (moved > 0) {
                         existing.grow(moved);
@@ -472,9 +431,6 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     /**
-     * All fluid tanks in GUI order. Empty for hammer and sieve.
-     */
-    /**
      * Slot treated as a persistent (tool/catalyst) input by recipe-automation integrations.
      * Only the hammer and sieve have one; families without an auxiliary slot return {@code null}.
      */
@@ -512,16 +468,16 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(@NotNull Provider provider) {
-        return new DeorumUpgradeData(saveWithoutMetadata(provider));
+    public @Nullable IUpgradeData getUpgradeData() {
+        return new DeorumUpgradeData(saveWithoutMetadata());
     }
 
     @Override
-    public void parseUpgradeData(@NotNull Provider provider, @NotNull IUpgradeData data) {
+    public void parseUpgradeData(@NotNull IUpgradeData data) {
         if (data instanceof DeorumUpgradeData deorum) {
-            loadWithComponents(deorum.tag(), provider);
+            load(deorum.tag());
         } else {
-            super.parseUpgradeData(provider, data);
+            super.parseUpgradeData(data);
         }
     }
 
@@ -557,14 +513,14 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.saveAdditional(nbt, provider);
+    public void saveAdditional(@NotNull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putFloat("progress", progress);
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         progress = nbt.getFloat("progress");
     }
 }

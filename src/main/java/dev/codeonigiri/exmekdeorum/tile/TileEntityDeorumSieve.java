@@ -1,11 +1,10 @@
 package dev.codeonigiri.exmekdeorum.tile;
 
+import dev.codeonigiri.exmekdeorum.inventory.DeorumAuxSlot;
 import mekanism.api.IContentsListener;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.inventory.slot.BasicInventorySlot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -42,10 +41,10 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
 
     private SieveLogic[] logics;
     private CompressedSieveLogic[] compressedLogics;
-    private BasicInventorySlot meshSlot;
+    private DeorumAuxSlot meshSlot;
     private ItemStack lastMesh = ItemStack.EMPTY;
 
-    public TileEntityDeorumSieve(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    public TileEntityDeorumSieve(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
         int lanes = operations();
         logics = new SieveLogic[lanes];
@@ -59,7 +58,7 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
     @Override
     protected void initInventory(InventorySlotHelper helper, IContentsListener listener) {
         super.initInventory(helper, listener);
-        meshSlot = helper.addSlot(BasicInventorySlot.at(stack -> stack.is(EItemTags.SIEVE_MESHES), listener, AUX_X, AUX_Y, 1));
+        meshSlot = helper.addSlot(DeorumAuxSlot.at(stack -> stack.is(EItemTags.SIEVE_MESHES), listener, AUX_X, AUX_Y));
     }
 
     @Override
@@ -160,7 +159,7 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
 
     private boolean matchesInput(ItemStack lane) {
         ItemStack input = getInputStack();
-        return !input.isEmpty() && ItemStack.isSameItemSameComponents(input, lane);
+        return !input.isEmpty() && ItemStack.isSameItemSameTags(input, lane);
     }
 
     private int countRunningLanes() {
@@ -214,8 +213,8 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.saveAdditional(nbt, provider);
+    public void saveAdditional(@NotNull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         CompoundTag lanes = new CompoundTag();
         for (int i = 0; i < logics.length; i++) {
             CompoundTag lane = new CompoundTag();
@@ -233,8 +232,8 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         CompoundTag lanes = nbt.getCompound(LANES_KEY);
         for (int i = 0; i < logics.length; i++) {
             String key = "lane_" + i;

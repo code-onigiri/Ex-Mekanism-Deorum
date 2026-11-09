@@ -6,6 +6,7 @@ import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.providers.IBlockProvider;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -13,8 +14,6 @@ import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import dev.codeonigiri.exmekdeorum.inventory.DeorumInputSlot;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +54,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
     /** The item whose melt is in progress; changing the input restarts the progress. */
     private ItemStack meltingItem = ItemStack.EMPTY;
 
-    protected TileEntityDeorumCrucibleBase(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    protected TileEntityDeorumCrucibleBase(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
     }
 
@@ -104,7 +103,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         tank = BasicFluidTank.create(getTankCapacity(), ConstantPredicates.alwaysTrueBi(),
                 ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrue(), listener);
         setFluidTanks(List.of(tank));
-        FluidTankHelper helper = FluidTankHelper.forSideWithConfig(this);
+        FluidTankHelper helper = FluidTankHelper.forSideWithConfig(this::getDirection, this::getConfig);
         helper.addTank(tank);
         return helper.build();
     }
@@ -184,21 +183,21 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.saveAdditional(nbt, provider);
+    public void saveAdditional(@NotNull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putFloat("melt_progress", meltProgress);
         // The melting item must be saved together with the progress: without it the first
         // tick after a reload sees a different item than the (empty) melting item and
         // resets the restored progress to zero.
         if (!meltingItem.isEmpty()) {
-            nbt.put("melting_item", meltingItem.save(provider));
+            nbt.put("melting_item", meltingItem.save(new CompoundTag()));
         }
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
+    public void load(@NotNull CompoundTag nbt) {
+        super.load(nbt);
         meltProgress = nbt.getFloat("melt_progress");
-        meltingItem = nbt.contains("melting_item") ? ItemStack.parseOptional(provider, nbt.getCompound("melting_item")) : ItemStack.EMPTY;
+        meltingItem = nbt.contains("melting_item") ? ItemStack.of(nbt.getCompound("melting_item")) : ItemStack.EMPTY;
     }
 }
