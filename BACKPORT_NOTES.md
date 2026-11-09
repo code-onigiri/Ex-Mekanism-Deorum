@@ -254,3 +254,37 @@ and in this notes file.
   - Static sweep: no other source or resource references the two removed fortune
     tags, `pickupBlock(null, ...)`, the 4-arg `hurtAndBreak`, or an overridden
     `mouseClicked` remain in `src/`.
+
+## Runtime verification (2026-11-10, local runClient under Xvfb)
+
+CI only proves the jar builds; the mod was also booted in a real client
+(Forge 47.2.0 dev environment, core dependency set: Mekanism 10.4.16,
+Ex Deorum 1.53, JEI). Result: the game reached the main-menu warning
+screen and the mod initialised cleanly:
+
+    Ex Mekanism Deorum loaded; registered 25 machine blocks.
+
+### Bug found by the runtime check (fixed in this branch)
+
+- `mods.toml` declared dependencies NeoForge-style (`type = "required"` /
+  `type = "optional"`). Forge 1.20.1 FML requires the `mandatory` field and
+  rejected the mod file outright (`InvalidModFileException: Missing
+  required field mandatory in dependency`), which also poisoned the whole
+  mod scan. Converted: `required` -> `mandatory = true`,
+  `optional` -> `mandatory = false` (9 entries). The pre-fix CI jar would
+  not have loaded on a real 1.20.1 instance.
+
+### Dev-environment issues with the full addon set (not mod bugs)
+
+- `mekanism_empowered`, `mekanism_empowered_core` and `emextras` require
+  Forge `[47.4.0, ...)`; the project pins 47.2.0, so the full addon set
+  cannot load in dev until the Forge version is bumped within 47.x.
+- AE2 (9357405) declares GuideMe `[20.1.7, 20.2.0)` as a mandatory
+  dependency; GuideMe is not in the dev dependency set. AE2's
+  `GuiGraphicsMixin` also failed to apply under official mappings in dev.
+- Optional-version warning only: `mekanism_empowered` expects
+  `mekanism_extras [1.20.1-1.4.6,)`; the pinned 1.5.0 jar reports its
+  version as plain `1.5.0`, which sorts below that range.
+- Minor: `hammer_machine` blockstate lacks models for the
+  `active=*, facing=north|south` variants (ModelBakery warnings;
+  non-fatal).

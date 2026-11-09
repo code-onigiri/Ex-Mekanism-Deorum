@@ -12,28 +12,28 @@ logoFile = "icon.png"
 
 [[dependencies.${mod_id}]]
 modId = "forge"
-type = "required"
+mandatory = true
 versionRange = "${forge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-type = "required"
+mandatory = true
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "exdeorum"
-type = "required"
+mandatory = true
 versionRange = "${exdeorum_version_range}"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "mekanism"
-type = "required"
+mandatory = true
 versionRange = "${mekanism_version_range}"
 ordering = "AFTER"
 side = "BOTH"
@@ -43,7 +43,7 @@ side = "BOTH"
 # loaded when JEI is present.
 [[dependencies.${mod_id}]]
 modId = "jei"
-type = "optional"
+mandatory = false
 versionRange = "[15.74.0,)"
 ordering = "AFTER"
 side = "CLIENT"
@@ -53,21 +53,21 @@ side = "CLIENT"
 # factories, and Empowered's upgrades apply through Mekanism's own upgrade hooks).
 [[dependencies.${mod_id}]]
 modId = "evolvedmekanism"
-type = "optional"
+mandatory = false
 versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "mekanism_empowered"
-type = "optional"
+mandatory = false
 versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "mekanism_extras"
-type = "optional"
+mandatory = false
 versionRange = "[1.4,)"
 ordering = "AFTER"
 side = "BOTH"
@@ -76,7 +76,7 @@ side = "BOTH"
 # and up). It itself requires Evolved Mekanism and Mekanism Extras.
 [[dependencies.${mod_id}]]
 modId = "emextras"
-type = "optional"
+mandatory = false
 versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
