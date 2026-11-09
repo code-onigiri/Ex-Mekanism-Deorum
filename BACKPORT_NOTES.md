@@ -205,3 +205,8 @@ and in this notes file.
   / `tasks.named('runServer')` at script-evaluation time failed with
   "Task with name 'runData' not found". Wrapped both blocks in `afterEvaluate`
   in `build.gradle`. (Review fix by Shion; no code-agent run needed.)
+
+- **Fix 2 — `runData` still not found in `afterEvaluate` (CI run 42642552328):**
+  ForgeGradle 6 creates the run tasks lazily, after project evaluation, so
+  `afterEvaluate` was still too early. Replaced with `tasks.whenTaskAdded`,
+  which hooks each run task whenever it appears. (Review fix by Shion.)

@@ -98,17 +98,18 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-// ForgeGradle registers the run tasks (runClient/runServer/runData) in its own
-// afterEvaluate, so they do not exist yet while this script is evaluated.
-afterEvaluate {
-    tasks.named('runData').configure {
-        doFirst {
+// ForgeGradle creates the run tasks (runClient/runServer/runData) lazily, after
+// project evaluation, so neither tasks.named at script time nor afterEvaluate
+// can see them. Hook task creation instead: this fires whenever each run task
+// appears, whenever that happens.
+tasks.whenTaskAdded { task ->
+    if (task.name == 'runData') {
+        task.doFirst {
             file('src/generated/resources').mkdirs()
         }
     }
-
-    tasks.named('runServer').configure {
-        doFirst {
+    if (task.name == 'runServer') {
+        task.doFirst {
             def eula = file('run/eula.txt')
             eula.parentFile.mkdirs()
             eula.text = 'eula=true\n'
