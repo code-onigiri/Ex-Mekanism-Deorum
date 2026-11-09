@@ -98,17 +98,21 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-tasks.named('runData').configure {
-    doFirst {
-        file('src/generated/resources').mkdirs()
+// ForgeGradle registers the run tasks (runClient/runServer/runData) in its own
+// afterEvaluate, so they do not exist yet while this script is evaluated.
+afterEvaluate {
+    tasks.named('runData').configure {
+        doFirst {
+            file('src/generated/resources').mkdirs()
+        }
     }
-}
 
-tasks.named('runServer').configure {
-    doFirst {
-        def eula = file('run/eula.txt')
-        eula.parentFile.mkdirs()
-        eula.text = 'eula=true\n'
+    tasks.named('runServer').configure {
+        doFirst {
+            def eula = file('run/eula.txt')
+            eula.parentFile.mkdirs()
+            eula.text = 'eula=true\n'
+        }
     }
 }
 

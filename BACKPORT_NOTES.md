@@ -197,3 +197,11 @@ and in this notes file.
   affects dev runs only, not compilation.
 - All work is committed on `backport/1.20.1` only; nothing was pushed or tagged
   and `main` was not touched.
+
+## CI fixes (after first push)
+
+- **Fix 1 — `runData` task not found (CI run 42642044045):** ForgeGradle 6
+  registers the run tasks in its own `afterEvaluate`, so `tasks.named('runData')`
+  / `tasks.named('runServer')` at script-evaluation time failed with
+  "Task with name 'runData' not found". Wrapped both blocks in `afterEvaluate`
+  in `build.gradle`. (Review fix by Shion; no code-agent run needed.)
