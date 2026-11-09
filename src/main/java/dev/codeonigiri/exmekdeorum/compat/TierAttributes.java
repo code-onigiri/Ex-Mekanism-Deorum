@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.content.blocktype.BlockType;
 import mekanism.common.registration.impl.BlockRegistryObject;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Adds optional addon tier attributes without compiling against the addons.

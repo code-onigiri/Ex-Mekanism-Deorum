@@ -4,7 +4,7 @@ import dev.codeonigiri.exmekdeorum.ExMekanismDeorum;
 import dev.codeonigiri.exmekdeorum.tile.TileEntityDeorumMachine;
 import mekanism.common.registration.impl.ContainerTypeDeferredRegister;
 import mekanism.common.registration.impl.ContainerTypeRegistryObject;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 
 /**
  * Containers for the Ex Deorum machines.

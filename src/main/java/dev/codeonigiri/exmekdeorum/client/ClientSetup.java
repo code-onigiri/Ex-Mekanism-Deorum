@@ -3,22 +3,22 @@ package dev.codeonigiri.exmekdeorum.client;
 import dev.codeonigiri.exmekdeorum.ExMekanismDeorum;
 import dev.codeonigiri.exmekdeorum.registry.ModContainers;
 import mekanism.client.ClientRegistrationUtil;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 /**
  * Client-side registration: the shared machine container gets the shared machine screen.
  */
-@EventBusSubscriber(modid = ExMekanismDeorum.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ExMekanismDeorum.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientSetup {
 
     private ClientSetup() {
     }
 
     @SubscribeEvent
-    public static void registerScreens(RegisterMenuScreensEvent event) {
-        ClientRegistrationUtil.registerScreen(event, ModContainers.DEORUM_MACHINE, GuiDeorumMachine::new);
+    public static void clientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> ClientRegistrationUtil.registerScreen(ModContainers.DEORUM_MACHINE, GuiDeorumMachine::new));
     }
 }

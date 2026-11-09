@@ -1,7 +1,7 @@
 package dev.codeonigiri.exmekdeorum.machine;
 
 import java.util.Locale;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Factory tiers.

@@ -1,7 +1,7 @@
 package dev.codeonigiri.exmekdeorum.compat.jei;
 
 import dev.codeonigiri.exmekdeorum.machine.DeorumMachineFamily;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Entry point used by the GUI (progress bar click) to open the matching JEI recipe page.

@@ -2,7 +2,7 @@ package dev.codeonigiri.exmekdeorum.compat.jei;
 
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import thedarkcolour.exdeorum.compat.XeiSieveRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelCompostRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelFluidMixingRecipe;
