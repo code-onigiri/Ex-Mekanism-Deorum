@@ -111,12 +111,10 @@ public class GuiDeorumMachine extends GuiMekanismTile<TileEntityDeorumMachine, D
         // Clicking the progress bar opens the matching JEI category (like Mekanism machines do).
         addRenderableWidget(new GuiProgress(() -> tile.getProgress(), ProgressType.BAR, this, progressX, progressY) {
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
-                if (button == 0 && isMouseOver(mouseX, mouseY)) {
+            public void onClick(double mouseX, double mouseY, int button) {
+                if (button == 0) {
                     DeorumJeiRuntime.openRecipeCategories(tile.getFamily());
-                    return true;
                 }
-                return super.mouseClicked(mouseX, mouseY, button);
             }
         });
 

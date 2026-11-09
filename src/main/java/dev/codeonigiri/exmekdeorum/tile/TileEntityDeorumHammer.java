@@ -148,7 +148,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             LootContext context = RecipeUtil.emptyLootContext(level);
             int count = recipe.resultAmount.getInt(context);
             boolean compressedRecipe = recipe instanceof CompressedHammerRecipe;
-            if (count > 0 && !lane.is(compressedRecipe ? EItemTags.COMPRESSED_HAMMER_FORTUNE_BLACKLIST : EItemTags.HAMMER_FORTUNE_BLACKLIST)) {
+            if (count > 0) {
                 count += HammerLootModifier.calculateFortuneBonus(hammer, context.getRandom(), count == 0);
             }
             // Roll once and keep the result with the lane; while the output is blocked the
@@ -286,8 +286,12 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
     private void damageHammer(ServerLevel level) {
         ItemStack hammer = hammerSlot.getStack();
         if (!hammer.isEmpty() && hammer.isDamageableItem()) {
-            hammer.hurtAndBreak(1, level, null, item -> {
-            });
+            if (hammer.hurt(1, level.getRandom(), null)) {
+                hammer.shrink(1);
+                if (hammer.isEmpty()) {
+                    hammerSlot.setStack(ItemStack.EMPTY);
+                }
+            }
         }
     }
 

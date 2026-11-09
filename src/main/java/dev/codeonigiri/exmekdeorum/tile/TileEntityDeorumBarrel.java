@@ -263,7 +263,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         }
         if (recipe.consumesAdditive) {
             if (!(aboveState.getBlock() instanceof BucketPickup pickup)
-                    || pickup.pickupBlock(null, level, abovePos, aboveState).isEmpty()) {
+                    || pickup.pickupBlock(level, abovePos, aboveState).isEmpty()) {
                 return false;
             }
         }

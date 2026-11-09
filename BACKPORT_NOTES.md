@@ -210,3 +210,44 @@ and in this notes file.
   ForgeGradle 6 creates the run tasks lazily, after project evaluation, so
   `afterEvaluate` was still too early. Replaced with `tasks.whenTaskAdded`,
   which hooks each run task whenever it appears. (Review fix by Shion.)
+
+- **Fix 3 — 6 `:compileJava` errors (CI run 42643136321).** Every API was verified
+  against the real 1.20.1 sources before editing (Mojang official mappings for
+  vanilla; upstream GitHub for the exact dependency versions) — no guessing.
+
+  - `tile/TileEntityDeorumBarrel` (`tryInWorldFluidMixing`): in 1.20.1
+    `BucketPickup.pickupBlock` is `pickupBlock(LevelAccessor, BlockPos, BlockState)`.
+    The `Player` parameter was added in a later Minecraft version, so there is no
+    player argument to pass. Dropped the `null`:
+    `pickup.pickupBlock(level, abovePos, aboveState)`.
+  - `tile/TileEntityDeorumHammer` fortune handling: the 1.20.1 dependency is
+    Ex Deorum **1.53** (the jar id in DEPS.md) and its `EItemTags` defines **no**
+    `HAMMER_FORTUNE_BLACKLIST` or `COMPRESSED_HAMMER_FORTUNE_BLACKLIST` — those
+    tags are 1.21.1-only. Verified on the upstream `1.20.1` branch
+    (`version = '1.53'`, i.e. exactly the dependency) and in
+    `MechanicalHammerBlockEntity` / `HammerLootModifier`: 1.20.1 Ex Deorum applies
+    fortune to **all** hammer outputs with no blacklist. The blacklist condition
+    was therefore dropped cleanly; the remaining guard is `count > 0`, so fortune
+    applies to every hammer output as it does upstream. No invented tag names.
+  - `tile/TileEntityDeorumHammer.damageHammer`: 1.20.1 has
+    `ItemStack.hurt(int, RandomSource, @Nullable ServerPlayer)` (returns whether the
+    item broke) and the generic `hurtAndBreak(int, LivingEntity,
+    Consumer<LivingEntity>)`; the 1.21.1 four-argument
+    `hurtAndBreak(int, ServerLevel, LivingEntity, Consumer)` does not exist.
+    Mirrored Ex Deorum 1.20.1's own `damageHammer`:
+    `if (hammer.hurt(1, level.getRandom(), null)) { hammer.shrink(1); if
+    (hammer.isEmpty()) hammerSlot.setStack(ItemStack.EMPTY); }`.
+    Mekanism 10.4 `BasicInventorySlot.getStack()` returns the live stack and
+    `setStack(...)` is the public setter, so the slot is cleared when the hammer
+    breaks. The original on-break lambda was empty, so no extra break behaviour was
+    lost; the hammer still takes exactly 1 damage per completed operation.
+  - `client/GuiDeorumMachine`: in Mekanism 10.4 `GuiElement.mouseClicked(double,
+    double, int)` is `final`. The overridable hook is `onClick(double, double,
+    int button)`, invoked by `mouseClickedNested` when the element is active,
+    visible and hovered. Reworked the anonymous `GuiProgress` override into
+    `onClick(...)`, keeping the same left-click (`button == 0`) behaviour that opens
+    the matching JEI recipe category. The click is still consumed by the element in
+    10.4, so nothing falls through to the parent screen.
+  - Static sweep: no other source or resource references the two removed fortune
+    tags, `pickupBlock(null, ...)`, the 4-arg `hurtAndBreak`, or an overridden
+    `mouseClicked` remain in `src/`.
