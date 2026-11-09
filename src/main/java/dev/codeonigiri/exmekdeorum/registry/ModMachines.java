@@ -166,7 +166,7 @@ public final class ModMachines {
 
         BlockRegistryObject<BlockDeorumMachine<T>, ItemBlockTooltip<BlockDeorumMachine<T>>> block = BLOCKS.registerDefaultProperties(name,
                 () -> new BlockDeorumMachine<>(type),
-                (created, properties) -> new ItemBlockTooltip<>(created, properties));
+                (created, properties) -> new ItemBlockTooltip<BlockDeorumMachine<T>>(created, properties));
         ref.value = TILE_TYPES.register(block, (pos, state) -> tileFactory.create(block, pos, state),
                 TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
         ALL.add(block);

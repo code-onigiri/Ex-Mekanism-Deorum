@@ -30,7 +30,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import thedarkcolour.exdeorum.config.EConfig;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
+import thedarkcolour.exdeorum.recipe.RecipeUtil;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelCompostRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelFluidMixingRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelMixingRecipe;
@@ -148,7 +148,6 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
 
         boolean didWork = false;
         boolean active = false;
-        RecipeCaches caches = getRecipeCaches();
 
         // 1. Process one of the two input slots: mixing first (fluid present), otherwise composting.
         for (IInventorySlot slot : inputSlots) {
@@ -156,7 +155,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
             if (input.isEmpty()) {
                 continue;
             }
-            if (tryCraft(caches, level, input)) {
+            if (tryCraft(level, input)) {
                 input.shrink(1);
                 didWork = true;
                 active = true;
@@ -173,7 +172,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         }
 
         // 3. Mix with a fluid source directly above the barrel.
-        if (tryInWorldFluidMixing(caches, level)) {
+        if (tryInWorldFluidMixing(level)) {
             didWork = true;
             active = true;
         }
@@ -196,7 +195,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         }
 
         // 5. Catalyst-based fluid transformation (input tank to output tank).
-        if (tickTransformation(level, caches)) {
+        if (tickTransformation(level)) {
             didWork = true;
             active = true;
         }
@@ -215,13 +214,14 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         return active;
     }
 
-    private boolean tryCraft(RecipeCaches caches, ServerLevel level, ItemStack stack) {
+    private boolean tryCraft(ServerLevel level, ItemStack stack) {
         if (inputTank.getFluidAmount() > 0) {
-            BarrelMixingRecipe recipe = caches.getBarrelMixingRecipe(level.getRecipeManager(), stack, inputTank.getFluid());
-            if (recipe != null && inputTank.getFluidAmount() >= recipe.getFluid().amount()) {
-                ItemStack result = recipe.getResult().copy();
+            BarrelMixingRecipe recipe = RecipeUtil.getBarrelMixingRecipe(level.getRecipeManager(), stack, inputTank.getFluid());
+            if (recipe != null && inputTank.getFluidAmount() >= recipe.fluidAmount) {
+                ItemStack result = new ItemStack(recipe.result);
+                result.setTag(recipe.getResultNbt());
                 if (canInsertResult(result)) {
-                    inputTank.extract(recipe.getFluid().amount(), Action.EXECUTE, AutomationType.INTERNAL);
+                    inputTank.extract(recipe.fluidAmount, Action.EXECUTE, AutomationType.INTERNAL);
                     insertResult(result);
                     return true;
                 }
@@ -230,7 +230,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
 
         // A barrel that holds fluid can still be used for composting if the item has no mixing
         // recipe with that fluid (Ex Deorum also composts items independently of the tank).
-        BarrelCompostRecipe recipe = caches.getBarrelCompostRecipe(stack);
+        BarrelCompostRecipe recipe = RecipeUtil.getBarrelCompostRecipe(stack);
         if (recipe != null && compost < getCompostCapacity()) {
             compost = Math.min(getCompostCapacity(), compost + recipe.getVolume());
             return true;
@@ -238,7 +238,7 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         return false;
     }
 
-    private boolean tryInWorldFluidMixing(RecipeCaches caches, ServerLevel level) {
+    private boolean tryInWorldFluidMixing(ServerLevel level) {
         if (inputTank.isEmpty() || !isIdle()) {
             return false;
         }
@@ -252,33 +252,34 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         if (aboveFluid instanceof FlowingFluid flowing) {
             aboveFluid = flowing.getSource();
         }
-        BarrelFluidMixingRecipe recipe = caches.getFluidMixingRecipe(inputTank.getFluid(), aboveFluid);
-        if (recipe == null || inputTank.getFluidAmount() < recipe.baseFluid().amount()) {
+        BarrelFluidMixingRecipe recipe = RecipeUtil.getFluidMixingRecipe(inputTank.getFluid(), aboveFluid);
+        if (recipe == null || inputTank.getFluidAmount() < recipe.baseFluidAmount) {
             return false;
         }
-        ItemStack result = recipe.result().copy();
+        ItemStack result = new ItemStack(recipe.result);
+        result.setTag(recipe.getResultNbt());
         if (!canInsertResult(result)) {
             return false;
         }
-        if (recipe.consumesAdditive()) {
+        if (recipe.consumesAdditive) {
             if (!(aboveState.getBlock() instanceof BucketPickup pickup)
                     || pickup.pickupBlock(null, level, abovePos, aboveState).isEmpty()) {
                 return false;
             }
         }
-        inputTank.extract(recipe.baseFluid().amount(), Action.EXECUTE, AutomationType.INTERNAL);
+        inputTank.extract(recipe.baseFluidAmount, Action.EXECUTE, AutomationType.INTERNAL);
         insertResult(result);
         return true;
     }
 
-    private boolean tickTransformation(ServerLevel level, RecipeCaches caches) {
+    private boolean tickTransformation(ServerLevel level) {
         if (inputTank.getFluidAmount() != inputTank.getCapacity()) {
             currentTransform = null;
             transformProgress = 0.0F;
             return false;
         }
         if (currentTransform == null) {
-            currentTransform = caches.getFluidTransformationRecipe(inputTank.getFluid().getFluid(), level.getBlockState(worldPosition.below()));
+            currentTransform = RecipeUtil.getFluidTransformationRecipe(inputTank.getFluid().getFluid(), level.getBlockState(worldPosition.below()));
             transformProgress = 0.0F;
             if (currentTransform == null) {
                 return false;
@@ -289,14 +290,14 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
         int catalysts = 0;
         for (BlockPos cursor : BlockPos.betweenClosed(worldPosition.getX() - 1, worldPosition.getY() - 1, worldPosition.getZ() - 1,
                 worldPosition.getX() + 1, worldPosition.getY() - 1, worldPosition.getZ() + 1)) {
-            if (!recipe.catalyst().test(level.getBlockState(cursor))) {
+            if (!recipe.catalyst.test(level.getBlockState(cursor))) {
                 continue;
             }
             catalysts++;
-            if (!recipe.byproducts().isEmpty() && level.random.nextInt(1500) == 0) {
+            if (!recipe.byproducts.isEmpty() && level.random.nextInt(1500) == 0) {
                 BlockPos above = cursor.above();
                 if (level.getBlockState(above).isAir()) {
-                    BlockState byproduct = recipe.byproducts().getRandom(level.random);
+                    BlockState byproduct = recipe.byproducts.getRandom(level.random);
                     if (byproduct.canSurvive(level, above)) {
                         level.setBlockAndUpdate(above, byproduct);
                     }
@@ -310,12 +311,12 @@ public class TileEntityDeorumBarrel extends TileEntityDeorumMachine {
             return false;
         }
 
-        transformProgress += (float) catalysts * stackMultiplier() / (float) recipe.duration();
+        transformProgress += (float) catalysts * stackMultiplier() / (float) recipe.duration;
         if (transformProgress >= 0.99999F) {
             transformProgress = 0.0F;
             if (outputTank.isEmpty()) {
                 inputTank.setEmpty();
-                outputTank.setStack(new FluidStack(recipe.resultFluid(), outputTank.getCapacity()));
+                outputTank.setStack(new FluidStack(recipe.resultFluid, outputTank.getCapacity()));
                 currentTransform = null;
             }
         }

@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
+import thedarkcolour.exdeorum.recipe.RecipeUtil;
 import thedarkcolour.exdeorum.recipe.crucible.CrucibleRecipe;
 
 /**
@@ -80,7 +80,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
      * Looks the input up in the recipe cache that belongs to this crucible.
      */
     @Nullable
-    protected abstract CrucibleRecipe recipeFor(RecipeCaches caches, ItemStack stack);
+    protected abstract CrucibleRecipe recipeFor(ItemStack stack);
 
     /**
      * Melting / conversion multiplier: 1 for an untiered crucible, 5/10/20/30 for factories.
@@ -118,13 +118,12 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         if (level == null || level.isClientSide) {
             return true;
         }
-        return recipeFor(getRecipeCaches(), stack) != null;
+        return recipeFor(stack) != null;
     }
 
     @Override
     protected boolean tickMachine(ServerLevel level) {
         int multiplier = meltMultiplier();
-        RecipeCaches caches = getRecipeCaches();
         ItemStack input = getInputStack();
         if (input.isEmpty()) {
             meltProgress = 0.0F;
@@ -132,11 +131,11 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
             return false;
         }
 
-        if (!ItemStack.isSameItemSameComponents(input, meltingItem)) {
+        if (!ItemStack.isSameItemSameTags(input, meltingItem)) {
             meltingItem = input.copyWithCount(1);
             meltProgress = 0.0F;
         }
-        CrucibleRecipe recipe = recipeFor(caches, input);
+        CrucibleRecipe recipe = recipeFor(input);
         if (recipe == null) {
             // No recipe: hold the item and do nothing (the input slot filter normally prevents this).
             meltProgress = 0.0F;
@@ -150,7 +149,7 @@ public abstract class TileEntityDeorumCrucibleBase extends TileEntityDeorumMachi
         }
 
         // Ex Deorum converts `heat` mB per 10 ticks; a factory melts `multiplier` times faster.
-        int rate = isLava() ? caches.getHeatValue(level.getBlockState(worldPosition.below())) : WATER_MELTING_RATE;
+        int rate = isLava() ? RecipeUtil.getHeatValue(level.getBlockState(worldPosition.below())) : WATER_MELTING_RATE;
         if (rate <= 0) {
             // Lava crucible without a heat source below: nothing melts, but keep the item.
             progress = Math.min(1.0F, meltProgress);

@@ -1,0 +1,39 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACT",
+    "PXQ",
+    "TCA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/shining"
+    },
+    "C": {
+      "tag": "c:circuits/cosmic_dense"
+    },
+    "T": {
+      "tag": "evolvedmekanism:alloys/singular"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
+    },
+    "P": {
+      "item": "exmekdeorum:cosmic_crucible_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:dense_crucible_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:cosmic_dense_crucible_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "emextras"
+    }
+  ]
+}

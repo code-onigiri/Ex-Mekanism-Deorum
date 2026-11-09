@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "mekanism:basic_control_circuit"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "exdeorum:mechanical_hammer"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:hammer_machine",
+    "count": 1
+  }
+}

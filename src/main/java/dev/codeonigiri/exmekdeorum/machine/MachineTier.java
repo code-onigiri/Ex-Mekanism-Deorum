@@ -14,7 +14,7 @@ import net.minecraftforge.fml.ModList;
  * (Absolute..Infinite) and
  * <a href="https://www.curseforge.com/minecraft/mc-mods/evolved-mekanism-extras">Evolved Mekanism
  * Extras</a> (Absolute Overclocked..Infinite Multiversal). Addon tiers are only registered when
- * the corresponding addon is installed, and their recipes carry a {@code neoforge:mod_loaded}
+ * the corresponding addon is installed, and their recipes carry a {@code forge:mod_loaded}
  * condition, so an addon-less game sees only the 25 base blocks.</p>
  *
  * <p>Per-operation time and energy are the same for every tier, so a factory is exactly

@@ -4,7 +4,7 @@
 
 **English** | [日本語](README.ja.md)
 
-**A NeoForge mod that adds Ex Deorum's machines as Mekanism machines.**
+**A Forge mod that adds Ex Deorum's machines as Mekanism machines.**
 
 Hammers / sieves / barrels / crucibles / water crucibles, automated with the
 same feel as Mekanism (FE power, upgrades, side configuration, security).
@@ -13,8 +13,8 @@ by data packs work as-is**.
 
 | Item | Details |
 | --- | --- |
-| Minecraft / NeoForge | 1.21.1 / 21.1.265 or later |
-| Required dependencies | Ex Deorum 3.12 or later / Mekanism 10.7.19 or later |
+| Minecraft / Forge | 1.20.1 / 47.2.0 or later |
+| Required dependencies | Ex Deorum 1.53 or later / Mekanism 10.4.16 or later |
 | This mod's version | 0.2.1 (textures and GUI are placeholder assets) |
 | Install on | Both client and server (no config) |
 | Block count | 25 base / up to 90 with all compatible mods installed (see below) |
@@ -59,9 +59,9 @@ by data packs work as-is**.
 
 ## Installation
 
-1. Prepare a Minecraft 1.21.1 + NeoForge 21.1.265 or later environment
-2. Install [Ex Deorum](https://modrinth.com/mod/ex-deorum) 3.12 or later
-3. Install [Mekanism](https://modrinth.com/mod/mekanism) 10.7.19 or later
+1. Prepare a Minecraft 1.20.1 + Forge 47.2.0 or later environment
+2. Install [Ex Deorum](https://modrinth.com/mod/ex-deorum) 1.53 or later
+3. Install [Mekanism](https://modrinth.com/mod/mekanism) 10.4.16 or later
 4. Put this mod's jar in `mods/`
 
 Install it on both client and server. There is no config.
@@ -128,7 +128,7 @@ keeps running capped at the capacity (it never fully stops).
 
 - Additional-tier blocks are **only registered when the matching mod is
   installed** (without the mod, only Mekanism's 25 blocks). Recipes also carry
-  a `neoforge:mod_loaded` condition. Without the additional mods, the
+  a `forge:mod_loaded` condition. Without the additional mods, the
   additional-tier blocks, recipes, and JEI catalysts are not shown.
 - Additional-tier recipes use the same material layout (`mekanism:mek_data`)
   as each compatible mod's own factories. `P` is the block one tier below
@@ -156,8 +156,8 @@ keeps running capped at the capacity (it never fully stops).
 
 ### Where recipes come from
 
-Machines hold no recipes of their own; at runtime they read Ex Deorum's
-recipe cache (`thedarkcolour.exdeorum.recipe.RecipeCaches`) directly.
+Machines hold no recipes of their own; at runtime they look recipes up through
+Ex Deorum's helper (`thedarkcolour.exdeorum.recipe.RecipeUtil`) directly.
 
 | Machine | Ex Deorum recipes referenced |
 | --- | --- |
@@ -259,7 +259,6 @@ The integrations below only become active when the listed mod is installed.
 | Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras | Each mod's tier installer can upgrade this mod's factories from Basic → Advanced → Elite → Ultimate → that mod's additional tiers (additional-tier blocks are only registered when the matching mod is present). |
 | Mekanism: Empowered | Accepts the additional upgrades below. Speed / energy multiplier upgrades are calculated via Mekanism's `MekanismUtils`, so they are reflected automatically. |
 | Mekanism Extras | Accepts the additional upgrades `STACK` (2× processing speed per level, with power rising by the same multiplier) and `CREATIVE` (0 power consumption) on all machines. |
-| Mek Energistics | Registers up to 90 blocks with AE2's pattern automation SPI. Supports item / fluid input and output, permanently installed hammers and meshes, and factory parallel processing. **The ME Pattern Provider / ME Passive Crafting / ME Output Interface upgrades can also be installed on all machines** (installing an upgrade connects that machine to the AE2 ME network, making it a pattern automation host). Verified with Mek Energistics 3.0.8 + AE2 19.2. |
 | JEI | Shows this mod's machines as catalysts for Ex Deorum recipes (see next section). |
 
 > **About Mekanism: Empowered upgrades**
@@ -275,8 +274,6 @@ in the distributed jar).
 - No custom categories are added; this mod's machines are added as catalysts
   to Ex Deorum's categories (`exdeorum:hammer`, `sieve`, `barrel_compost`, etc.).
 - Left-clicking a GUI progress bar opens the corresponding JEI recipe directly.
-- When EMI is also installed, it follows Ex Deorum's category namespace
-  (`exdeorum_emi`).
 
 ## Screenshots
 

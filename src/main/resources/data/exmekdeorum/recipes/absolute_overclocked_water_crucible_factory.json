@@ -1,0 +1,39 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACT",
+    "PXQ",
+    "TCA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/radiance"
+    },
+    "C": {
+      "tag": "c:circuits/absolute_overclocked"
+    },
+    "T": {
+      "tag": "evolvedmekanism:alloys/hypercharged"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
+    },
+    "P": {
+      "item": "exmekdeorum:absolute_water_crucible_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:overclocked_water_crucible_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:absolute_overclocked_water_crucible_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "emextras"
+    }
+  ]
+}

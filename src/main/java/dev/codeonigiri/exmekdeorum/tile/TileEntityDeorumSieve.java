@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import thedarkcolour.exdeorum.blockentity.logic.CompressedSieveLogic;
 import thedarkcolour.exdeorum.blockentity.logic.SieveLogic;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
 import thedarkcolour.exdeorum.tag.EItemTags;
 
 /**
@@ -182,14 +181,9 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
         }
         lastMesh = mesh.copy();
         for (int i = 0; i < logics.length; i++) {
-            logics[i].setMesh(level.registryAccess(), mesh.copy());
-            compressedLogics[i].setMesh(level.registryAccess(), mesh.copy());
+            logics[i].setMesh(mesh.copy());
+            compressedLogics[i].setMesh(mesh.copy());
         }
-    }
-
-    @Override
-    public RecipeCaches getRecipeCaches() {
-        return super.getRecipeCaches();
     }
 
     @Override
@@ -218,14 +212,14 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
         CompoundTag lanes = new CompoundTag();
         for (int i = 0; i < logics.length; i++) {
             CompoundTag lane = new CompoundTag();
-            logics[i].saveNbt(lane, provider);
+            logics[i].saveNbt(lane);
             lanes.put("lane_" + i, lane);
         }
         nbt.put(LANES_KEY, lanes);
         CompoundTag compressedLanes = new CompoundTag();
         for (int i = 0; i < compressedLogics.length; i++) {
             CompoundTag lane = new CompoundTag();
-            compressedLogics[i].saveNbt(lane, provider);
+            compressedLogics[i].saveNbt(lane);
             compressedLanes.put("lane_" + i, lane);
         }
         nbt.put(COMPRESSED_LANES_KEY, compressedLanes);
@@ -238,14 +232,14 @@ public class TileEntityDeorumSieve extends TileEntityDeorumMachine implements Si
         for (int i = 0; i < logics.length; i++) {
             String key = "lane_" + i;
             if (lanes.contains(key, Tag.TAG_COMPOUND)) {
-                logics[i].loadNbt(lanes.getCompound(key), provider);
+                logics[i].loadNbt(lanes.getCompound(key));
             }
         }
         CompoundTag compressedLanes = nbt.getCompound(COMPRESSED_LANES_KEY);
         for (int i = 0; i < compressedLogics.length; i++) {
             String key = "lane_" + i;
             if (compressedLanes.contains(key, Tag.TAG_COMPOUND)) {
-                compressedLogics[i].loadNbt(compressedLanes.getCompound(key), provider);
+                compressedLogics[i].loadNbt(compressedLanes.getCompound(key));
             }
         }
     }

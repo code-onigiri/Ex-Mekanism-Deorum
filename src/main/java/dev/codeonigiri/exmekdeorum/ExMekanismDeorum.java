@@ -3,7 +3,6 @@ package dev.codeonigiri.exmekdeorum;
 import com.mojang.logging.LogUtils;
 import dev.codeonigiri.exmekdeorum.registry.ModMachines;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -24,15 +23,6 @@ public final class ExMekanismDeorum {
     public ExMekanismDeorum() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModMachines.register(modEventBus);
-        if (ModList.get().isLoaded("mekenergistics")) {
-            try {
-                Class.forName("dev.codeonigiri.exmekdeorum.compat.MekEnergisticsCompat")
-                        .getMethod("registerBlocks").invoke(null);
-                LOGGER.info("Registered {} machines with Mek Energistics pattern automation.", ModMachines.getBlockIds().size());
-            } catch (ReflectiveOperationException e) {
-                LOGGER.warn("Mek Energistics is installed but its pattern automation API could not be registered.", e);
-            }
-        }
         LOGGER.info("Ex Mekanism Deorum loaded; registered {} machine blocks.", ModMachines.getBlockIds().size());
     }
 }

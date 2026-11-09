@@ -2,29 +2,26 @@ package dev.codeonigiri.exmekdeorum.compat.jei;
 
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.fml.ModList;
 import thedarkcolour.exdeorum.compat.XeiSieveRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelCompostRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelFluidMixingRecipe;
 import thedarkcolour.exdeorum.recipe.barrel.BarrelMixingRecipe;
 import thedarkcolour.exdeorum.recipe.crucible.CrucibleRecipe;
-import thedarkcolour.exdeorum.recipe.hammer.CompressedHammerRecipe;
 import thedarkcolour.exdeorum.recipe.hammer.HammerRecipe;
 
 /**
  * The JEI recipe types exposed by Ex Deorum, created with the same namespace it uses.
  *
- * <p>Ex Deorum switches its category namespace to {@code exdeorum_emi} when EMI is installed, so
- * every type has to be built lazily-ish (at class initialisation) with the same rule.</p>
+ * <p>The 1.20.1 Ex Deorum line always registers its JEI categories under {@code exdeorum};
+ * unlike the 1.21 line it does not switch to an {@code exdeorum_emi} namespace when EMI is
+ * installed.</p>
  */
 public final class DeorumJeiRecipeTypes {
 
-    private static final String EMI = "emi";
     private static final String EXDEORUM = "exdeorum";
-    private static final String EXDEORUM_EMI = "exdeorum_emi";
 
     public static final RecipeType<HammerRecipe> HAMMER = create("hammer", HammerRecipe.class);
-    public static final RecipeType<CompressedHammerRecipe> COMPRESSED_HAMMER = create("compressed_hammer", CompressedHammerRecipe.class);
+    public static final RecipeType<HammerRecipe> COMPRESSED_HAMMER = create("compressed_hammer", HammerRecipe.class);
     public static final RecipeType<XeiSieveRecipe> SIEVE = create("sieve", XeiSieveRecipe.class);
     public static final RecipeType<XeiSieveRecipe> COMPRESSED_SIEVE = create("compressed_sieve", XeiSieveRecipe.class);
     public static final RecipeType<BarrelCompostRecipe> BARREL_COMPOST = create("barrel_compost", BarrelCompostRecipe.class);
@@ -40,7 +37,6 @@ public final class DeorumJeiRecipeTypes {
     }
 
     private static <T> RecipeType<T> create(String path, Class<? extends T> recipeClass) {
-        String namespace = ModList.get().isLoaded(EMI) ? EXDEORUM_EMI : EXDEORUM;
-        return RecipeType.create(namespace, path, recipeClass);
+        return RecipeType.create(EXDEORUM, path, recipeClass);
     }
 }

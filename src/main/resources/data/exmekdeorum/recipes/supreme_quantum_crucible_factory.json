@@ -1,0 +1,39 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACT",
+    "PXQ",
+    "TCA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/thermonuclear"
+    },
+    "C": {
+      "tag": "c:circuits/supreme_quantum"
+    },
+    "T": {
+      "tag": "evolvedmekanism:alloys/subatomic"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
+    },
+    "P": {
+      "item": "exmekdeorum:supreme_crucible_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:quantum_crucible_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:supreme_quantum_crucible_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "emextras"
+    }
+  ]
+}

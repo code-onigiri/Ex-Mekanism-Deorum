@@ -1,0 +1,36 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPJ",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/spectrum"
+    },
+    "C": {
+      "tag": "c:circuits/infinite"
+    },
+    "I": {
+      "tag": "c:pellets/plutonium"
+    },
+    "J": {
+      "tag": "c:pellets/polonium"
+    },
+    "P": {
+      "item": "exmekdeorum:cosmic_hammer_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:infinite_hammer_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism_extras"
+    }
+  ]
+}

@@ -30,8 +30,8 @@ into your Mekanism factory, this is for you.
 - **JEI support** — the machines show up as catalysts for Ex Deorum's recipes
 
 Optional addons (**Evolved Mekanism**, **Mekanism Extras**,
-**Evolved Mekanism Extras**, **Mekanism: Empowered**, **Mek Energistics**)
-unlock extra factory tiers, extra upgrades and AE2 pattern automation.
+**Evolved Mekanism Extras**, **Mekanism: Empowered**)
+unlock extra factory tiers and extra upgrades.
 None of them are required.
 
 ![Block Fronts](https://raw.githubusercontent.com/code-onigiri/Ex-Mekanism-Deorum/main/docs/block-fronts.png)
@@ -40,15 +40,15 @@ None of them are required.
 
 | Requirement | Version |
 | --- | --- |
-| Minecraft | 1.21.1 |
-| NeoForge | 21.1.265 or higher |
-| Ex Deorum | 3.12 or higher (required) |
-| Mekanism | 10.7.19 or higher (required) |
+| Minecraft | 1.20.1 |
+| Forge | 47.2.0 or higher |
+| Ex Deorum | 1.53 or higher (required) |
+| Mekanism | 10.4.16 or higher (required) |
 | JEI | Optional |
 
 ## Installation
 
-1. Set up Minecraft 1.21.1 with NeoForge.
+1. Set up Minecraft 1.20.1 with Forge.
 2. Put **Ex Deorum** and **Mekanism** in your `mods/` folder.
 3. Put this mod's jar in your `mods/` folder.
 

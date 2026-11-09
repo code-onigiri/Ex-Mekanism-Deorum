@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
+import thedarkcolour.exdeorum.recipe.RecipeUtil;
 import thedarkcolour.exdeorum.recipe.crucible.CrucibleRecipe;
 
 /**
@@ -30,7 +30,7 @@ public class TileEntityDeorumWaterCrucible extends TileEntityDeorumCrucibleBase 
 
     @Nullable
     @Override
-    protected CrucibleRecipe recipeFor(RecipeCaches caches, ItemStack stack) {
-        return caches.getWaterCrucibleRecipe(stack);
+    protected CrucibleRecipe recipeFor(ItemStack stack) {
+        return RecipeUtil.getWaterCrucibleRecipe(stack);
     }
 }

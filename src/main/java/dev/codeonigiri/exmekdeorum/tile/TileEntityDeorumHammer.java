@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 import thedarkcolour.exdeorum.loot.HammerLootModifier;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
 import thedarkcolour.exdeorum.recipe.RecipeUtil;
 import thedarkcolour.exdeorum.recipe.hammer.CompressedHammerRecipe;
 import thedarkcolour.exdeorum.recipe.hammer.HammerRecipe;
@@ -82,16 +81,14 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         // Accept anything either hammer type can process, independent of which hammer happens to be
         // installed right now: the player may insert the blocks before the hammer. A lane only starts
         // once a recipe matches the currently installed hammer.
-        RecipeCaches caches = getRecipeCaches();
-        return caches.getHammerRecipe(stack.getItem()) != null || caches.getCompressedHammerRecipe(stack.getItem()) != null;
+        return RecipeUtil.getHammerRecipe(stack.getItem()) != null || RecipeUtil.getCompressedHammerRecipe(stack.getItem()) != null;
     }
 
     @Override
     protected boolean tickMachine(ServerLevel level) {
-        RecipeCaches caches = getRecipeCaches();
         ItemStack hammer = hammerSlot.getStack();
         boolean compressed = hammer.is(EItemTags.COMPRESSED_HAMMERS);
-        float efficiency = hammer.isEmpty() ? 1.0F : 2.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.EFFICIENCY, hammer) * 0.33F;
+        float efficiency = hammer.isEmpty() ? 1.0F : 2.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_EFFICIENCY, hammer) * 0.33F;
         float increment = efficiency * stackMultiplier() / ticksFor(BASE_TICKS);
 
         // Every running lane has claimed one item from the input slot; do not start more lanes than
@@ -115,7 +112,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
                 if (input.isEmpty() || claimed >= available) {
                     continue;
                 }
-                if (recipeFor(caches, input.getItem(), hammer) == null) {
+                if (recipeFor(input.getItem(), hammer) == null) {
                     continue;
                 }
                 laneInputs[i] = input.copyWithCount(1);
@@ -130,7 +127,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
                 continue;
             }
 
-            HammerRecipe recipe = recipeFor(caches, lane.getItem(), hammer);
+            HammerRecipe recipe = recipeFor(lane.getItem(), hammer);
             if (recipe == null) {
                 laneInputs[i] = ItemStack.EMPTY;
                 laneProgress[i] = 0.0F;
@@ -152,7 +149,7 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
             int count = recipe.resultAmount.getInt(context);
             boolean compressedRecipe = recipe instanceof CompressedHammerRecipe;
             if (count > 0 && !lane.is(compressedRecipe ? EItemTags.COMPRESSED_HAMMER_FORTUNE_BLACKLIST : EItemTags.HAMMER_FORTUNE_BLACKLIST)) {
-                count += HammerLootModifier.calculateFortuneBonus(level.registryAccess(), hammer, context.getRandom(), count == 0);
+                count += HammerLootModifier.calculateFortuneBonus(hammer, context.getRandom(), count == 0);
             }
             // Roll once and keep the result with the lane; while the output is blocked the
             // lane waits in the finished state instead of re-rolling (and re-charging) per tick.
@@ -179,20 +176,27 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
         if (count <= 0) {
             return new ItemStack[0];
         }
+        ItemStack plain = hammerResult(recipe, count);
         if (compressedRecipe) {
-            ItemStack compressedResult = compressedEquivalent(recipe.result);
+            ItemStack compressedResult = compressedEquivalent(plain);
             if (!compressedResult.isEmpty()) {
                 if (count < 9) {
-                    return new ItemStack[]{recipe.result.copyWithCount(count)};
+                    return new ItemStack[]{plain};
                 }
                 compressedResult.setCount(count / 9);
                 int remainder = count % 9;
                 return remainder == 0
                         ? new ItemStack[]{compressedResult}
-                        : new ItemStack[]{compressedResult, recipe.result.copyWithCount(remainder)};
+                        : new ItemStack[]{compressedResult, hammerResult(recipe, remainder)};
             }
         }
-        return new ItemStack[]{recipe.result.copyWithCount(count)};
+        return new ItemStack[]{plain};
+    }
+
+    private static ItemStack hammerResult(HammerRecipe recipe, int count) {
+        ItemStack stack = new ItemStack(recipe.result, count);
+        stack.setTag(recipe.getResultNbt());
+        return stack;
     }
 
     /**
@@ -251,14 +255,14 @@ public class TileEntityDeorumHammer extends TileEntityDeorumMachine {
      * Prefers the compressed recipe when a compressed hammer is installed, but falls back to the
      * normal recipe so a compressed hammer still works like an ordinary hammer on ordinary blocks.
      */
-    private static HammerRecipe recipeFor(RecipeCaches caches, Item item, ItemStack hammer) {
+    private static HammerRecipe recipeFor(Item item, ItemStack hammer) {
         if (hammer.is(EItemTags.COMPRESSED_HAMMERS)) {
-            HammerRecipe compressed = caches.getCompressedHammerRecipe(item);
+            HammerRecipe compressed = RecipeUtil.getCompressedHammerRecipe(item);
             if (compressed != null) {
                 return compressed;
             }
         }
-        return caches.getHammerRecipe(item);
+        return RecipeUtil.getHammerRecipe(item);
     }
 
     /**

@@ -17,26 +17,26 @@ import net.minecraft.world.item.ItemStack;
  * JEI integration: lists this mod's machines as crafting catalysts for the
  * Ex Deorum recipe categories they can run.
  *
- * <p>The machines do not own recipe types themselves; they read Ex Deorum's
- * recipe caches at runtime. Registering catalysts against Ex Deorum's existing
+ * <p>The machines do not own recipe types themselves; they look Ex Deorum's
+ * recipes up at runtime. Registering catalysts against Ex Deorum's existing
  * {@code mezz.jei.api.recipe.RecipeType}s is therefore enough for JEI to show "this machine can
  * process that recipe" on the hammer / sieve / barrel / crucible pages, without
  * duplicating any recipe data.</p>
  *
- * <p>Ex Deorum changes its JEI category namespace to {@code exdeorum_emi} when
- * EMI is installed (so the two mods can share recipe pages), so the namespace is
- * chosen the same way here.</p>
+ * <p>The 1.20.1 Ex Deorum line always registers its JEI categories under
+ * {@code exdeorum}; unlike the 1.21 line it does not switch to an
+ * {@code exdeorum_emi} namespace when EMI is installed.</p>
  *
  * <p>This class is only loaded when JEI is present: {@link JeiPlugin} is
  * discovered by JEI's own plugin loader, and JEI is an optional dependency in
- * {@code neoforge.mods.toml}. The server never touches it.</p>
+ * {@code mods.toml}. The server never touches it.</p>
  */
 @JeiPlugin
 public final class DeorumJeiPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(ExMekanismDeorum.MOD_ID, "jei_plugin");
+        return new ResourceLocation(ExMekanismDeorum.MOD_ID, "jei_plugin");
     }
 
     @Override
@@ -56,7 +56,7 @@ public final class DeorumJeiPlugin implements IModPlugin {
             if (family == null) {
                 continue;
             }
-            ItemStack catalyst = new ItemStack(block.value());
+            ItemStack catalyst = new ItemStack(block.asItem());
             switch (family) {
                 case HAMMER -> registration.addRecipeCatalyst(catalyst, DeorumJeiRecipeTypes.HAMMER, DeorumJeiRecipeTypes.COMPRESSED_HAMMER);
                 case SIEVE -> registration.addRecipeCatalyst(catalyst,
@@ -71,7 +71,7 @@ public final class DeorumJeiPlugin implements IModPlugin {
     }
 
     private static DeorumMachineFamily familyOf(BlockRegistryObject<?, ?> block) {
-        AttributeMachineFamily attribute = Attribute.get(block.value(), AttributeMachineFamily.class);
+        AttributeMachineFamily attribute = Attribute.get(block.getBlock(), AttributeMachineFamily.class);
         return attribute == null ? null : attribute.family();
     }
 }

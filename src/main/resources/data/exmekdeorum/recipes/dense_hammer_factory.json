@@ -1,0 +1,33 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "tag": "evolvedmekanism:alloys/singular"
+    },
+    "C": {
+      "tag": "c:circuits/dense"
+    },
+    "I": {
+      "tag": "c:ingots/bronze"
+    },
+    "P": {
+      "item": "exmekdeorum:quantum_hammer_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:dense_hammer_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "evolvedmekanism"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/radiance"
+    },
+    "C": {
+      "tag": "c:circuits/absolute"
+    },
+    "I": {
+      "tag": "c:gems/emerald"
+    },
+    "P": {
+      "item": "exmekdeorum:ultimate_hammer_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:absolute_hammer_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism_extras"
+    }
+  ]
+}

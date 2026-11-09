@@ -1,0 +1,33 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/shining"
+    },
+    "C": {
+      "tag": "c:circuits/cosmic"
+    },
+    "I": {
+      "tag": "c:ingots/refined_obsidian"
+    },
+    "P": {
+      "item": "exmekdeorum:supreme_water_crucible_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:cosmic_water_crucible_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism_extras"
+    }
+  ]
+}

@@ -49,8 +49,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import thedarkcolour.exdeorum.recipe.RecipeCaches;
-import thedarkcolour.exdeorum.recipe.RecipeUtil;
 
 /**
  * Shared base for the Ex Deorum machine variants.
@@ -199,17 +197,16 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected void onUpdateServer() {
+        super.onUpdateServer();
         if (level instanceof ServerLevel serverLevel) {
             energySlot.fillContainerOrConvert();
             boolean active = tickMachine(serverLevel);
             setActive(active);
             if (active) {
-                sendUpdatePacket = true;
+                sendUpdatePacket();
             }
         }
-        return sendUpdatePacket;
     }
 
     /**
@@ -225,10 +222,6 @@ public abstract class TileEntityDeorumMachine extends TileEntityConfigurableMach
      */
     protected boolean isValidInput(ItemStack stack) {
         return !stack.isEmpty();
-    }
-
-    protected RecipeCaches getRecipeCaches() {
-        return RecipeUtil.getCaches(level);
     }
 
     /**

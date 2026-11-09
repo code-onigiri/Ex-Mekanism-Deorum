@@ -48,7 +48,7 @@
 
 ### MOD アイコン
 
-- ゲーム内の Mod 一覧用: `src/main/resources/icon.png` (128×128、`neoforge.mods.toml` の `logoFile = "icon.png"`)
+- ゲーム内の Mod 一覧用: `src/main/resources/icon.png` (128×128、`mods.toml` の `logoFile = "icon.png"`)
 - GitHub / CurseForge 用: `docs/icon.png` (512×512)
 - どちらも PNG を同じサイズで上書きして `gradle build` すれば反映されます。
 
@@ -126,8 +126,8 @@ GUI は `src/main/java/dev/codeonigiri/exmekdeorum/client/GuiDeorumMachine.java`
 | るつぼのファクトリー倍率 (基本ティア 5/10/20/30、追加ティア 40〜120) | `machine/MachineTier.java` の各列挙子の第 2 引数 (`getMeltMultiplier()`) |
 | るつぼの水の溶解速度 (4) / タンク容量 | `tile/TileEntityDeorumCrucibleBase.java` |
 | バレルのタンク・堆肥容量 | `tile/TileEntityDeorumBarrel.java` |
-| 機械自体のクラフトレシピ | `src/main/resources/data/exmekdeorum/recipe/*.json` |
-| ルートテーブル | `src/main/resources/data/exmekdeorum/loot_table/blocks/*.json` |
+| 機械自体のクラフトレシピ | `src/main/resources/data/exmekdeorum/recipes/*.json` |
+| ルートテーブル | `src/main/resources/data/exmekdeorum/loot_tables/blocks/*.json` |
 
 - ファクトリーは「同じ処理時間のレーンを並列数だけ回す」設計で、1 レーンが動くたびに
   `基本消費 FE/t` を 1 回ぶん消費します (3 レーン同時なら 3 倍)。1 レーンあたりのコストは

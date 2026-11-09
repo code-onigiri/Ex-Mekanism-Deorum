@@ -4,7 +4,7 @@
 
 [English](README.md) | **日本語**
 
-**Ex Deorum の機械を、Mekanism の機械として使えるようにする NeoForge Mod です。**
+**Ex Deorum の機械を、Mekanism の機械として使えるようにする Forge Mod です。**
 
 ハンマー / ふるい / バレル / るつぼ / 水るつぼを、Mekanism と同じ操作感
 （FE 給電・アップグレード・側面設定・セキュリティ）で自動化できます。
@@ -13,8 +13,8 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| Minecraft / NeoForge | 1.21.1 / 21.1.265 以降 |
-| 必須依存 | Ex Deorum 3.12 以降 / Mekanism 10.7.19 以降 |
+| Minecraft / Forge | 1.20.1 / 47.2.0 以降 |
+| 必須依存 | Ex Deorum 1.53 以降 / Mekanism 10.4.16 以降 |
 | この Mod のバージョン | 0.2.1（テクスチャ・GUI は仮アセット） |
 | 導入先 | クライアントとサーバーの両方（コンフィグなし） |
 | ブロック数 | 基本 25 種／連携 Mod がすべて入れば最大 90 種（下記） |
@@ -56,9 +56,9 @@
 
 ## 導入方法
 
-1. Minecraft 1.21.1 + NeoForge 21.1.265 以降の環境を用意する
-2. [Ex Deorum](https://modrinth.com/mod/ex-deorum) 3.12 以降を入れる
-3. [Mekanism](https://modrinth.com/mod/mekanism) 10.7.19 以降を入れる
+1. Minecraft 1.20.1 + Forge 47.2.0 以降の環境を用意する
+2. [Ex Deorum](https://modrinth.com/mod/ex-deorum) 1.53 以降を入れる
+3. [Mekanism](https://modrinth.com/mod/mekanism) 10.4.16 以降を入れる
 4. この Mod の jar を `mods/` に入れる
 
 クライアント・サーバーの両方に入れてください。コンフィグはありません。
@@ -119,7 +119,7 @@
 ### 追加ティアについて
 
 - 追加ティアのブロックは **対応する Mod が入っているときだけ登録されます**
-  （Mod なしなら Mekanism の 25 ブロックのみ）。レシピにも `neoforge:mod_loaded` 条件が付きます。
+  （Mod なしなら Mekanism の 25 ブロックのみ）。レシピにも `forge:mod_loaded` 条件が付きます。
   追加 Mod なしでは、追加ティアのブロック・レシピ・JEI 触媒は表示されません。
 - 追加ティアのレシピは、各連携 Mod のファクトリーと同じ素材構成（`mekanism:mek_data`）に
   揃えています。`P` は 1 つ下のティアのブロックです
@@ -144,8 +144,8 @@
 
 ### レシピの参照元
 
-機械はレシピを自前で持たず、稼働時に Ex Deorum のレシピキャッシュ
-（`thedarkcolour.exdeorum.recipe.RecipeCaches`）を直接引きます。
+機械はレシピを自前で持たず、稼働時に Ex Deorum のヘルパー
+（`thedarkcolour.exdeorum.recipe.RecipeUtil`）から直接引きます。
 
 | 機械 | 参照する Ex Deorum レシピ |
 | --- | --- |
@@ -238,7 +238,6 @@ Mekanism の工場と同じく、1 つ下のティアを中央に置いてアッ
 | Evolved Mekanism / Mekanism Extras / Evolved Mekanism Extras | 各 Mod のティアインストーラーで、この Mod のファクトリーを Basic → Advanced → Elite → Ultimate → その Mod の追加ティアまでアップグレードできます（追加ティアのブロックは対応 Mod があるときだけ登録されます）。 |
 | Mekanism: Empowered | 追加アップグレード（下記）を受け付けます。速度・エネルギー倍率アップグレードは Mekanism の `MekanismUtils` 経由で計算されるため、自動的に反映されます。 |
 | Mekanism Extras | 追加アップグレード `STACK`（1 レベルごとに処理速度 2 倍・消費電力も同倍率）と `CREATIVE`（消費電力 0）を全機械で受け付けます。 |
-| Mek Energistics | AE2 のパターン自動化 SPI に最大 90 ブロックを登録します。アイテム / 液体の入出力、ハンマー・メッシュの常設入力、ファクトリーのパラレル処理に対応します。さらに **ME Pattern Provider / ME Passive Crafting / ME Output Interface の各アップグレードを全機械に装着できます**（アップグレードを入れると、その機械が AE2 の ME ネットワークに接続され、パターン自動化のホストになります）。Mek Energistics 3.0.8 + AE2 19.2 で動作確認済みです。 |
 | JEI | Ex Deorum のレシピに、この Mod の機械を触媒として表示します（詳細は次節）。 |
 
 > **Mekanism: Empowered のアップグレードについて**
@@ -253,7 +252,6 @@ JEI は任意依存です（なくても動作します。配布 jar には含�
 - 独自カテゴリは追加せず、Ex Deorum のカテゴリ（`exdeorum:hammer`、`sieve`、
   `barrel_compost` など）にこの Mod の機械を触媒として追加します。
 - GUI の進行バーを左クリックすると、対応する JEI レシピを直接開きます。
-- EMI 併用時は、Ex Deorum のカテゴリ名前空間（`exdeorum_emi`）に追従します。
 
 ## スクリーンショット
 

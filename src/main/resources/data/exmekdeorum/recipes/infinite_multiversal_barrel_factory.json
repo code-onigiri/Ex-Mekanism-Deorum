@@ -1,0 +1,39 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "pattern": [
+    "ACT",
+    "PXQ",
+    "TCA"
+  ],
+  "key": {
+    "A": {
+      "tag": "mekanism_extras:alloys/spectrum"
+    },
+    "C": {
+      "tag": "c:circuits/infinite_multiversal"
+    },
+    "T": {
+      "tag": "evolvedmekanism:alloys/exoversal"
+    },
+    "X": {
+      "item": "mekanism:steel_casing"
+    },
+    "P": {
+      "item": "exmekdeorum:infinite_barrel_factory"
+    },
+    "Q": {
+      "item": "exmekdeorum:multiversal_barrel_factory"
+    }
+  },
+  "result": {
+    "item": "exmekdeorum:infinite_multiversal_barrel_factory",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "emextras"
+    }
+  ]
+}
