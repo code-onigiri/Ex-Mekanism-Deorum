@@ -1,32 +1,32 @@
 {
   "variants": {
-    "facing=north,active=false": {
+    "active=false,facing=north": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory"
     },
-    "facing=north,active=true": {
+    "active=true,facing=north": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory_active"
     },
-    "facing=east,active=false": {
+    "active=false,facing=east": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory",
       "y": 90
     },
-    "facing=east,active=true": {
+    "active=true,facing=east": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory_active",
       "y": 90
     },
-    "facing=south,active=false": {
+    "active=false,facing=south": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory",
       "y": 180
     },
-    "facing=south,active=true": {
+    "active=true,facing=south": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory_active",
       "y": 180
     },
-    "facing=west,active=false": {
+    "active=false,facing=west": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory",
       "y": -90
     },
-    "facing=west,active=true": {
+    "active=true,facing=west": {
       "model": "exmekdeorum:block/advanced_water_crucible_factory_active",
       "y": -90
     }

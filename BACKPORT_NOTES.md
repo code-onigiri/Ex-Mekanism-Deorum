@@ -288,3 +288,30 @@ screen and the mod initialised cleanly:
 - Minor: `hammer_machine` blockstate lacks models for the
   `active=*, facing=north|south` variants (ModelBakery warnings;
   non-fatal).
+
+## In-world operation check (2026-11-10, continued)
+
+Booted the dev client (Xvfb), created a world and exercised a Hammer
+Machine end to end: hopper-fed 64 cobblestone, supplied energy, and the
+machine processed cobblestone -> gravel continuously (input 64 -> 48,
+16 gravel produced, `active=true`, energy draining per operation).
+Recipe lookup, lane progress, GUI and localisation all work.
+
+### Bug found by the in-world check (fixed in this branch)
+
+- All 90 blockstate files keyed variants as `facing=...,active=...`,
+  but 1.20.1's state serialisation expects `active=...,facing=...`, so
+  every variant missed its model and every machine/factory block
+  rendered as the magenta/black missing-model cube. Reordered all 720
+  variant keys; blocks now render with their real textures.
+- Added the missing `pack.mcmeta` (pack_format 15). Without it the
+  exploded dev resources fail to load as a resource pack (production
+  jars are unaffected because FML synthesises pack metadata), which in
+  dev made GUI textures and lang entries fail to load.
+
+### Notes from the check
+
+- Creative Energy Cubes placed with /setblock do not feed the machines
+  in dev (no stored energy / no ejection); energy was injected via the
+  tile's `EnergyContainers` NBT for the test instead. Normal play with
+  charged cubes/cables is unaffected.
