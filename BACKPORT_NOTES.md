@@ -1,6 +1,6 @@
 # Ex Mekanism Deorum — 1.20.1 backport notes
 
-Branch: `backport/1.20.1` (never pushed, never tagged).
+Branch: `backport/1.20.1` (pushed to origin 2026-11-10; never tagged).
 Target: Minecraft 1.20.1 / Forge 47.2.0 / Java 17 / ForgeGradle 6, official mappings.
 Source: NeoForge 1.21.1 / Java 21.
 
@@ -182,12 +182,14 @@ and in this notes file.
 
 - **Gradle could not be run in this VM**, and no dependency jars were present in
   a resolvable cache, so the Ex Deorum 1.20.1 API was adapted from the documented
-  1.20.1 shape and not verified with `javap`. If CI fails, check first:
+  1.20.1 shape and not verified with `javap`. CI then verified it: build green
+  on run 42644904854 after three fix rounds (see "CI fixes" below), so the
   `RecipeUtil` helper names, the barrel/fluid recipe record component names
   (`fluidAmount`, `baseFluidAmount`, `consumesAdditive`, `catalyst`,
   `byproducts`, `duration`, `result`, `resultFluid`), `getResultNbt()`,
   `HammerLootModifier.calculateFortuneBonus(...)`, and
-  `SieveLogic.setMesh/saveNbt/loadNbt`.
+  `SieveLogic.setMesh/saveNbt/loadNbt` all compile against the real 1.20.1
+  dependencies.
 - Addon-tier recipe item ids and tags (Evolved Mekanism / Extras / Empowered)
   are unchanged from the 1.21.1 data and were not verified against the 1.20.1
   addon jars; they only affect optional tiers and not compilation.
@@ -195,8 +197,9 @@ and in this notes file.
   dev-classpath-only dependency either way.
 - Empowered 1.20.1 may declare an additional "MekMM" runtime dependency; it
   affects dev runs only, not compilation.
-- All work is committed on `backport/1.20.1` only; nothing was pushed or tagged
-  and `main` was not touched.
+- All work is committed on `backport/1.20.1` only; the branch is pushed to
+  origin (CI green, run 42644904854), nothing is tagged, and `main` was not
+  touched.
 
 ## CI fixes (after first push)
 
