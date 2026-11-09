@@ -1,5 +1,5 @@
 {
-  description = "NeoForge 1.21.1 development environment for Ex Mekanism Deorum";
+  description = "Forge 1.20.1 development environment for Ex Mekanism Deorum";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -17,7 +17,7 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          jdk = pkgs.jdk21;
+          jdk = pkgs.jdk17;
           # Native libraries the Minecraft client needs (GLFW/GLX, X11, audio).
           # NixOS keeps the actual GPU drivers in /run/opengl-driver/lib, while
           # libGL/libGLX themselves come from libglvnd; both must be on

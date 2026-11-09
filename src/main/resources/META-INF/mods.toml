@@ -11,9 +11,9 @@ description = '''${mod_description}'''
 logoFile = "icon.png"
 
 [[dependencies.${mod_id}]]
-modId = "neoforge"
+modId = "forge"
 type = "required"
-versionRange = "${neo_version_range}"
+versionRange = "${forge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
@@ -44,14 +44,13 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "jei"
 type = "optional"
-versionRange = "[19.21,)"
+versionRange = "[15.74.0,)"
 ordering = "AFTER"
 side = "CLIENT"
 
 # Optional addon compatibility. These mods are never required; when present the
 # matching integration activates (tier installers can upgrade this mod's
-# factories, Empowered's upgrades apply through Mekanism's own upgrade hooks,
-# and Mek Energistics can automate the machines through its pattern SPI).
+# factories, and Empowered's upgrades apply through Mekanism's own upgrade hooks).
 [[dependencies.${mod_id}]]
 modId = "evolvedmekanism"
 type = "optional"
@@ -62,7 +61,7 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "mekanism_empowered"
 type = "optional"
-versionRange = "[21.1,)"
+versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -70,13 +69,6 @@ side = "BOTH"
 modId = "mekanism_extras"
 type = "optional"
 versionRange = "[1.4,)"
-ordering = "AFTER"
-side = "BOTH"
-
-[[dependencies.${mod_id}]]
-modId = "mekenergistics"
-type = "optional"
-versionRange = "[3.0.6,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -88,8 +80,3 @@ type = "optional"
 versionRange = "[1.0,)"
 ordering = "AFTER"
 side = "BOTH"
-
-# Optional Mek Energistics pattern-automation bridge. The mixin plugin applies the mixin
-# only when the Mek Energistics API is present, so the mod still loads without it.
-[[mixins]]
-config = "exmekdeorum.mixins.json"
