@@ -11,7 +11,7 @@
       "tag": "evolvedmekanism:alloys/creative"
     },
     "C": {
-      "tag": "c:circuits/creative"
+      "tag": "forge:circuits/creative"
     },
     "I": {
       "item": "minecraft:nether_star"

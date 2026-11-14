@@ -11,10 +11,10 @@
       "tag": "mekanism_extras:alloys/shining"
     },
     "C": {
-      "tag": "c:circuits/cosmic"
+      "tag": "forge:circuits/cosmic"
     },
     "I": {
-      "tag": "c:ingots/refined_obsidian"
+      "tag": "forge:ingots/refined_obsidian"
     },
     "P": {
       "item": "exmekdeorum:supreme_hammer_factory"

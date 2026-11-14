@@ -11,7 +11,7 @@
       "tag": "mekanism_extras:alloys/radiance"
     },
     "C": {
-      "tag": "c:circuits/absolute_overclocked"
+      "tag": "forge:circuits/absolute_overclocked"
     },
     "T": {
       "tag": "evolvedmekanism:alloys/hypercharged"

@@ -11,10 +11,10 @@
       "tag": "evolvedmekanism:alloys/subatomic"
     },
     "C": {
-      "tag": "c:circuits/quantum"
+      "tag": "forge:circuits/quantum"
     },
     "I": {
-      "tag": "c:ingots/tin"
+      "tag": "forge:ingots/tin"
     },
     "P": {
       "item": "exmekdeorum:overclocked_crucible_factory"

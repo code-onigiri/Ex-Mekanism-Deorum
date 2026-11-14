@@ -11,13 +11,13 @@
       "tag": "mekanism_extras:alloys/spectrum"
     },
     "C": {
-      "tag": "c:circuits/infinite"
+      "tag": "forge:circuits/infinite"
     },
     "I": {
-      "tag": "c:pellets/plutonium"
+      "tag": "forge:pellets/plutonium"
     },
     "J": {
-      "tag": "c:pellets/polonium"
+      "tag": "forge:pellets/polonium"
     },
     "P": {
       "item": "exmekdeorum:cosmic_hammer_factory"

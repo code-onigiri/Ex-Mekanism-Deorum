@@ -11,7 +11,7 @@
       "tag": "mekanism_extras:alloys/thermonuclear"
     },
     "C": {
-      "tag": "c:circuits/supreme_quantum"
+      "tag": "forge:circuits/supreme_quantum"
     },
     "T": {
       "tag": "evolvedmekanism:alloys/subatomic"

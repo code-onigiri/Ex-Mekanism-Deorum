@@ -11,10 +11,10 @@
       "tag": "evolvedmekanism:alloys/hypercharged"
     },
     "C": {
-      "tag": "c:circuits/overclocked"
+      "tag": "forge:circuits/overclocked"
     },
     "I": {
-      "tag": "c:ingots/uranium"
+      "tag": "forge:ingots/uranium"
     },
     "P": {
       "item": "exmekdeorum:ultimate_water_crucible_factory"

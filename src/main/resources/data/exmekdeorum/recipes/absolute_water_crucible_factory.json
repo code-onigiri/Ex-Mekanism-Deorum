@@ -11,10 +11,10 @@
       "tag": "mekanism_extras:alloys/radiance"
     },
     "C": {
-      "tag": "c:circuits/absolute"
+      "tag": "forge:circuits/absolute"
     },
     "I": {
-      "tag": "c:gems/emerald"
+      "tag": "forge:gems/emerald"
     },
     "P": {
       "item": "exmekdeorum:ultimate_water_crucible_factory"
