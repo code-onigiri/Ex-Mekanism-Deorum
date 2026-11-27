@@ -14,7 +14,7 @@
       "item": "mekanism:advanced_control_circuit"
     },
     "I": {
-      "item": "mekanism:ingot_osmium"
+      "tag": "forge:ingots/osmium"
     },
     "P": {
       "item": "exmekdeorum:basic_sieve_factory"

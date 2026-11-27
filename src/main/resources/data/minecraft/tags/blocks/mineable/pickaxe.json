@@ -1,0 +1,289 @@
+{
+  "values": [
+    "exmekdeorum:advanced_barrel_factory",
+    "exmekdeorum:advanced_crucible_factory",
+    "exmekdeorum:advanced_hammer_factory",
+    "exmekdeorum:advanced_sieve_factory",
+    "exmekdeorum:advanced_water_crucible_factory",
+    "exmekdeorum:barrel_machine",
+    "exmekdeorum:basic_barrel_factory",
+    "exmekdeorum:basic_crucible_factory",
+    "exmekdeorum:basic_hammer_factory",
+    "exmekdeorum:basic_sieve_factory",
+    "exmekdeorum:basic_water_crucible_factory",
+    "exmekdeorum:crucible_machine",
+    "exmekdeorum:elite_barrel_factory",
+    "exmekdeorum:elite_crucible_factory",
+    "exmekdeorum:elite_hammer_factory",
+    "exmekdeorum:elite_sieve_factory",
+    "exmekdeorum:elite_water_crucible_factory",
+    "exmekdeorum:hammer_machine",
+    "exmekdeorum:sieve_machine",
+    "exmekdeorum:ultimate_barrel_factory",
+    "exmekdeorum:ultimate_crucible_factory",
+    "exmekdeorum:ultimate_hammer_factory",
+    "exmekdeorum:ultimate_sieve_factory",
+    "exmekdeorum:ultimate_water_crucible_factory",
+    "exmekdeorum:water_crucible_machine",
+    {
+      "id": "exmekdeorum:absolute_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_overclocked_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_overclocked_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_overclocked_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_overclocked_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_overclocked_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:absolute_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_dense_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_dense_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_dense_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_dense_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_dense_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:cosmic_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:creative_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:creative_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:creative_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:creative_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:creative_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:dense_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:dense_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:dense_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:dense_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:dense_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_multiversal_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_multiversal_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_multiversal_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_multiversal_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_multiversal_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:infinite_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:multiversal_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:multiversal_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:multiversal_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:multiversal_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:multiversal_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:overclocked_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:overclocked_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:overclocked_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:overclocked_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:overclocked_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:quantum_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:quantum_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:quantum_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:quantum_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:quantum_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_quantum_barrel_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_quantum_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_quantum_hammer_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_quantum_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_quantum_water_crucible_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_sieve_factory",
+      "required": false
+    },
+    {
+      "id": "exmekdeorum:supreme_water_crucible_factory",
+      "required": false
+    }
+  ]
+}
