@@ -14,7 +14,7 @@
       "item": "mekanism:advanced_control_circuit"
     },
     "I": {
-      "item": "mekanism:ingot_osmium"
+      "tag": "c:ingots/osmium"
     },
     "P": {
       "item": "exmekdeorum:basic_crucible_factory"
